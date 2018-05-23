@@ -22,7 +22,7 @@
      ("gnu" . "http://elpa.gnu.org/packages/"))))
  '(package-selected-packages
    (quote
-    (monokai-theme rainbow-delimiters which-key ivy avy general use-package)))
+    (magit paredit clojure-mode monokai-theme rainbow-delimiters which-key ivy avy general use-package)))
  '(show-paren-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -38,12 +38,25 @@
 
 (require 'use-package)
 
+;; generic
+
 (add-to-list 'load-path "~/.emacs.d/better-defaults")
 (require 'better-defaults)
 
 (use-package general
   :ensure t
   :config (general-define-key "C-'" 'avy-goto-word-1))
+
+(use-package magit
+  :ensure t)
+
+;; looks
+
+(use-package monokai-theme
+  :ensure t
+  :pin melpa)
+
+;; navigation
 
 (use-package avy
   :ensure t
@@ -58,11 +71,16 @@
 (use-package which-key :ensure t)
 
 ;; clojure
+
 (use-package rainbow-delimiters
   :ensure t
   :hook (prog-mode . rainbow-delimiters-mode)
   )
 
-(use-package monokai-theme
+(use-package clojure-mode
+  :ensure t)
+
+(use-package paredit
   :ensure t
-  :pin melpa)
+  :init (add-hook 'clojure-mode-hook #'enable-paredit-mode))
+
