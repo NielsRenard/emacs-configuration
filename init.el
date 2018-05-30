@@ -14,6 +14,8 @@
  '(custom-safe-themes
    (quote
     ("c3d4af771cbe0501d5a865656802788a9a0ff9cf10a7df704ec8b8ef69017c68" default)))
+ '(ido-vertical-mode t)
+ '(inhibit-startup-screen t)
  '(package-archives
    (quote
     (("org" . "https://orgmode.org/elpa/")
@@ -22,7 +24,7 @@
      ("gnu" . "http://elpa.gnu.org/packages/"))))
  '(package-selected-packages
    (quote
-    (magit paredit clojure-mode monokai-theme rainbow-delimiters which-key ivy avy general use-package)))
+    (smex ido-vertical-mode projectile flx-ido aggressive-indent aggressive-indent-mode cider magit paredit clojure-mode monokai-theme rainbow-delimiters which-key ivy avy general use-package)))
  '(show-paren-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -38,7 +40,11 @@
 
 (require 'use-package)
 
-;; generic
+;;;; generic
+
+;; starts garbage-collection after 20 megabytes
+;; to improve performance
+(setq gc-cons-threshold 20000000)
 
 (add-to-list 'load-path "~/.emacs.d/better-defaults")
 (require 'better-defaults)
@@ -48,34 +54,57 @@
   :config (general-define-key "C-'" 'avy-goto-word-1))
 
 (use-package magit
-  :ensure t)
+  :ensure t
+  :bind ("C-c g" . magit-status))
 
-;; looks
+;;;; looks
 
 (use-package monokai-theme
   :ensure t
   :pin melpa)
 
-;; navigation
+;;;; navigation
+
+(use-package projectile
+  :ensure t
+  :config (projectile-mode))
+
+(general-define-key
+ :prefix "C-c"
+ "p"	'projectile-switch-project)
+
+(general-define-key
+ :prefix "C-c"
+ "f"	'projectile-find-file)
+
+
+(use-package flx-ido
+  :requires ido
+  :ensure t
+  :config (flx-ido-mode))
+
+(use-package ido-vertical-mode
+  :ensure t
+  :requires ido
+  :config (ido-vertical-mode))
 
 (use-package avy
   :ensure t
   :commands (avy-goto-word-1))
 
-(use-package ivy :ensure t)
+(use-package smex
+  :ensure t
+  :bind ("M-x" . smex))
 
-(general-define-key
- :prefix "C-c"
-  "b"	'ivy-switch-buffer)
+(use-package ivy :ensure t)
 
 (use-package which-key :ensure t)
 
-;; clojure
+;;;; clojure
 
 (use-package rainbow-delimiters
   :ensure t
-  :hook (prog-mode . rainbow-delimiters-mode)
-  )
+  :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package clojure-mode
   :ensure t)
@@ -84,3 +113,11 @@
   :ensure t
   :init (add-hook 'clojure-mode-hook #'enable-paredit-mode))
 
+
+(use-package cider
+  :ensure t
+  :init (add-hook 'clojure-mode-hook #'cider-mode))
+
+(use-package aggressive-indent
+  :ensure t
+  :init (add-hook 'clojure-mode-hook #'aggressive-indent-mode))
