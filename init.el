@@ -121,3 +121,9 @@
 (use-package aggressive-indent
   :ensure t
   :init (add-hook 'clojure-mode-hook #'aggressive-indent-mode))
+
+
+;;;; org
+
+(define-key global-map "\C-ca" 'org-agenda)
+(setq org-agenda-files (list "~/Documents/org/"))
