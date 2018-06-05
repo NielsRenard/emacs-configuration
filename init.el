@@ -88,6 +88,8 @@
   :requires ido
   :config (ido-vertical-mode))
 
+(setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)
+
 (use-package avy
   :ensure t
   :commands (avy-goto-word-1))
