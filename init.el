@@ -77,7 +77,6 @@
  :prefix "C-c"
  "f"	'projectile-find-file)
 
-
 (use-package flx-ido
   :requires ido
   :ensure t
@@ -101,6 +100,8 @@
 (use-package ivy :ensure t)
 
 (use-package which-key :ensure t)
+
+(windmove-default-keybindings)
 
 ;;;; clojure
 
@@ -129,3 +130,9 @@
 
 (define-key global-map "\C-ca" 'org-agenda)
 (setq org-agenda-files (list "~/Documents/org/"))
+
+;;;; fennel
+
+(autoload 'fennel-mode "~/.emacs.d/fennel-mode/fennel-mode" nil t)
+(add-to-list 'auto-mode-alist '("\\.fnl\\'" . fennel-mode))
+
