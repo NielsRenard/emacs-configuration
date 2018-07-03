@@ -1,4 +1,3 @@
-
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
@@ -10,6 +9,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(company-lua-interpreter (quote lua53))
  '(custom-enabled-themes (quote (monokai)))
  '(custom-safe-themes
    (quote
@@ -24,7 +24,7 @@
      ("gnu" . "http://elpa.gnu.org/packages/"))))
  '(package-selected-packages
    (quote
-    (smex ido-vertical-mode projectile flx-ido aggressive-indent aggressive-indent-mode cider magit paredit clojure-mode monokai-theme rainbow-delimiters which-key ivy avy general use-package)))
+    (flycheck-kotlin flycheck-clojure flycheck-lua flycheck company-lua company lua-mode smex ido-vertical-mode projectile flx-ido aggressive-indent aggressive-indent-mode cider magit paredit clojure-mode monokai-theme rainbow-delimiters which-key ivy avy general use-package)))
  '(show-paren-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -39,7 +39,7 @@
   (package-install 'use-package))
 
 (require 'use-package)
-
+(setq use-package-always-ensure t)
 ;;;; generic
 
 ;; starts garbage-collection after 20 megabytes
@@ -51,7 +51,7 @@
 
 (use-package general
   :ensure t
-  :config (general-define-key "C-'" 'avy-goto-word-1))
+  :config (general-define-key "C-'" 'avy-goto-char-timer))
 
 (use-package magit
   :ensure t
@@ -62,6 +62,8 @@
 (use-package monokai-theme
   :ensure t
   :pin melpa)
+
+(global-linum-mode)
 
 ;;;; navigation
 
@@ -91,7 +93,7 @@
 
 (use-package avy
   :ensure t
-  :commands (avy-goto-word-1))
+  :commands (avy-goto-char-timer))
 
 (use-package smex
   :ensure t
@@ -102,6 +104,29 @@
 (use-package which-key :ensure t)
 
 (windmove-default-keybindings)
+
+;;;; autocompletion
+
+(use-package company
+  :ensure t)
+
+(use-package company-lua
+  :ensure t
+  :hook (lua-mode . company-mode)
+  :config (setq company-idle-delay 0.05
+                company-minimum-prefix-length 0))
+
+;;;; syntax checking
+
+(use-package flycheck
+  :ensure t)
+
+(use-package flycheck-clojure
+  :ensure t)
+
+(use-package flycheck-kotlin
+  :ensure t)
+
 
 ;;;; clojure
 
