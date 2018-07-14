@@ -101,7 +101,10 @@
 
 (use-package ivy :ensure t)
 
-(use-package which-key :ensure t)
+(use-package which-key
+  :ensure t
+  :config (which-key-mode))
+(setq which-key-idle-delay 0.05)
 
 (windmove-default-keybindings)
 
