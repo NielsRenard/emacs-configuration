@@ -17,6 +17,7 @@
     ("bd7b7c5df1174796deefce5debc2d976b264585d51852c962362be83932873d9" "c3d4af771cbe0501d5a865656802788a9a0ff9cf10a7df704ec8b8ef69017c68" default)))
  '(ido-vertical-mode t)
  '(inhibit-startup-screen t)
+ '(org-agenda-files nil)
  '(package-archives
    (quote
     (("org" . "https://orgmode.org/elpa/")
@@ -32,7 +33,17 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(fixed-pitch ((t (:family "Inconsolata" :slant normal :weight normal :height 1.0 :width normal))))
+ '(org-block ((t (:inherit fixed-pitch))))
+ '(org-document-info ((t (:foreground "dark orange"))))
+ '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
+ '(org-link ((t (:foreground "royal blue" :underline t))))
+ '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+ '(org-property-value ((t (:inherit fixed-pitch))) t)
+ '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+ '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
+ '(org-verbatim ((t (:inherit (shadow fixed-pitch)))))
+ '(variable-pitch ((t (:family "Source Sans Pro" :height 180 :weight light)))))
 
 ;; Bootstrap 'use-package'
 (unless (package-installed-p 'use-package)
@@ -79,6 +90,18 @@
 (general-define-key
  :prefix "C-c"
  "f"	'projectile-find-file)
+
+(general-define-key
+ :prefix "C-c"
+ "s"	'projectile-grep)
+
+(general-define-key
+ :prefix "C-c"
+ "."	'cider-find-dwim)
+
+(general-define-key
+ "M-;" 'avy-goto-char-timer)
+
 
 (use-package flx-ido
   :requires ido
@@ -167,33 +190,33 @@
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
-(let* ((variable-tuple
-        (cond ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
-              ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
-              ((x-list-fonts "Verdana")         '(:font "Verdana"))
-              ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
-              (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
-       (base-font-color     (face-foreground 'default nil 'default))
-       (headline           `(:inherit default :weight bold :foreground ,base-font-color))))
+;; (let* ((variable-tuple
+;;         (cond ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
+;;               ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
+;;               ((x-list-fonts "Verdana")         '(:font "Verdana"))
+;;               ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
+;;               (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
+;;        (base-font-color     (face-foreground 'default nil 'default))
+;;        (headline           `(:inherit default :weight bold :foreground ,base-font-color))))
 
-(custom-theme-set-faces
- 'user
- '(variable-pitch ((t (:family "Source Sans Pro" :height 180 :weight light))))
- '(fixed-pitch ((t ( :family "Inconsolata" :slant normal :weight normal :height 1.0 :width normal)))))
+;; (custom-theme-set-faces
+;;  'user
+;;  '(variable-pitch ((t (:family "Source Sans Pro" :height 180 :weight light))))
+;;  '(fixed-pitch ((t ( :family "Inconsolata" :slant normal :weight normal :height 1.0 :width normal)))))
 
 (add-hook 'org-mode-hook 'variable-pitch-mode)
 
-(custom-theme-set-faces
- 'user
- '(org-block                 ((t (:inherit fixed-pitch))))
- '(org-document-info         ((t (:foreground "dark orange"))))
- '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
- '(org-link                  ((t (:foreground "royal blue" :underline t))))
- '(org-meta-line             ((t (:inherit (font-lock-comment-face fixed-pitch)))))
- '(org-property-value        ((t (:inherit fixed-pitch))) t)
- '(org-special-keyword       ((t (:inherit (font-lock-comment-face fixed-pitch)))))
- '(org-tag                   ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
- '(org-verbatim              ((t (:inherit (shadow fixed-pitch))))))
+;; (custom-theme-set-faces                 
+;;  'user
+;;  '(org-block                 ((t (:inherit fixed-pitch))))
+;;  '(org-document-info         ((t (:foreground "dark orange"))))
+;;  '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
+;;  '(org-link                  ((t (:foreground "royal blue" :underline t))))
+;;  '(org-meta-line             ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+;;  '(org-property-value        ((t (:inherit fixed-pitch))) t)
+;;  '(org-special-keyword       ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+;;  '(org-tag                   ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
+;;  '(org-verbatim              ((t (:inherit (shadow fixed-pitch))))))
 
 ;;;; fennel
 
