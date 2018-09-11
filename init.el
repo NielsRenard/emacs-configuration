@@ -26,7 +26,7 @@
      ("gnu" . "http://elpa.gnu.org/packages/"))))
  '(package-selected-packages
    (quote
-    (org-bullets flycheck-kotlin flycheck-clojure flycheck-lua flycheck company-lua company lua-mode smex ido-vertical-mode projectile flx-ido aggressive-indent aggressive-indent-mode cider magit paredit clojure-mode monokai-theme rainbow-delimiters which-key ivy avy general use-package)))
+    (clj-refactor justify-kp nov org-bullets flycheck-kotlin flycheck-clojure flycheck-lua flycheck company-lua company lua-mode smex ido-vertical-mode projectile flx-ido aggressive-indent aggressive-indent-mode cider magit paredit clojure-mode monokai-theme rainbow-delimiters which-key ivy avy general use-package)))
  '(show-paren-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -102,6 +102,8 @@
 (general-define-key
  "M-;" 'avy-goto-char-timer)
 
+;;(use-package expand-region
+;;  :bind ("M-x" . smex))
 
 (use-package flx-ido
   :requires ido
@@ -172,6 +174,13 @@
 (use-package cider
   :ensure t
   :init (add-hook 'clojure-mode-hook #'cider-mode))
+
+(use-package clj-refactor
+  :ensure t
+  :init (add-hook 'clojure-mode-hook #'clj-refactor-mode))
+
+
+
 
 (use-package aggressive-indent
   :ensure t
