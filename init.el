@@ -184,13 +184,6 @@
   :ensure t
   :init (add-hook 'clojure-mode-hook #'cider-mode))
 
-(use-package clj-refactor
-  :ensure t
-  :init (add-hook 'clojure-mode-hook #'clj-refactor-mode))
-
-
-
-
 (use-package aggressive-indent
   :ensure t
   :init (add-hook 'clojure-mode-hook #'aggressive-indent-mode))
