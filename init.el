@@ -69,6 +69,11 @@
   :ensure t
   :bind ("C-c g" . magit-status))
 
+(use-package nov
+  :ensure t)
+
+(add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+
 ;;;; looks
 
 (use-package monokai-theme
