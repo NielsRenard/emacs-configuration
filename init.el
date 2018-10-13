@@ -69,6 +69,9 @@
   :ensure t
   :bind ("C-c g" . magit-status))
 
+;;removes trailing whitespace on save
+(add-hook 'before-save-hook 'whitespace-cleanup)
+
 ;;;; looks
 
 (use-package monokai-theme
@@ -98,9 +101,6 @@
 (general-define-key
  :prefix "C-c"
  "."	'cider-find-dwim)
-
-(general-define-key
- "M-;" 'avy-goto-char-timer)
 
 ;;(use-package expand-region
 ;;  :bind ("M-x" . smex))
