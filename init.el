@@ -1,4 +1,3 @@
-
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
@@ -61,18 +60,19 @@
 (add-to-list 'load-path "~/.emacs.d/better-defaults")
 (require 'better-defaults)
 
-(use-package general
-  :ensure t
-  :config (general-define-key "C-'" 'avy-goto-char-timer))
-
+;;version control
 (use-package magit
   :ensure t
   :bind ("C-c g" . magit-status))
 
+;;epub support
 (use-package nov
   :ensure t)
 
 (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+
+;;removes trailing whitespace on save
+(add-hook 'before-save-hook 'whitespace-cleanup)
 
 ;;;; looks
 
@@ -87,6 +87,10 @@
 (use-package neotree
   :ensure t
   :config (global-set-key [f8] 'neotree-toggle))
+
+(use-package general
+  :ensure t
+  :config (general-define-key "C-'" 'avy-goto-char-timer))
 
 (use-package projectile
   :ensure t
@@ -107,9 +111,6 @@
 (general-define-key
  :prefix "C-c"
  "."	'cider-find-dwim)
-
-(general-define-key
- "M-;" 'avy-goto-char-timer)
 
 (general-define-key
  "M-p" 'switch-to-prev-buffer)
@@ -248,4 +249,3 @@
 
 (autoload 'fennel-mode "~/.emacs.d/fennel-mode/fennel-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.fnl\\'" . fennel-mode))
-
