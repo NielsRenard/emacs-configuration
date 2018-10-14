@@ -26,7 +26,7 @@
      ("gnu" . "http://elpa.gnu.org/packages/"))))
  '(package-selected-packages
    (quote
-    (clj-refactor justify-kp nov org-bullets flycheck-kotlin flycheck-clojure flycheck-lua flycheck company-lua company lua-mode smex ido-vertical-mode projectile flx-ido aggressive-indent aggressive-indent-mode cider magit paredit clojure-mode monokai-theme rainbow-delimiters which-key ivy avy general use-package)))
+    (## neotree ensime clj-refactor justify-kp nov org-bullets flycheck-kotlin flycheck-clojure flycheck-lua flycheck company-lua company lua-mode smex ido-vertical-mode projectile flx-ido aggressive-indent aggressive-indent-mode cider magit paredit clojure-mode monokai-theme rainbow-delimiters which-key ivy avy general use-package)))
  '(show-paren-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -84,6 +84,10 @@
 
 ;;;; navigation
 
+(use-package neotree
+  :ensure t
+  :config (global-set-key [f8] 'neotree-toggle))
+
 (use-package projectile
   :ensure t
   :config (projectile-mode))
@@ -106,6 +110,12 @@
 
 (general-define-key
  "M-;" 'avy-goto-char-timer)
+
+(general-define-key
+ "M-p" 'switch-to-prev-buffer)
+
+(general-define-key
+ "M-n" 'switch-to-next-buffer)
 
 ;;(use-package expand-region
 ;;  :bind ("M-x" . smex))
@@ -192,7 +202,6 @@
 (use-package aggressive-indent
   :ensure t
   :init (add-hook 'clojure-mode-hook #'aggressive-indent-mode))
-
 
 ;;;; org
 
