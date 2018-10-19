@@ -9,6 +9,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(blink-cursor-mode nil)
  '(company-lua-interpreter (quote lua53))
  '(custom-enabled-themes (quote (monokai)))
  '(custom-safe-themes
@@ -74,11 +75,30 @@
 ;;removes trailing whitespace on save
 (add-hook 'before-save-hook 'whitespace-cleanup)
 
+(use-package undo-tree
+  :ensure t
+  :config
+  ;; autosave the undo-tree history
+  (setq undo-tree-history-directory-alist
+        `((".*" . ,temporary-file-directory)))
+  (setq undo-tree-auto-save-history t))
+
+
 ;;;; looks
 
 (use-package monokai-theme
   :ensure t
   :pin melpa)
+
+(use-package volatile-highlights
+  :ensure t
+  :config
+  (volatile-highlights-mode +1))
+
+(use-package rainbow-mode
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook #'rainbow-mode))
 
 (global-linum-mode)
 
@@ -153,7 +173,17 @@
 ;;;; autocompletion
 
 (use-package company
-  :ensure t)
+  :ensure t
+  :config
+  (setq company-idle-delay 0.4)
+  (setq company-show-numbers t)
+  (setq company-tooltip-limit 10)
+  (setq company-minimum-prefix-length 0)
+  (setq company-tooltip-align-annotations t)
+  ;; invert the navigation direction if the the completion popup-isearch-match
+  ;; is displayed on top (happens near the bottom of windows)
+  (setq company-tooltip-flip-when-above t)
+  (global-company-mode))
 
 (use-package company-lua
   :ensure t
@@ -164,9 +194,11 @@
 ;;;; syntax checking
 
 (use-package flycheck
-  :ensure t)
+  :ensure t
+  :config
+  (add-hook 'after-init-hook #'global-flycheck-mode))
 
-(use-package flycheck-clojure
+(use-package flycheck-joker
   :ensure t)
 
 (use-package flycheck-kotlin
@@ -180,11 +212,16 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package clojure-mode
-  :ensure t)
+  :ensure t
+  :config
+  (add-hook 'clojure-mode-hook #'paredit-mode)
+  (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode))
 
 (use-package paredit
   :ensure t
-  :init (add-hook 'clojure-mode-hook #'enable-paredit-mode))
+  :config
+  (add-hook 'clojure-mode-hook #'enable-paredit-mode)
+  (add-hook 'clojure-repl-mode-hook #'enable-paredit-mode))
 
 (defun my-clojure-mode-hook ()
     (clj-refactor-mode 1)
@@ -196,9 +233,17 @@
   :ensure t
   :init (add-hook 'clojure-mode-hook #'my-clojure-mode-hook))
 
+(global-set-key (kbd "TAB") #'company-indent-or-complete-common)
+
 (use-package cider
   :ensure t
-  :init (add-hook 'clojure-mode-hook #'cider-mode))
+  :init (add-hook 'clojure-mode-hook #'cider-mode)
+  :config
+  (setq nrepl-log-messages t)
+  (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
+  (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
+  (add-hook 'cider-repl-mode-hook #'paredit-mode)
+  (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode))
 
 (use-package aggressive-indent
   :ensure t
