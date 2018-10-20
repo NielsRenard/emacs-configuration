@@ -1,3 +1,5 @@
+;;; package --- Summary:
+;;; Commentary:
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
@@ -26,7 +28,7 @@
      ("gnu" . "http://elpa.gnu.org/packages/"))))
  '(package-selected-packages
    (quote
-    (## neotree ensime clj-refactor justify-kp nov org-bullets flycheck-kotlin flycheck-clojure flycheck-lua flycheck company-lua company lua-mode smex ido-vertical-mode projectile flx-ido aggressive-indent aggressive-indent-mode cider magit paredit clojure-mode monokai-theme rainbow-delimiters which-key ivy avy general use-package)))
+    (flycheck-joker rainbow-mode volatile-highlights undo-tree ## neotree ensime clj-refactor justify-kp nov org-bullets flycheck-kotlin flycheck-clojure flycheck-lua flycheck company-lua company lua-mode smex ido-vertical-mode projectile flx-ido aggressive-indent aggressive-indent-mode cider magit paredit clojure-mode monokai-theme rainbow-delimiters which-key ivy avy general use-package)))
  '(show-paren-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -45,6 +47,7 @@
  '(org-verbatim ((t (:inherit (shadow fixed-pitch)))))
  '(variable-pitch ((t (:family "Source Sans Pro" :height 180 :weight light)))))
 
+;;; Code:
 ;; Bootstrap 'use-package'
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -99,6 +102,9 @@
   :ensure t
   :config
   (add-hook 'prog-mode-hook #'rainbow-mode))
+
+(global-set-key [C-mouse-4] 'text-scale-increase)
+(global-set-key [C-mouse-5] 'text-scale-decrease)
 
 (global-linum-mode)
 
@@ -175,10 +181,10 @@
 (use-package company
   :ensure t
   :config
-  (setq company-idle-delay 0.4)
+  (setq company-idle-delay 0.5)
   (setq company-show-numbers t)
   (setq company-tooltip-limit 10)
-  (setq company-minimum-prefix-length 0)
+  (setq company-minimum-prefix-length 1)
   (setq company-tooltip-align-annotations t)
   ;; invert the navigation direction if the the completion popup-isearch-match
   ;; is displayed on top (happens near the bottom of windows)
@@ -294,3 +300,6 @@
 
 (autoload 'fennel-mode "~/.emacs.d/fennel-mode/fennel-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.fnl\\'" . fennel-mode))
+
+(provide 'init)
+;;; init.el ends here
