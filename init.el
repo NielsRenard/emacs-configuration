@@ -69,6 +69,12 @@
   :ensure t
   :bind ("C-c g" . magit-status))
 
+;;docker mode not-found?
+;;(use-package docker
+;;  :ensure t
+;;  :pin melpa
+;;  :bind ("C-c d" . docker))
+
 ;;epub support
 (use-package nov
   :ensure t)
