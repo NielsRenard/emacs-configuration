@@ -261,6 +261,11 @@
   :ensure t
   :init (add-hook 'clojure-mode-hook #'aggressive-indent-mode))
 
+;;;; api
+(use-package yaml-mode
+  :ensure t
+  :config (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
+
 ;;;; org
 
 (define-key global-map "\C-ca" 'org-agenda)
