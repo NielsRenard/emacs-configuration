@@ -283,7 +283,8 @@
 ;; uml
 
 (use-package plantuml-mode
-:ensure t)
+  :ensure t
+  :config (add-to-list 'auto-mode-alist '("\\.puml\\'" . plantuml-mode)))
 
 ;;;; fennel
 
