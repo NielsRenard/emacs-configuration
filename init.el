@@ -55,6 +55,7 @@
 
 (require 'use-package)
 (setq use-package-always-ensure t)
+
 ;;;; generic
 
 ;; starts garbage-collection after 20 megabytes
@@ -69,19 +70,18 @@
   :ensure t
   :bind ("C-c g" . magit-status))
 
-;;docker mode not-found?
-;;(use-package docker
-;;  :ensure t
-;;  :pin melpa
-;;  :bind ("C-c d" . docker))
-
 ;;epub support
 (use-package nov
   :ensure t)
 
 (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
 
+;; https://askubuntu.com/questions/30224/how-to-disable-the-alt-hotkey-behavior-on-gnome-terminal
+;; hit this to fix whitespace, nice to use use together with M-^
+(define-key global-map "\M-space" 'fixup-whitespace)
+
 ;;removes trailing whitespace on save
+(define-key global-map "\C-ca" 'org-agenda)
 (add-hook 'before-save-hook 'whitespace-cleanup)
 
 (use-package undo-tree
@@ -115,6 +115,10 @@
 (global-linum-mode)
 
 ;;;; navigation
+
+(use-package zygospore
+  :ensure t
+  :config (global-set-key (kbd "C-x 1") 'zygospore-toggle-delete-other-windows))
 
 (use-package neotree
   :ensure t
@@ -276,9 +280,18 @@
 (define-key global-map "\C-ca" 'org-agenda)
 (setq org-hide-emphasis-markers t)
 
+;;letters as ordered list bullets
+;; A. handy
+;; B. things
+(setq org-list-allow-alphabetical t)
+
 (use-package org-bullets
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
+;;emacs-reveal for presentations
+(load "~/.emacs.d/emacs-reveal/reveal-config.el")
+
 
 ;; uml
 
