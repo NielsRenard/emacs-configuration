@@ -120,9 +120,11 @@
   :ensure t
   :config (global-set-key (kbd "C-x 1") 'zygospore-toggle-delete-other-windows))
 
+
 (use-package neotree
   :ensure t
-  :config (global-set-key [f8] 'neotree-toggle))
+  :config (global-set-key [f8] 'neotree-toggle)
+          (setq neo-smart-open t))
 
 (use-package general
   :ensure t
