@@ -272,9 +272,9 @@
   :ensure t
   :config (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
 
-(use-package highlight-indentation
-  :ensure t
-  :config (add-to-list 'auto-mode-alist '("\\.yml\\'" . highlight-indentation-mode)))
+;;(use-package highlight-indentation
+;;  :ensure t
+;;  :config (add-to-list 'auto-mode-alist '("\\.yml\\'" . highlight-indentation-mode)))
 
 ;;;; docs
 ;; org
