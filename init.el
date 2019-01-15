@@ -56,6 +56,8 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+
+
 ;;;; generic
 
 ;; starts garbage-collection after 20 megabytes
@@ -93,8 +95,8 @@
   (setq undo-tree-auto-save-history t))
 
 
-;;;; looks
 
+;;;; looks
 (use-package monokai-theme
   :ensure t
   :pin melpa)
@@ -114,8 +116,9 @@
 
 (global-linum-mode)
 
-;;;; navigation
 
+
+;;;; navigation
 (use-package zygospore
   :ensure t
   :config (global-set-key (kbd "C-x 1") 'zygospore-toggle-delete-other-windows))
@@ -188,15 +191,16 @@
 
 (windmove-default-keybindings)
 
-;;;; autocompletion
 
+
+;;;; autocompletion
 (use-package company
   :ensure t
   :config
   (setq company-idle-delay 0.5)
   (setq company-show-numbers t)
   (setq company-tooltip-limit 10)
-  (setq company-minimum-prefix-length 1)
+  (setq company-minimum-prefix-length 2)
   (setq company-tooltip-align-annotations t)
   ;; invert the navigation direction if the the completion popup-isearch-match
   ;; is displayed on top (happens near the bottom of windows)
@@ -207,10 +211,23 @@
   :ensure t
   :hook (lua-mode . company-mode)
   :config (setq company-idle-delay 0.05
-                company-minimum-prefix-length 0))
+                company-minimum-prefix-length 2))
+
+(use-package company-ghci
+  :ensure t
+  :hook (haskell-mode . company-mode)
+  :config (setq company-idle-delay 0.05
+                company-minimum-prefix-length 2))
+
+(use-package company-ghc
+  :ensure t
+  :hook (haskell-mode . company-mode)
+  :config (setq company-idle-delay 0.05
+                company-minimum-prefix-length 2))
+
+
 
 ;;;; syntax checking
-
 (use-package flycheck
   :ensure t
   :config
@@ -222,9 +239,12 @@
 (use-package flycheck-kotlin
   :ensure t)
 
+(use-package flycheck-haskell
+  :ensure t)
+
+
 
 ;;;; clojure
-
 (use-package rainbow-delimiters
   :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
@@ -242,10 +262,10 @@
   (add-hook 'clojure-repl-mode-hook #'enable-paredit-mode))
 
 (defun my-clojure-mode-hook ()
+  "Initialize clojure refactoring and code snippets."
     (clj-refactor-mode 1)
-    (yas-minor-mode 1) ; for adding require/use/import statements
-    ;; This choice of keybinding leaves cider-macroexpand-1 unbound
-    (cljr-add-keybindings-with-prefix "C-c C-m"))
+    (yas-minor-mode 1) ;;for adding require/use/import statements
+    (cljr-add-keybindings-with-prefix "C-c C-m")) ;; This choice of keybinding leaves cider-macroexpand-1 unbound
 
 (use-package clj-refactor
   :ensure t
@@ -267,18 +287,26 @@
   :ensure t
   :init (add-hook 'clojure-mode-hook #'aggressive-indent-mode))
 
+
+
+;;;; haskell
+
+(use-package haskell-mode
+  :ensure t
+  :config
+  (add-hook 'haskell-mode #'subword-mode))
+
+
+
 ;;;; yml
 (use-package yaml-mode
   :ensure t
   :config (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
 
-;;(use-package highlight-indentation
-;;  :ensure t
-;;  :config (add-to-list 'auto-mode-alist '("\\.yml\\'" . highlight-indentation-mode)))
+
 
 ;;;; docs
 ;; org
-
 (define-key global-map "\C-ca" 'org-agenda)
 (setq org-hide-emphasis-markers t)
 
@@ -291,18 +319,15 @@
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
-;;emacs-reveal for presentations
+;; emacs-reveal for presentations
 (load "~/.emacs.d/emacs-reveal/reveal-config.el")
 
-
 ;; uml
-
 (use-package plantuml-mode
   :ensure t
   :config (add-to-list 'auto-mode-alist '("\\.puml\\'" . plantuml-mode)))
 
 ;;;; fennel
-
 (autoload 'fennel-mode "~/.emacs.d/fennel-mode/fennel-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.fnl\\'" . fennel-mode))
 
