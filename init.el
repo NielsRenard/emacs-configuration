@@ -99,7 +99,7 @@
 ;;;; looks
 (use-package monokai-theme
   :ensure t
-  :pin melpa)
+  :config (setq inhibit-startup-screen t))
 
 (use-package volatile-highlights
   :ensure t
@@ -169,8 +169,7 @@
 
 (use-package ido-vertical-mode
   :ensure t
-  :requires ido
-  :config (ido-vertical-mode))
+  :config (ido-vertical-mode 1))
 
 (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)
 
@@ -186,11 +185,10 @@
 
 (use-package which-key
   :ensure t
-  :config (which-key-mode))
-(setq which-key-idle-delay 0.05)
+  :config (which-key-mode)
+          (setq which-key-idle-delay 0.05))
 
 (windmove-default-keybindings)
-
 
 
 ;;;; autocompletion
@@ -293,6 +291,12 @@
   :ensure t
   :init (add-hook 'clojure-mode-hook #'aggressive-indent-mode))
 
+
+;;;; perl
+
+(add-to-list 'auto-mode-alist '("\\.t\\'" . cperl-mode))
+(add-to-list 'auto-mode-alist '("\\.pm\\'" . cperl-mode))
+(add-to-list 'auto-mode-alist '("\\.pl\\'" . cperl-mode))
 
 
 ;;;; haskell
