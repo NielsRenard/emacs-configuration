@@ -294,6 +294,7 @@
 
 ;;;; perl
 
+(defalias 'perl-mode 'cperl-mode)
 (add-to-list 'auto-mode-alist '("\\.t\\'" . cperl-mode))
 (add-to-list 'auto-mode-alist '("\\.pm\\'" . cperl-mode))
 (add-to-list 'auto-mode-alist '("\\.pl\\'" . cperl-mode))
