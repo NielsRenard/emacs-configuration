@@ -242,6 +242,10 @@
 (use-package flycheck-haskell
   :ensure t)
 
+(use-package perlcritic
+  :ensure t
+  :config (setq flycheck-perlcritic-severity 1
+                flycheck-perlcriticrc "~/.perlcritic.rc"))
 
 
 ;;;; clojure
@@ -270,6 +274,8 @@
 (use-package clj-refactor
   :ensure t
   :init (add-hook 'clojure-mode-hook #'my-clojure-mode-hook))
+
+(global-set-key (kbd "C-c t") #'transpose-sexps)
 
 (global-set-key (kbd "TAB") #'company-indent-or-complete-common)
 
