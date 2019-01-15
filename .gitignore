@@ -1,2 +1,14 @@
 *~
 *\#*
+/network-security.data
+.projectile
+/.cache
+bookmarks
+elpa/
+emacs-reveal
+ido.last
+projectile.cache
+projectile-bookmarks.eld
+recentf
+request/
+session.*
