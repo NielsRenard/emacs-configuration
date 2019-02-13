@@ -1,51 +1,6 @@
 ;;; package --- Summary:
 ;;; Commentary:
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
 (package-initialize)
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(blink-cursor-mode nil)
- '(company-lua-interpreter (quote lua53))
- '(custom-enabled-themes (quote (monokai)))
- '(custom-safe-themes
-   (quote
-    ("bd7b7c5df1174796deefce5debc2d976b264585d51852c962362be83932873d9" "c3d4af771cbe0501d5a865656802788a9a0ff9cf10a7df704ec8b8ef69017c68" default)))
- '(ido-vertical-mode t)
- '(inhibit-startup-screen t)
- '(org-agenda-files nil)
- '(package-archives
-   (quote
-    (("org" . "https://orgmode.org/elpa/")
-     ("melpa" . "http://melpa.org/packages/")
-     ("marmalade" . "http://marmalade-repo.org/packages/")
-     ("gnu" . "http://elpa.gnu.org/packages/"))))
- '(package-selected-packages
-   (quote
-    (flycheck-joker rainbow-mode volatile-highlights undo-tree ## neotree ensime clj-refactor justify-kp nov org-bullets flycheck-kotlin flycheck-clojure flycheck-lua flycheck company-lua company lua-mode smex ido-vertical-mode projectile flx-ido aggressive-indent aggressive-indent-mode cider magit paredit clojure-mode monokai-theme rainbow-delimiters which-key ivy avy general use-package)))
- '(show-paren-mode t))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(fixed-pitch ((t (:family "Inconsolata" :slant normal :weight normal :height 1.0 :width normal))))
- '(org-block ((t (:inherit fixed-pitch))))
- '(org-document-info ((t (:foreground "dark orange"))))
- '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
- '(org-link ((t (:foreground "royal blue" :underline t))))
- '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
- '(org-property-value ((t (:inherit fixed-pitch))) t)
- '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
- '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
- '(org-verbatim ((t (:inherit (shadow fixed-pitch)))))
- '(variable-pitch ((t (:family "Source Sans Pro" :height 180 :weight light)))))
 
 ;;; Code:
 ;; Bootstrap 'use-package'
@@ -56,6 +11,8 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+(add-to-list 'package-archives
+'("melpa" . "https://melpa.org/packages/") t)
 
 
 ;;;; generic
@@ -95,11 +52,13 @@
   (setq undo-tree-auto-save-history t))
 
 
-
 ;;;; looks
 (use-package monokai-theme
   :ensure t
   :config (setq inhibit-startup-screen t))
+
+(use-package doom-themes
+  :ensure t)
 
 (use-package volatile-highlights
   :ensure t
@@ -114,8 +73,17 @@
 (global-set-key [C-mouse-4] 'text-scale-increase)
 (global-set-key [C-mouse-5] 'text-scale-decrease)
 
+;; set linenumbers by default
 (global-linum-mode)
 
+
+;;;; editing
+(use-package multiple-cursors
+  :ensure t
+  :config  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+           (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+           (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+           (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
 
 
 ;;;; navigation
@@ -293,7 +261,6 @@
 
 
 ;;;; perl
-
 (defalias 'perl-mode 'cperl-mode)
 (add-to-list 'auto-mode-alist '("\\.t\\'" . cperl-mode))
 (add-to-list 'auto-mode-alist '("\\.pm\\'" . cperl-mode))
@@ -301,12 +268,10 @@
 
 
 ;;;; haskell
-
 (use-package haskell-mode
   :ensure t
   :config
   (add-hook 'haskell-mode #'subword-mode))
-
 
 
 ;;;; yml
@@ -329,6 +294,8 @@
 (use-package org-bullets
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
+
 
 ;; emacs-reveal for presentations
 (load "~/.emacs.d/emacs-reveal/reveal-config.el")
