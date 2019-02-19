@@ -70,6 +70,15 @@
   :config
   (add-hook 'prog-mode-hook #'rainbow-mode))
 
+;;icons for neo-tree
+(use-package all-the-icons
+;;https://github.com/domtronn/all-the-icons.el#installing-fonts
+;;In order for the icons to work it is very important that you install the Resource Fonts included
+;;M-x all-the-icons-install-fonts
+;;Bear in mind, this will also run fc-cache -f -v on MacOS and Linux which can take some time to complete.
+  :ensure t)
+
+;; mouse-wheel scrolling
 (global-set-key [C-mouse-4] 'text-scale-increase)
 (global-set-key [C-mouse-5] 'text-scale-decrease)
 
@@ -91,11 +100,11 @@
   :ensure t
   :config (global-set-key (kbd "C-x 1") 'zygospore-toggle-delete-other-windows))
 
-
 (use-package neotree
   :ensure t
   :config (global-set-key [f8] 'neotree-toggle)
-          (setq neo-smart-open t))
+          (setq neo-smart-open t)
+          (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
 (use-package general
   :ensure t
@@ -272,6 +281,12 @@
   :ensure t
   :config
   (add-hook 'haskell-mode #'subword-mode))
+
+(use-package intero
+  :ensure t
+  :config
+  (add-hook 'haskell-mode #'intero-mode))
+
 
 
 ;;;; yml
