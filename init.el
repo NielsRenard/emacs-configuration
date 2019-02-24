@@ -313,7 +313,7 @@
 
 
 ;; emacs-reveal for presentations
-(load "~/.emacs.d/emacs-reveal/reveal-config.el")
+;;(load "~/.emacs.d/emacs-reveal/reveal-config.el")
 
 ;; uml
 (use-package plantuml-mode
