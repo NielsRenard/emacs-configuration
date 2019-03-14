@@ -24,12 +24,15 @@
 (add-to-list 'load-path "~/.emacs.d/better-defaults")
 (require 'better-defaults)
 
-;;version control
+;; disable minimizing frame
+(global-unset-key (kbd "C-z"))
+
+;;  version control
 (use-package magit
   :ensure t
   :bind ("C-c g" . magit-status))
 
-;;epub support
+;;  epub support
 (use-package nov
   :ensure t)
 
@@ -39,7 +42,7 @@
 ;; hit this to fix whitespace, nice to use use together with M-^
 (define-key global-map "\M-space" 'fixup-whitespace)
 
-;;removes trailing whitespace on save
+;; removes trailing whitespace on save
 (define-key global-map "\C-ca" 'org-agenda)
 (add-hook 'before-save-hook 'whitespace-cleanup)
 
@@ -70,12 +73,12 @@
   :config
   (add-hook 'prog-mode-hook #'rainbow-mode))
 
-;;icons for neo-tree
+;; icons for neo-tree
 (use-package all-the-icons
-;;https://github.com/domtronn/all-the-icons.el#installing-fonts
-;;In order for the icons to work it is very important that you install the Resource Fonts included
-;;M-x all-the-icons-install-fonts
-;;Bear in mind, this will also run fc-cache -f -v on MacOS and Linux which can take some time to complete.
+;; https://github.com/domtronn/all-the-icons.el#installing-fonts
+;; In order for the icons to work it is very important that you install the Resource Fonts included
+;; M-x all-the-icons-install-fonts
+;; Bear in mind, this will also run fc-cache -f -v on MacOS and Linux which can take some time to complete.
   :ensure t)
 
 ;; mouse-wheel scrolling
@@ -287,30 +290,24 @@
   :config
   (add-hook 'haskell-mode #'intero-mode))
 
-
-
 ;;;; yml
 (use-package yaml-mode
   :ensure t
   :config (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
-
-
 
 ;;;; docs
 ;; org
 (define-key global-map "\C-ca" 'org-agenda)
 (setq org-hide-emphasis-markers t)
 
-;;letters as ordered list bullets
-;; A. handy
-;; B. things
+;; letters as ordered list bullets
+;; A. like
+;; B. this
 (setq org-list-allow-alphabetical t)
 
 (use-package org-bullets
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-
-
 
 ;; emacs-reveal for presentations
 (load "~/.emacs.d/emacs-reveal/reveal-config.el")
