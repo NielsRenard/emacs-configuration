@@ -43,7 +43,6 @@
 (define-key global-map "\M-space" 'fixup-whitespace)
 
 ;; removes trailing whitespace on save
-(define-key global-map "\C-ca" 'org-agenda)
 (add-hook 'before-save-hook 'whitespace-cleanup)
 
 (use-package undo-tree
@@ -53,6 +52,10 @@
   (setq undo-tree-history-directory-alist
         `((".*" . ,temporary-file-directory)))
   (setq undo-tree-auto-save-history t))
+
+  (use-package zone
+    :ensure t
+    :config (zone-when-idle 120))
 
 
 ;;;; looks
@@ -116,6 +119,9 @@
 (use-package projectile
   :ensure t
   :config (projectile-mode))
+
+(setq projectile-enable-caching t)
+(setq projectile-indexing-method 'native)
 
 (general-define-key
  :prefix "C-c"
@@ -289,6 +295,8 @@
   :ensure t
   :config
   (add-hook 'haskell-mode #'intero-mode))
+
+(flycheck-add-next-checker 'intero '(warning . haskell-hlint))
 
 ;;;; yml
 (use-package yaml-mode
