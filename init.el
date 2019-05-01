@@ -68,11 +68,13 @@
 
 (use-package volatile-highlights
   :ensure t
+  :diminish volatile-highlights-mode
   :config
   (volatile-highlights-mode +1))
 
 (use-package rainbow-mode
   :ensure t
+  :diminish rainbow-mode
   :config
   (add-hook 'prog-mode-hook #'rainbow-mode))
 
@@ -91,6 +93,9 @@
 ;; set linenumbers by default
 (global-linum-mode)
 
+;; less clutter in mode-line
+(use-package diminish
+  :ensure t)
 
 ;;;; editing
 (use-package multiple-cursors
@@ -117,6 +122,7 @@
   :config (general-define-key "C-'" 'avy-goto-char-timer))
 
 (use-package projectile
+  :diminish projectile-mode
   :ensure t
   :config (projectile-mode))
 
@@ -171,6 +177,7 @@
 
 (use-package which-key
   :ensure t
+  :diminish which-key-mode
   :config (which-key-mode)
           (setq which-key-idle-delay 0.05))
 
@@ -180,6 +187,7 @@
 ;;;; autocompletion
 (use-package company
   :ensure t
+  :diminish company-mode
   :config
   (setq company-idle-delay 0.5)
   (setq company-show-numbers t)
@@ -214,6 +222,7 @@
 ;;;; syntax checking
 (use-package flycheck
   :ensure t
+  :diminish flycheck-mode
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode))
 
@@ -298,10 +307,38 @@
 
 (flycheck-add-next-checker 'intero '(warning . haskell-hlint))
 
+
+;;;; javascript
+(use-package js2-mode
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
+
+(use-package js2-refactor
+  :ensure t
+  :config
+  (add-hook 'js2-mode-hook #'js2-refactor-mode)
+  (js2r-add-keybindings-with-prefix "C-c C-r"))
+
+(use-package xref-js2
+  :ensure t
+  :config
+  (add-hook 'js2-mode-hook #'js2-refactor-mode))
+
+;; for html templates
+(use-package web-mode
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode)))
+
+
 ;;;; yml
 (use-package yaml-mode
   :ensure t
   :config (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
+
 
 ;;;; docs
 ;; org
@@ -312,7 +349,6 @@
 ;; A. like
 ;; B. this
 (setq org-list-allow-alphabetical t)
-
 (use-package org-bullets
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
