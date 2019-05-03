@@ -12,7 +12,7 @@
 (setq use-package-always-ensure t)
 
 (add-to-list 'package-archives
-'("melpa" . "https://melpa.org/packages/") t)
+             '("melpa" . "https://melpa.org/packages/"))
 
 
 ;;;; generic
@@ -260,17 +260,13 @@
 
 (defun my-clojure-mode-hook ()
   "Initialize clojure refactoring and code snippets."
-    (clj-refactor-mode 1)
-    (yas-minor-mode 1) ;;for adding require/use/import statements
-    (cljr-add-keybindings-with-prefix "C-c C-m")) ;; This choice of keybinding leaves cider-macroexpand-1 unbound
+  (yas-minor-mode 1) ;;for adding require/use/import statements
+  )
 
-(use-package clj-refactor
-  :ensure t
-  :init (add-hook 'clojure-mode-hook #'my-clojure-mode-hook))
 
 (global-set-key (kbd "C-c t") #'transpose-sexps)
 
-(global-set-key (kbd "TAB") #'company-indent-or-complete-common)
+;;(global-set-key (kbd "TAB") #'company-indent-or-complete-common)
 
 (use-package cider
   :ensure t
@@ -325,6 +321,12 @@
   :config
   (add-hook 'js2-mode-hook #'js2-refactor-mode))
 
+(use-package rjsx-mode
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("components\\/.*\\.js\\'" . rjsx-mode)))
+
+
 ;; for html templates
 (use-package web-mode
   :ensure t
@@ -365,5 +367,51 @@
 (autoload 'fennel-mode "~/.emacs.d/fennel-mode/fennel-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.fnl\\'" . fennel-mode))
 
+;;; godot
+
+(use-package gdscript-mode
+  :ensure t)
+
 (provide 'init)
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(blink-cursor-mode nil)
+ '(company-lua-interpreter (quote lua53))
+ '(custom-enabled-themes (quote (monokai)))
+ '(custom-safe-themes
+   (quote
+    ("bd7b7c5df1174796deefce5debc2d976b264585d51852c962362be83932873d9" "c3d4af771cbe0501d5a865656802788a9a0ff9cf10a7df704ec8b8ef69017c68" default)))
+ '(ido-vertical-mode t)
+ '(inhibit-startup-screen t)
+ '(org-agenda-files nil)
+ '(org-trello-current-prefix-keybinding "C-c o" nil (org-trello))
+ '(package-archives
+   (quote
+    (("org" . "https://orgmode.org/elpa/")
+     ("melpa" . "http://melpa.org/packages/")
+     ("marmalade" . "http://marmalade-repo.org/packages/")
+     ("gnu" . "http://elpa.gnu.org/packages/"))))
+ '(package-selected-packages
+   (quote
+    (gdscript-mode plantuml-mode yaml-mode zygospore org-trello hindent markdown-mode intero all-the-icons doom-themes haskell-mode perlcritic flycheck-haskell company-ghc company-ghci flycheck-joker rainbow-mode volatile-highlights undo-tree ## neotree ensime clj-refactor nov org-bullets flycheck-kotlin flycheck-clojure flycheck-lua flycheck company-lua company lua-mode smex ido-vertical-mode projectile flx-ido aggressive-indent aggressive-indent-mode cider magit paredit clojure-mode monokai-theme rainbow-delimiters which-key ivy avy general use-package)))
+ '(show-paren-mode t))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(fixed-pitch ((t (:family "Inconsolata" :slant normal :weight normal :height 1.0 :width normal))))
+ '(org-block ((t (:inherit fixed-pitch))))
+ '(org-document-info ((t (:foreground "dark orange"))))
+ '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
+ '(org-link ((t (:foreground "royal blue" :underline t))))
+ '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+ '(org-property-value ((t (:inherit fixed-pitch))) t)
+ '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+ '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
+ '(org-verbatim ((t (:inherit (shadow fixed-pitch)))))
+ '(variable-pitch ((t (:family "Source Sans Pro" :height 180 :weight light)))))
