@@ -24,12 +24,15 @@
 (add-to-list 'load-path "~/.emacs.d/better-defaults")
 (require 'better-defaults)
 
-;;version control
+;; disable minimizing frame
+(global-unset-key (kbd "C-z"))
+
+;;  version control
 (use-package magit
   :ensure t
   :bind ("C-c g" . magit-status))
 
-;;epub support
+;;  epub support
 (use-package nov
   :ensure t)
 
@@ -39,8 +42,7 @@
 ;; hit this to fix whitespace, nice to use use together with M-^
 (define-key global-map "\M-space" 'fixup-whitespace)
 
-;;removes trailing whitespace on save
-(define-key global-map "\C-ca" 'org-agenda)
+;; removes trailing whitespace on save
 (add-hook 'before-save-hook 'whitespace-cleanup)
 
 (use-package undo-tree
@@ -50,6 +52,10 @@
   (setq undo-tree-history-directory-alist
         `((".*" . ,temporary-file-directory)))
   (setq undo-tree-auto-save-history t))
+
+  (use-package zone
+    :ensure t
+    :config (zone-when-idle 120))
 
 
 ;;;; looks
@@ -62,20 +68,22 @@
 
 (use-package volatile-highlights
   :ensure t
+  :diminish volatile-highlights-mode
   :config
   (volatile-highlights-mode +1))
 
 (use-package rainbow-mode
   :ensure t
+  :diminish rainbow-mode
   :config
   (add-hook 'prog-mode-hook #'rainbow-mode))
 
-;;icons for neo-tree
+;; icons for neo-tree
 (use-package all-the-icons
-;;https://github.com/domtronn/all-the-icons.el#installing-fonts
-;;In order for the icons to work it is very important that you install the Resource Fonts included
-;;M-x all-the-icons-install-fonts
-;;Bear in mind, this will also run fc-cache -f -v on MacOS and Linux which can take some time to complete.
+;; https://github.com/domtronn/all-the-icons.el#installing-fonts
+;; In order for the icons to work it is very important that you install the Resource Fonts included
+;; M-x all-the-icons-install-fonts
+;; Bear in mind, this will also run fc-cache -f -v on MacOS and Linux which can take some time to complete.
   :ensure t)
 
 ;; mouse-wheel scrolling
@@ -85,6 +93,9 @@
 ;; set linenumbers by default
 (global-linum-mode)
 
+;; less clutter in mode-line
+(use-package diminish
+  :ensure t)
 
 ;;;; editing
 (use-package multiple-cursors
@@ -111,8 +122,12 @@
   :config (general-define-key "C-'" 'avy-goto-char-timer))
 
 (use-package projectile
+  :diminish projectile-mode
   :ensure t
   :config (projectile-mode))
+
+(setq projectile-enable-caching t)
+(setq projectile-indexing-method 'native)
 
 (general-define-key
  :prefix "C-c"
@@ -162,6 +177,7 @@
 
 (use-package which-key
   :ensure t
+  :diminish which-key-mode
   :config (which-key-mode)
           (setq which-key-idle-delay 0.05))
 
@@ -171,6 +187,7 @@
 ;;;; autocompletion
 (use-package company
   :ensure t
+  :diminish company-mode
   :config
   (setq company-idle-delay 0.5)
   (setq company-show-numbers t)
@@ -205,6 +222,7 @@
 ;;;; syntax checking
 (use-package flycheck
   :ensure t
+  :diminish flycheck-mode
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode))
 
@@ -287,6 +305,33 @@
   :config
   (add-hook 'haskell-mode #'intero-mode))
 
+(flycheck-add-next-checker 'intero '(warning . haskell-hlint))
+
+
+;;;; javascript
+(use-package js2-mode
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
+
+(use-package js2-refactor
+  :ensure t
+  :config
+  (add-hook 'js2-mode-hook #'js2-refactor-mode)
+  (js2r-add-keybindings-with-prefix "C-c C-r"))
+
+(use-package xref-js2
+  :ensure t
+  :config
+  (add-hook 'js2-mode-hook #'js2-refactor-mode))
+
+;; for html templates
+(use-package web-mode
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode)))
 
 
 ;;;; yml
@@ -295,22 +340,18 @@
   :config (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
 
 
-
 ;;;; docs
 ;; org
 (define-key global-map "\C-ca" 'org-agenda)
 (setq org-hide-emphasis-markers t)
 
-;;letters as ordered list bullets
-;; A. handy
-;; B. things
+;; letters as ordered list bullets
+;; A. like
+;; B. this
 (setq org-list-allow-alphabetical t)
-
 (use-package org-bullets
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-
-
 
 ;; emacs-reveal for presentations
 ;;(load "~/.emacs.d/emacs-reveal/reveal-config.el")
