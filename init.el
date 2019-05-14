@@ -12,7 +12,7 @@
 (setq use-package-always-ensure t)
 
 (add-to-list 'package-archives
-'("melpa" . "https://melpa.org/packages/") t)
+             '("melpa" . "https://melpa.org/packages/") t)
 
 
 ;;;; generic
@@ -26,17 +26,16 @@
 
 ;; disable minimizing frame
 (global-unset-key (kbd "C-z"))
+;; disable page-up and page-down
+(global-unset-key (kbd "<prior>"))
+(global-unset-key (kbd "<next>"))
+
 
 ;;  version control
 (use-package magit
   :ensure t
   :bind ("C-c g" . magit-status))
 
-;;  epub support
-(use-package nov
-  :ensure t)
-
-(add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
 
 ;; https://askubuntu.com/questions/30224/how-to-disable-the-alt-hotkey-behavior-on-gnome-terminal
 ;; hit this to fix whitespace, nice to use use together with M-^
@@ -53,9 +52,9 @@
         `((".*" . ,temporary-file-directory)))
   (setq undo-tree-auto-save-history t))
 
-  (use-package zone
-    :ensure t
-    :config (zone-when-idle 120))
+(use-package zone
+  :ensure t
+  :config (zone-when-idle 120))
 
 
 ;;;; looks
@@ -80,10 +79,10 @@
 
 ;; icons for neo-tree
 (use-package all-the-icons
-;; https://github.com/domtronn/all-the-icons.el#installing-fonts
-;; In order for the icons to work it is very important that you install the Resource Fonts included
-;; M-x all-the-icons-install-fonts
-;; Bear in mind, this will also run fc-cache -f -v on MacOS and Linux which can take some time to complete.
+  ;; https://github.com/domtronn/all-the-icons.el#installing-fonts
+  ;; In order for the icons to work it is very important that you install the Resource Fonts included
+  ;; M-x all-the-icons-install-fonts
+  ;; Bear in mind, this will also run fc-cache -f -v on MacOS and Linux which can take some time to complete.
   :ensure t)
 
 ;; mouse-wheel scrolling
@@ -101,12 +100,19 @@
 (use-package multiple-cursors
   :ensure t
   :config  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-           (global-set-key (kbd "C->") 'mc/mark-next-like-this)
-           (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-           (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
+  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
 
 
 ;;;; navigation
+
+(use-package smooth-scrolling
+  :ensure t
+  :config (smooth-scrolling-mode))
+
+
+
 (use-package zygospore
   :ensure t
   :config (global-set-key (kbd "C-x 1") 'zygospore-toggle-delete-other-windows))
@@ -114,8 +120,8 @@
 (use-package neotree
   :ensure t
   :config (global-set-key [f8] 'neotree-toggle)
-          (setq neo-smart-open t)
-          (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
+  (setq neo-smart-open t)
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
 (use-package general
   :ensure t
@@ -151,8 +157,8 @@
 (general-define-key
  "M-n" 'switch-to-next-buffer)
 
-;;(use-package expand-region
-;;  :bind ("M-x" . smex))
+(use-package expand-region
+  :bind ("C-=" . er/expand-region))
 
 (use-package flx-ido
   :requires ido
@@ -179,7 +185,7 @@
   :ensure t
   :diminish which-key-mode
   :config (which-key-mode)
-          (setq which-key-idle-delay 0.05))
+  (setq which-key-idle-delay 0.05))
 
 (windmove-default-keybindings)
 
@@ -218,7 +224,6 @@
                 company-minimum-prefix-length 2))
 
 
-
 ;;;; syntax checking
 (use-package flycheck
   :ensure t
@@ -229,9 +234,6 @@
 (use-package flycheck-joker
   :ensure t)
 
-(use-package flycheck-kotlin
-  :ensure t)
-
 (use-package flycheck-haskell
   :ensure t)
 
@@ -239,7 +241,6 @@
   :ensure t
   :config (setq flycheck-perlcritic-severity 1
                 flycheck-perlcriticrc "~/.perlcritic.rc"))
-
 
 ;;;; clojure
 (use-package rainbow-delimiters
@@ -249,20 +250,21 @@
 (use-package clojure-mode
   :ensure t
   :config
-  (add-hook 'clojure-mode-hook #'paredit-mode)
-  (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode))
+  (add-hook 'clojure-mode-hook 'paredit-mode)
+  (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode))
 
 (use-package paredit
   :ensure t
   :config
-  (add-hook 'clojure-mode-hook #'enable-paredit-mode)
-  (add-hook 'clojure-repl-mode-hook #'enable-paredit-mode))
+  (add-hook 'clojure-mode-hook 'enable-paredit-mode)
+  (add-hook 'clojure-repl-mode-hook 'enable-paredit-mode)
+  (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode))
 
 (defun my-clojure-mode-hook ()
   "Initialize clojure refactoring and code snippets."
-    (clj-refactor-mode 1)
-    (yas-minor-mode 1) ;;for adding require/use/import statements
-    (cljr-add-keybindings-with-prefix "C-c C-m")) ;; This choice of keybinding leaves cider-macroexpand-1 unbound
+  (clj-refactor-mode 1)
+  (yas-minor-mode 1) ;;for adding require/use/import statements
+  (cljr-add-keybindings-with-prefix "C-c C-m")) ;; This choice of keybinding leaves cider-macroexpand-1 unbound
 
 (use-package clj-refactor
   :ensure t
@@ -298,12 +300,14 @@
 (use-package haskell-mode
   :ensure t
   :config
+  (add-to-list 'auto-mode-alist '("\\.hs\\'" . haskell-mode))
   (add-hook 'haskell-mode #'subword-mode))
 
 (use-package intero
   :ensure t
   :config
-  (add-hook 'haskell-mode #'intero-mode))
+  (add-hook 'haskell-mode #'intero-mode)
+  (intero-global-mode 1))
 
 (flycheck-add-next-checker 'intero '(warning . haskell-hlint))
 
@@ -312,7 +316,8 @@
 (use-package js2-mode
   :ensure t
   :config
-  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+  (setq js2-mode-show-strict-warnings nil))
 
 (use-package js2-refactor
   :ensure t
@@ -324,6 +329,11 @@
   :ensure t
   :config
   (add-hook 'js2-mode-hook #'js2-refactor-mode))
+
+(use-package rjsx-mode
+  :ensure t
+  :config (add-to-list 'auto-mode-alist '("components\\/.*\\.js\\'" . rjsx-mode)))
+
 
 ;; for html templates
 (use-package web-mode
@@ -341,10 +351,6 @@
 
 
 ;;;; docs
-;; org
-(define-key global-map "\C-ca" 'org-agenda)
-(setq org-hide-emphasis-markers t)
-
 ;; letters as ordered list bullets
 ;; A. like
 ;; B. this
@@ -356,14 +362,26 @@
 ;; emacs-reveal for presentations
 (load "~/.emacs.d/emacs-reveal/reveal-config.el")
 
-;; uml
-(use-package plantuml-mode
-  :ensure t
-  :config (add-to-list 'auto-mode-alist '("\\.puml\\'" . plantuml-mode)))
-
-;;;; fennel
-(autoload 'fennel-mode "~/.emacs.d/fennel-mode/fennel-mode" nil t)
-(add-to-list 'auto-mode-alist '("\\.fnl\\'" . fennel-mode))
-
 (provide 'init)
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("a3fa4abaf08cc169b61dea8f6df1bbe4123ec1d2afeb01c17e11fdc31fc66379" "93a0885d5f46d2aeac12bf6be1754faa7d5e28b27926b8aa812840fe7d0b7983" "10461a3c8ca61c52dfbbdedd974319b7f7fd720b091996481c8fb1dded6c6116" "bd7b7c5df1174796deefce5debc2d976b264585d51852c962362be83932873d9" "4697a2d4afca3f5ed4fdf5f715e36a6cac5c6154e105f3596b44a4874ae52c45" "7e78a1030293619094ea6ae80a7579a562068087080e01c2b8b503b27900165c" "6b289bab28a7e511f9c54496be647dc60f5bd8f9917c9495978762b99d8c96a0" "8aca557e9a17174d8f847fb02870cb2bb67f3b6e808e46c0e54a44e3e18e1020" "75d3dde259ce79660bac8e9e237b55674b910b470f313cdf4b019230d01a982a" "1c082c9b84449e54af757bcae23617d11f563fc9f33a832a8a2813c4d7dfb652" "6d589ac0e52375d311afaa745205abb6ccb3b21f6ba037104d71111e7e76a3fc" "100e7c5956d7bb3fd0eebff57fde6de8f3b9fafa056a2519f169f85199cc1c96" default)))
+ '(jdee-db-active-breakpoint-face-colors (cons "#FFFBF0" "#268bd2"))
+ '(jdee-db-requested-breakpoint-face-colors (cons "#FFFBF0" "#859900"))
+ '(jdee-db-spec-breakpoint-face-colors (cons "#FFFBF0" "#E1DBCD"))
+ '(org-agenda-files (quote ("~/code/FH/webqube/api-mojo/notes.org")))
+ '(package-selected-packages
+   (quote
+    (rjsx-mode expand-region smooth-scrolling xbm-life threes xref-js2 js2-refactor web-mode diminish intero zygospore which-key volatile-highlights use-package undo-tree smex rainbow-mode rainbow-delimiters projectile plantuml-mode perlcritic org-ref org-jira org-bullets org nov neotree monokai-theme markdown-mode magit ido-vertical-mode highlight-indentation ghub general flycheck-kotlin flycheck-joker flycheck-haskell flycheck-clojure flx-ido ensime docker-compose-mode docker company-lua company-ghci company-ghc clj-refactor avy aggressive-indent))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
