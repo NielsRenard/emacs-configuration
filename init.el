@@ -155,13 +155,13 @@
 
 (general-define-key
  :prefix "C-c"
- "."	'cider-find-dwim)
+ "."	'helm-projectile-find-file-dwim)
 
-(general-define-key
- "M-p" 'switch-to-prev-buffer)
+;; (general-define-key
+;;  "M-p" 'switch-to-prev-buffer)
 
-(general-define-key
- "M-n" 'switch-to-next-buffer)
+;; (general-define-key
+;;  "M-n" 'switch-to-next-buffer)
 
 (use-package expand-region
   :bind ("C-=" . er/expand-region))
@@ -304,7 +304,7 @@
   :ensure t
   :config
   (add-to-list 'auto-mode-alist '("\\.hs\\'" . haskell-mode))
-  (add-hook 'haskell-mode #'subword-mode))
+  (add-hook 'haskell-mode-hook 'subword-mode))
 
 (use-package intero
   :ensure t
