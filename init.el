@@ -140,6 +140,7 @@
 
 (setq projectile-enable-caching t)
 (setq projectile-indexing-method 'native)
+(setq projectile-globally-ignored-directories '("node_modules"))
 
 (general-define-key
  :prefix "C-c"
