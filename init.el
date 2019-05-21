@@ -136,7 +136,8 @@
   :ensure t
   :bind
   ("C-c f" . helm-projectile)
-  ("C-c s" . helm-projectile-grep))
+  ("C-c s" . helm-projectile-grep)
+  ("C-c i" . helm-imenu))
 
 (setq projectile-enable-caching t)
 (setq projectile-indexing-method 'native)
