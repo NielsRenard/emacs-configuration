@@ -145,7 +145,7 @@
 
 (general-define-key
  :prefix "C-c"
- "p"	'projectile-switch-project)
+ "p"	'helm-projectile-switch-project)
 
 ;; (general-define-key
 ;;  :prefix "C-c"
