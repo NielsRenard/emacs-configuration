@@ -137,15 +137,12 @@
   :bind
   ("C-c f" . helm-projectile)
   ("C-c s" . helm-projectile-grep)
-  ("C-c i" . helm-imenu))
+  ("C-c i" . helm-imenu)
+  ("C-c p" . helm-projectile-switch-project))
 
 (setq projectile-enable-caching t)
 (setq projectile-indexing-method 'native)
 (setq projectile-globally-ignored-directories '("node_modules"))
-
-(general-define-key
- :prefix "C-c"
- "p"	'helm-projectile-switch-project)
 
 ;; (general-define-key
 ;;  :prefix "C-c"
