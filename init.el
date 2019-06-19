@@ -62,10 +62,17 @@
 ;;  :ensure t
 ;;  :config (setq inhibit-startup-screen t))
 
+
 (use-package doom-themes
   :ensure t
-  :config (load-theme `doom-molokai)
-  (setq inhibit-startup-screen t))
+  :config (setq inhibit-startup-screen t)
+  (set-face-attribute 'default nil
+                    :family "Hasklig"
+                    :height 150
+                    :weight 'normal
+                    :width 'normal))
+
+(load-theme `doom-molokai t)
 
 (use-package volatile-highlights
   :ensure t
@@ -139,15 +146,12 @@
   :bind
   ("C-c f" . helm-projectile)
   ("C-c s" . helm-projectile-grep)
-  ("C-c i" . helm-imenu))
+  ("C-c i" . helm-imenu)
+  ("C-c p" . helm-projectile-switch-project))
 
 (setq projectile-enable-caching t)
 (setq projectile-indexing-method 'native)
 (setq projectile-globally-ignored-directories '("node_modules"))
-
-(general-define-key
- :prefix "C-c"
- "p"	'helm-projectile-switch-project)
 
 ;; (general-define-key
 ;;  :prefix "C-c"
@@ -310,6 +314,11 @@
   (add-to-list 'auto-mode-alist '("\\.hs\\'" . haskell-mode))
   (add-hook 'haskell-mode-hook 'subword-mode))
 
+(use-package hasklig-mode
+  :ensure t
+  :config
+  :hook (haskell-mode))
+
 (use-package intero
   :ensure t
   :config
@@ -398,7 +407,7 @@
  '(org-agenda-files (quote ("~/code/FH/webqube/api-mojo/notes.org")))
  '(package-selected-packages
    (quote
-    (groovy-mode helm-projectile gdscript-mode rjsx-mode expand-region smooth-scrolling xbm-life threes xref-js2 js2-refactor web-mode diminish intero zygospore which-key volatile-highlights use-package undo-tree smex rainbow-mode rainbow-delimiters projectile plantuml-mode perlcritic org-ref org-jira org-bullets org nov neotree monokai-theme markdown-mode magit ido-vertical-mode highlight-indentation ghub general flycheck-kotlin flycheck-joker flycheck-haskell flycheck-clojure flx-ido ensime docker-compose-mode docker company-lua company-ghci company-ghc clj-refactor avy aggressive-indent))))
+    (hasklig-mode groovy-mode helm-projectile gdscript-mode rjsx-mode expand-region smooth-scrolling xbm-life threes xref-js2 js2-refactor web-mode diminish intero zygospore which-key volatile-highlights use-package undo-tree smex rainbow-mode rainbow-delimiters projectile plantuml-mode perlcritic org-ref org-jira org-bullets org nov neotree monokai-theme markdown-mode magit ido-vertical-mode highlight-indentation ghub general flycheck-kotlin flycheck-joker flycheck-haskell flycheck-clojure flx-ido ensime docker-compose-mode docker company-lua company-ghci company-ghc clj-refactor avy aggressive-indent))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
