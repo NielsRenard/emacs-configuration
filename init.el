@@ -42,7 +42,7 @@
 (define-key global-map "\M-space" 'fixup-whitespace)
 
 ;; removes trailing whitespace on save
-;;(add-hook 'before-save-hook 'whitespace-cleanup)
+(add-hook 'before-save-hook 'whitespace-cleanup)
 
 (use-package undo-tree
   :ensure t
