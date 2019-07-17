@@ -243,7 +243,10 @@
   :ensure t
   :diminish flycheck-mode
   :config
-  (add-hook 'after-init-hook #'global-flycheck-mode))
+  (add-hook 'after-init-hook #'global-flycheck-mode)
+  :bind
+  ("C-c n" . flycheck-next-error)
+)
 
 (use-package flycheck-joker
   :ensure t)
