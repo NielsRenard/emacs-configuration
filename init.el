@@ -145,7 +145,7 @@
   :ensure t
   :bind
   ("C-c f" . helm-projectile)
-  ("C-c s" . helm-projectile-grep)
+  ("C-c s" . helm-projectile-ag)
   ("C-c i" . helm-imenu)
   ("C-c p" . helm-projectile-switch-project))
 
