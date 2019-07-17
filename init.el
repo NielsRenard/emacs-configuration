@@ -309,6 +309,10 @@
 (add-to-list 'auto-mode-alist '("\\.pm\\'" . cperl-mode))
 (add-to-list 'auto-mode-alist '("\\.pl\\'" . cperl-mode))
 
+;;;; php
+(use-package php-mode
+  :ensure t)
+
 
 ;;;; haskell
 (use-package haskell-mode
