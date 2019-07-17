@@ -72,7 +72,7 @@
                     :weight 'normal
                     :width 'normal))
 
-(load-theme `doom-molokai t)
+(load-theme `doom-solarized-light t)
 
 (use-package volatile-highlights
   :ensure t
