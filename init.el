@@ -72,7 +72,7 @@
                     :weight 'normal
                     :width 'normal))
 
-(load-theme `doom-molokai t)
+(load-theme `doom-solarized-light t)
 
 (use-package volatile-highlights
   :ensure t
@@ -145,7 +145,7 @@
   :ensure t
   :bind
   ("C-c f" . helm-projectile)
-  ("C-c s" . helm-projectile-grep)
+  ("C-c s" . helm-projectile-ag)
   ("C-c i" . helm-imenu)
   ("C-c p" . helm-projectile-switch-project))
 
@@ -243,7 +243,10 @@
   :ensure t
   :diminish flycheck-mode
   :config
-  (add-hook 'after-init-hook #'global-flycheck-mode))
+  (add-hook 'after-init-hook #'global-flycheck-mode)
+  :bind
+  ("C-c n" . flycheck-next-error)
+)
 
 (use-package flycheck-joker
   :ensure t)
@@ -305,6 +308,10 @@
 (add-to-list 'auto-mode-alist '("\\.t\\'" . cperl-mode))
 (add-to-list 'auto-mode-alist '("\\.pm\\'" . cperl-mode))
 (add-to-list 'auto-mode-alist '("\\.pl\\'" . cperl-mode))
+
+;;;; php
+(use-package php-mode
+  :ensure t)
 
 
 ;;;; haskell
