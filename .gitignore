@@ -12,6 +12,10 @@ projectile-bookmarks.eld
 recentf
 request/
 session.*
+.mc-lists.el
+smex-items
+transient/
+
 
 # Created by https://www.gitignore.io/api/emacs
 # Edit at https://www.gitignore.io/?templates=emacs
