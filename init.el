@@ -72,7 +72,9 @@
                     :weight 'normal
                     :width 'normal))
 
-(load-theme `doom-solarized-light t)
+(if (display-graphic-p)
+    (load-theme 'doom-solarized-light t)
+  (load-theme 'wheatgrass))
 
 (use-package volatile-highlights
   :ensure t
