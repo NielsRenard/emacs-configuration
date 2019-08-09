@@ -120,7 +120,10 @@
   :ensure t
   :config (smooth-scrolling-mode))
 
-
+;; swap easily between vertical/horizontal arrangement
+(use-package transpose-frame
+  :ensure t
+  :config (global-set-key (kbd "C-|") 'transpose-frame))
 
 (use-package zygospore
   :ensure t
