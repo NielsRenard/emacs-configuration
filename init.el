@@ -128,7 +128,10 @@
   scroll-conservatively 10000
   scroll-preserve-screen-position 1))
 
-
+;; swap easily between vertical/horizontal arrangement
+(use-package transpose-frame
+  :ensure t
+  :config (global-set-key (kbd "C-|") 'transpose-frame))
 
 (use-package zygospore
   :ensure t
@@ -216,6 +219,7 @@
 (use-package company
   :ensure t
   :diminish company-mode
+  :bind ("TAB" . company-indent-or-complete-common)
   :config
   (setq company-idle-delay 0.125)
   (setq company-show-numbers t)
@@ -225,7 +229,8 @@
   ;; invert the navigation direction if the the completion popup-isearch-match
   ;; is displayed on top (happens near the bottom of windows)
   (setq company-tooltip-flip-when-above t)
-  (global-company-mode))
+  (global-company-mode)
+  )
 
 (use-package company-lua
   :ensure t
