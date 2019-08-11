@@ -120,7 +120,13 @@
 
 (use-package smooth-scrolling
   :ensure t
-  :config (smooth-scrolling-mode))
+  :config
+  (smooth-scrolling-mode)
+  (setq redisplay-dont-pause t
+  scroll-margin 1
+  scroll-step 1
+  scroll-conservatively 10000
+  scroll-preserve-screen-position 1))
 
 
 
@@ -211,7 +217,7 @@
   :ensure t
   :diminish company-mode
   :config
-  (setq company-idle-delay 0.5)
+  (setq company-idle-delay 0.125)
   (setq company-show-numbers t)
   (setq company-tooltip-limit 10)
   (setq company-minimum-prefix-length 2)
@@ -388,6 +394,10 @@
 (use-package org-bullets
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
+;; graphviz
+(use-package graphviz-dot-mode
+  :ensure t)
 
 ;; emacs-reveal for presentations
 ;;(load "~/.emacs.d/emacs-reveal/reveal-config.el")
