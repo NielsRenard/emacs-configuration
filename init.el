@@ -213,6 +213,9 @@
   :config (which-key-mode)
   (setq which-key-idle-delay 0.05))
 
+;; hit insert to cycle to next buffer
+(global-set-key (kbd "<insert>") 'other-window)
+;; move around with shift+arrowkeys
 (windmove-default-keybindings)
 
 
