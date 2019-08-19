@@ -261,6 +261,7 @@
   ("C-c n" . flycheck-next-error)
 )
 
+;; clojure flycheck
 (use-package flycheck-joker
   :ensure t)
 
