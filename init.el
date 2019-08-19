@@ -145,7 +145,8 @@
 
 (use-package general
   :ensure t
-  :config (general-define-key "C-'" 'avy-goto-char-timer))
+  :config (general-define-key "C-'" 'avy-goto-char-timer)
+          (general-define-key "C-M-'" 'avy-goto-line))
 
 (use-package projectile
   :diminish projectile-mode
@@ -212,6 +213,9 @@
   :config (which-key-mode)
   (setq which-key-idle-delay 0.05))
 
+;; hit insert to cycle to next buffer
+(global-set-key (kbd "<insert>") 'other-window)
+;; move around with shift+arrowkeys
 (windmove-default-keybindings)
 
 
