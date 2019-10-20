@@ -66,11 +66,7 @@
 (use-package doom-themes
   :ensure t
   :config (setq inhibit-startup-screen t)
-  (set-face-attribute 'default nil
-                    :family "Hasklig"
-                    :height 150
-                    :weight 'normal
-                    :width 'normal))
+  (set-default-font "-ADBO-Hasklig-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1"))
 
 (if (display-graphic-p)
     (load-theme 'doom-solarized-light t)
@@ -352,29 +348,46 @@
 
 (flycheck-add-next-checker 'intero '(warning . haskell-hlint))
 
+;;;; java
+(use-package lsp-mode :ensure t)
+(use-package company-lsp :ensure t)
+(use-package yasnippet :ensure t)
+(use-package hydra :ensure t)
+(use-package lsp-ui :ensure t)
+(use-package lsp-ui :ensure t)
+(use-package lsp-java :ensure t :after lsp
+  :config (add-hook 'java-mode-hook 'lsp))
+
+(use-package dap-mode
+  :ensure t :after lsp-mode
+  :config
+  (dap-mode t)
+  (dap-ui-mode t))
 
 ;;;; javascript
-;(use-package js2-mode
-;  :ensure t
-;  :config
-;  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-;  (setq js2-mode-show-strict-warnings nil))
-;
-;(use-package js2-refactor
-;  :ensure t
-;  :config
-;  (add-hook 'js2-mode-hook #'js2-refactor-mode)
-;  (js2r-add-keybindings-with-prefix "C-c C-r"))
-;
-;(use-package xref-js2
-;  :ensure t
-;  :config
-;  (add-hook 'js2-mode-hook #'js2-refactor-mode))
-;
-(use-package rjsx-mode
+(use-package js2-mode
   :ensure t
   :config
-  (add-to-list 'auto-mode-alist '("*.js" . rjsx-mode)))
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+  (add-to-list 'flycheck-checkers 'javascript-eslint))
+
+;;(use-package js2-refactor
+;;  :ensure t
+;;  :config
+;;  (add-hook 'js2-mode-hook #'js2-refactor-mode)
+;;  (js2r-add-keybindings-with-prefix "C-c C-r"))
+
+;;(use-package xref-js2
+;;  :ensure t
+;;  :config
+;;  (add-hook 'js2-mode-hook #'js2-refactor-mode))
+;;
+;;
+;;(use-package rjsx-mode
+;;  :ensure t
+;;  :config
+;;  (add-to-list 'auto-mode-alist '("*.js" . rjsx-mode)))
+
 
 ;;;; groovy
 (use-package groovy-mode
