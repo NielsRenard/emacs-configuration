@@ -356,10 +356,12 @@
 (use-package lsp-ui :ensure t)
 (use-package lsp-ui :ensure t)
 (use-package lsp-java :ensure t :after lsp
-  :config (add-hook 'java-mode-hook 'lsp))
+  :config (add-hook 'java-mode-hook 'lsp)
+  (require 'dap-java))
 
 (use-package dap-mode
   :ensure t :after lsp-mode
+  :requires 'dap-java
   :config
   (dap-mode t)
   (dap-ui-mode t))
