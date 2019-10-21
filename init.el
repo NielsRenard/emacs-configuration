@@ -424,6 +424,15 @@
 (use-package graphviz-dot-mode
   :ensure t)
 
+;; tex
+
+(use-package tex
+  ;; apt install texlive-latex-extra
+  :defer t
+  :ensure auctex
+  :config
+  (setq TeX-auto-save t))
+
 ;; emacs-reveal for presentations
 ;;(load "~/.emacs.d/emacs-reveal/reveal-config.el")
 
