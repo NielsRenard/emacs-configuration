@@ -21,6 +21,8 @@
 ;; to improve performance
 (setq gc-cons-threshold 20000000)
 
+;;"A defined abbrev is a word which expands
+(setq-default abbrev-mode t)
 (add-to-list 'load-path "~/.emacs.d/better-defaults")
 (require 'better-defaults)
 
@@ -386,7 +388,7 @@
 ;;  :ensure t
 ;;  :config
 ;;  (add-to-list 'auto-mode-alist '("*.js" . rjsx-mode)))
-
+;
 ;;;; purescript
 (use-package purescript-mode
              :commands purescript-mode
