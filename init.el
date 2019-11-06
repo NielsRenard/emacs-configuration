@@ -387,6 +387,34 @@
 ;;  :config
 ;;  (add-to-list 'auto-mode-alist '("*.js" . rjsx-mode)))
 
+;;;; purescript
+(use-package purescript-mode
+             :commands purescript-mode
+             :mode (("\\.purs$" . purescript-mode))
+             :config
+             (add-hook 'purescript-mode-hook 'turn-on-purescript-indentation))
+
+(use-package psc-ide
+  :ensure t)
+
+(add-hook 'purescript-mode-hook
+          (lambda ()
+            (psc-ide-mode)
+            (company-mode)
+            (flycheck-mode)
+            (turn-on-purescript-indentation)
+            (customize-set-variable 'psc-ide-add-import-on-completion t)))
+
+;;(use-package psc-ide
+;;             :ensure nil
+;;             :load-path "site-lisp/psc-ide-emacs"
+;;             :init
+;;             ;; psc-ide
+;;             (setq psc-ide-client-executable "~/.psvm/current/bin/psc-ide-client")
+;;             (setq psc-ide-server-executable "~/.psvm/current/bin/psc-ide-server")
+;;             (setq psc-ide-rebuild-on-save t)
+;;             :config
+;;               (add-hook 'purescript-mode-hook 'psc-ide-mode))
 
 ;;;; groovy
 (use-package groovy-mode
