@@ -41,9 +41,6 @@
 ;; hit this to fix whitespace, nice to use use together with M-^
 (define-key global-map "\M-space" 'fixup-whitespace)
 
-;; removes trailing whitespace on save
-(add-hook 'before-save-hook 'whitespace-cleanup)
-
 (use-package undo-tree
   :ensure t
   :config
