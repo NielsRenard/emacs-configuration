@@ -113,6 +113,8 @@
 
 ;;;; navigation
 
+(which-function-mode t)
+
 (use-package smooth-scrolling
   :ensure t
   :config
