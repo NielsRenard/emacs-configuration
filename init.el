@@ -2,6 +2,9 @@
 ;;; Commentary:
 (package-initialize)
 
+;; Melpa
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
 ;;; Code:
 ;; Bootstrap 'use-package'
 (unless (package-installed-p 'use-package)
@@ -11,8 +14,7 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/") t)
+
 
 
 ;;;; generic
