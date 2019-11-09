@@ -255,9 +255,15 @@
 
 
 ;;;; syntax checking
+
+;; Nope, I want my copies in the system temp dir.
+(setq flymake-run-in-place nil)
+;; This lets me say where my temp dir is.
+(setq temporary-file-directory "~/.emacs.d/tmp/")
+
 (use-package flycheck
   :ensure t
-  :diminish flycheck-mode
+;;  :diminish flycheck-mode
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode)
   :bind
@@ -353,7 +359,9 @@
 
 ;;;; lsp
 (use-package lsp-mode
-  :ensure t)
+  :ensure t
+  :config
+  (setq lsp-prefer-flymake nil))
 (use-package company-lsp :ensure t)
 (use-package yasnippet :ensure t)
 (use-package hydra :ensure t)
