@@ -14,9 +14,6 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-
-
-
 ;;;; generic
 
 ;; starts garbage-collection after 20 megabytes
@@ -25,8 +22,28 @@
 
 ;;"A defined abbrev is a word which expands
 (setq-default abbrev-mode t)
-(add-to-list 'load-path "~/.emacs.d/better-defaults")
-(require 'better-defaults)
+;;(add-to-list 'load-path "~/.emacs.d/better-defaults")
+;;(require 'better-defaults)
+;; inline better-default fns for now
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(global-set-key (kbd "M-z") 'zap-up-to-char)
+(global-set-key (kbd "C-s") 'isearch-forward-regexp)
+(global-set-key (kbd "C-r") 'isearch-backward-regexp)
+(global-set-key (kbd "C-M-s") 'isearch-forward)
+(global-set-key (kbd "C-M-r") 'isearch-backward)
+(show-paren-mode 1)
+(setq save-interprogram-paste-before-kill t
+        apropos-do-all t
+        mouse-yank-at-point t
+        require-final-newline t
+        load-prefer-newer t
+        ediff-window-setup-function 'ediff-setup-windows-plain
+        save-place-file (concat user-emacs-directory "places")
+        backup-directory-alist `(("." . ,(concat user-emacs-directory
+                                                 "backups"))))
+
 
 ;; disable minimizing frame
 (global-unset-key (kbd "C-z"))
@@ -259,28 +276,18 @@
 ;; Nope, I want my copies in the system temp dir.
 (setq flymake-run-in-place nil)
 ;; This lets me say where my temp dir is.
-(setq temporary-file-directory "~/.emacs.d/tmp/")
+(setq temporary-file-directory "~/.emacs.d/tmp")
+
+(add-to-list 'load-path "~/.emacs.d/")
+(require 'flycheck-inline)
 
 (use-package flycheck
   :ensure t
-;;  :diminish flycheck-mode
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode)
+  (add-hook 'flycheck-mode-hook #'flycheck-inline-mode)
   :bind
-  ("C-c n" . flycheck-next-error)
-)
-
-;; clojure flycheck
-(use-package flycheck-joker
-  :ensure t)
-
-(use-package flycheck-haskell
-  :ensure t)
-
-;;(use-package perlcritic
-;;  :ensure t
-;;  :config (setq flycheck-perlcritic-severity 1
-;;                flycheck-perlcriticrc "~/.perlcritic.rc"))
+  ("C-c n" . flycheck-next-error))
 
 ;;;; clojure
 (use-package rainbow-delimiters
@@ -359,56 +366,48 @@
 
 ;;;; lsp
 (use-package lsp-mode
-  :ensure t
-  :config
-  (setq lsp-prefer-flymake nil))
-(use-package company-lsp :ensure t)
+  :commands lsp
+  :config  (setq lsp-prefer-flymake nil))
+
+(use-package company-lsp :commands company-lsp)
+(use-package helm-lsp :commands helm-lsp-workspace-symbol)
 (use-package yasnippet :ensure t)
-(use-package hydra :ensure t)
-(use-package lsp-ui ;; from https://ladicle.com/post/config/
-  :ensure t
-  :custom
-  (lsp-ui-doc-enable nil)
-  (lsp-ui-doc-position 'at-point) ;; top, bottom, or at-point
-  (lsp-ui-sideline-code-actions-prefix "👻")
-  (lsp-ui-doc-use-webkit t)
-  (lsp-ui-sideline-ignore-duplicate t)
-  (lsp-ui-sideline-show-symbol t)
-  (lsp-ui-sideline-show-hover t)
-  (lsp-ui-sideline-show-diagnostics nil)
-  ;; to put a different side-actions colour:
-  ;;(custom-set-faces '(lsp-ui-sideline-code-action ((t (:foreground "#268bd2")))))
-  (lsp-ui-sideline-show-code-actions t)
-  ;; lsp-ui-imenu
-  (lsp-ui-imenu-enable t)
-  (lsp-ui-imenu-kind-position 'top)
-  ;; lsp-ui-peek
-  (lsp-ui-peek-enable t)
-  (lsp-ui-peek-peek-height 20)
-  (lsp-ui-peek-list-width 50)
-  (lsp-ui-peek-fontify 'on-demand) ;; never, on-demand, or always
-  :preface
-  (defun ladicle/toggle-lsp-ui-doc ()
-    (interactive)
-    (if lsp-ui-doc-mode
-      (progn
-        (lsp-ui-doc-mode -1)
-        (lsp-ui-doc--hide-frame))
+(use-package lsp-ui
+   :config (lsp-ui-flycheck-enable t)
+   :custom
+   (lsp-ui-doc-enable nil)
+   (lsp-ui-sideline-enable nil)
+   (lsp-ui-sideline-ignore-duplicate t)
+   (lsp-ui-sideline-show-symbol t)
+   (lsp-ui-sideline-show-hover t)
+   (lsp-ui-sideline-show-diagnostics nil)
+   ;; to put a different side-actions colour:
+   ;;(custom-set-faces '(lsp-ui-sideline-code-action ((t (:foreground "#268bd2")))))
+;   (lsp-ui-sideline-show-code-actions t)
+   (lsp-ui-imenu-enable t)
+   (lsp-ui-imenu-kind-position 'top)
+   :preface
+   (defun ladicle/toggle-lsp-ui-doc ()
+     (interactive)
+     (if lsp-ui-doc-mode
+         (progn
+           (lsp-ui-doc-mode -1)
+           (lsp-ui-doc--hide-frame))
        (lsp-ui-doc-mode 1)))
    :bind
-  (:map lsp-mode-map
-  ("C-c C-r" . lsp-ui-peek-find-references)
-  ("C-c C-j" . lsp-ui-peek-find-definitions)
-  ("C-c C-m"   . lsp-ui-imenu)
-  ("C-c C-s"   . lsp-ui-sideline-mode)
-  ("C-c C-d"   . ladicle/toggle-lsp-ui-doc))
-  :hook
-  (lsp-mode . lsp-ui-mode))
+   (:map lsp-mode-map
+         ("C-c C-r" . lsp-ui-peek-find-references)
+         ("C-c C-j" . lsp-ui-peek-find-definitions)
+         ("C-c C-m"   . lsp-ui-imenu)
+         ("C-c C-s"   . lsp-ui-sideline-mode)
+         ("C-c C-d"   . ladicle/toggle-lsp-ui-doc)))
 
 ;; java lsp
 (use-package lsp-java :ensure t :after lsp
   :config (add-hook 'java-mode-hook 'lsp)
   (require 'dap-java))
+
+(add-hook 'haskell-mode-hook 'flycheck-mode)
 
 (use-package dap-mode
   :ensure t :after lsp-mode
@@ -418,16 +417,14 @@
   (dap-ui-mode t))
 
 ;; haskell lsp
-(use-package lsp-haskell :ensure t :after lsp
-  :config (add-hook 'haskell-mode-hook 'lsp))
-
+(require 'lsp-haskell)
+(add-hook 'haskell-mode-hook #'lsp)
 
 ;;;; javascript
 (use-package js2-mode
   :ensure t
   :config
-  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-  (add-to-list 'flycheck-checkers 'javascript-eslint))
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
 
 ;;(use-package js2-refactor
 ;;  :ensure t
@@ -460,7 +457,6 @@
           (lambda ()
             (psc-ide-mode)
             (company-mode)
-            (flycheck-mode)
             (turn-on-purescript-indentation)
             (customize-set-variable 'psc-ide-add-import-on-completion t)))
 
@@ -544,10 +540,24 @@
  '(jdee-db-requested-breakpoint-face-colors (cons "#FFFBF0" "#859900"))
  '(jdee-db-spec-breakpoint-face-colors (cons "#FFFBF0" "#E1DBCD"))
  '(js-indent-level 2)
+ '(lsp-ui-doc-enable nil)
+ '(lsp-ui-imenu-enable t)
+ '(lsp-ui-imenu-kind-position (quote top))
+ '(lsp-ui-peek-enable t)
+ '(lsp-ui-peek-fontify (quote on-demand))
+ '(lsp-ui-peek-list-width 50)
+ '(lsp-ui-peek-peek-height 20)
+ '(lsp-ui-sideline-code-actions-prefix "👻" t)
+ '(lsp-ui-sideline-enable nil)
+ '(lsp-ui-sideline-ignore-duplicate t)
+ '(lsp-ui-sideline-show-code-actions t)
+ '(lsp-ui-sideline-show-diagnostics nil)
+ '(lsp-ui-sideline-show-hover t)
+ '(lsp-ui-sideline-show-symbol t)
  '(org-agenda-files (quote ("~/code/FH/webqube/api-mojo/notes.org")))
  '(package-selected-packages
    (quote
-    (hasklig-mode groovy-mode helm-projectile gdscript-mode rjsx-mode expand-region smooth-scrolling xbm-life threes xref-js2 js2-refactor web-mode diminish intero zygospore which-key volatile-highlights use-package undo-tree smex rainbow-mode rainbow-delimiters projectile plantuml-mode perlcritic org-ref org-jira org-bullets org nov neotree monokai-theme markdown-mode magit ido-vertical-mode highlight-indentation ghub general flycheck-kotlin flycheck-joker flycheck-haskell flycheck-clojure flx-ido ensime docker-compose-mode docker company-lua company-ghci company-ghc clj-refactor avy aggressive-indent)))
+    (lsp-ui-flycheck zygospore yasnippet yaml-mode which-key web-mode volatile-highlights use-package undo-tree transpose-frame smooth-scrolling smex rainbow-mode rainbow-delimiters purescript-mode psc-ide php-mode paredit org-bullets neotree multiple-cursors magit lsp-ui lsp-java lsp-haskell js2-mode ivy ido-vertical-mode helm-rg helm-projectile helm-lsp helm-ag hasklig-mode groovy-mode graphviz-dot-mode general gdscript-mode flycheck-joker flycheck-haskell flx-ido expand-region doom-themes diminish dap-mode company-lua company-lsp company-ghci company-ghc cider auctex all-the-icons aggressive-indent)))
  '(vc-annotate-background "#FDF6E3")
  '(vc-annotate-color-map
    (list
