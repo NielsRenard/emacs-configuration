@@ -278,7 +278,7 @@
 ;; This lets me say where my temp dir is.
 (setq temporary-file-directory "~/.emacs.d/tmp")
 
-(add-to-list 'load-path "~/.emacs.d/")
+(add-to-list 'load-path "~/.emacs.d/flycheck-inline")
 (require 'flycheck-inline)
 
 (use-package flycheck
