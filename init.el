@@ -53,7 +53,7 @@
 
 (use-package zone
   :ensure t
-  :config (zone-when-idle 520))
+  :config (zone-when-idle 1028))
 
 
 ;;;; looks
