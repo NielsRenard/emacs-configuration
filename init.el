@@ -271,10 +271,10 @@
 (use-package flycheck-haskell
   :ensure t)
 
-(use-package perlcritic
-  :ensure t
-  :config (setq flycheck-perlcritic-severity 1
-                flycheck-perlcriticrc "~/.perlcritic.rc"))
+;;(use-package perlcritic
+;;  :ensure t
+;;  :config (setq flycheck-perlcritic-severity 1
+;;                flycheck-perlcriticrc "~/.perlcritic.rc"))
 
 ;;;; clojure
 (use-package rainbow-delimiters
