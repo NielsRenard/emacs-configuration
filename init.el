@@ -396,6 +396,7 @@
        (lsp-ui-doc-mode 1)))
    :bind
    (:map lsp-mode-map
+	 ("C-c C-t" . lsp-describe-thing-at-point)
          ("C-c C-r" . lsp-ui-peek-find-references)
          ("C-c C-j" . lsp-ui-peek-find-definitions)
          ("C-c C-m"   . lsp-ui-imenu)
