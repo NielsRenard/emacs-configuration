@@ -14,6 +14,8 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+;;(setq package-check-signature nil)
+
 ;;;; generic
 
 ;; starts garbage-collection after 20 megabytes
@@ -54,7 +56,6 @@
 
 ;;  version control
 (use-package magit
-  :ensure t
   :bind ("C-c g" . magit-status))
 
 
@@ -63,7 +64,6 @@
 (define-key global-map "\M-space" 'fixup-whitespace)
 
 (use-package undo-tree
-  :ensure t
   :config
   ;; autosave the undo-tree history
   (setq undo-tree-history-directory-alist
@@ -71,14 +71,8 @@
   (setq undo-tree-auto-save-history t))
 
 (use-package zone
-  :ensure t
   :config (zone-when-idle 1028))
 
-
-;;;; looks
-;;(use-package monokai-theme
-;;  :ensure t
-;;  :config (setq inhibit-startup-screen t))
 
 
 (use-package doom-themes
@@ -91,13 +85,11 @@
   (load-theme 'wheatgrass))
 
 (use-package volatile-highlights
-  :ensure t
   :diminish volatile-highlights-mode
   :config
   (volatile-highlights-mode +1))
 
 (use-package rainbow-mode
-  :ensure t
   :diminish rainbow-mode
   :config
   (add-hook 'prog-mode-hook #'rainbow-mode))
@@ -108,7 +100,7 @@
   ;; In order for the icons to work it is very important that you install the Resource Fonts included
   ;; M-x all-the-icons-install-fonts
   ;; Bear in mind, this will also run fc-cache -f -v on MacOS and Linux which can take some time to complete.
-  :ensure t)
+)
 
 ;; mouse-wheel scrolling
 (global-set-key [C-mouse-4] 'text-scale-increase)
@@ -118,12 +110,10 @@
 (global-linum-mode)
 
 ;; less clutter in mode-line
-(use-package diminish
-  :ensure t)
+(use-package diminish)
 
 ;;;; editing
 (use-package multiple-cursors
-  :ensure t
   :config  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
   (global-set-key (kbd "C->") 'mc/mark-next-like-this)
   (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
@@ -135,7 +125,6 @@
 (which-function-mode t)
 
 (use-package smooth-scrolling
-  :ensure t
   :config
   (smooth-scrolling-mode)
   (setq redisplay-dont-pause t
@@ -146,31 +135,25 @@
 
 ;; swap easily between vertical/horizontal arrangement
 (use-package transpose-frame
-  :ensure t
   :config (global-set-key (kbd "C-|") 'transpose-frame))
 
 (use-package zygospore
-  :ensure t
   :config (global-set-key (kbd "C-x 1") 'zygospore-toggle-delete-other-windows))
 
 (use-package neotree
-  :ensure t
   :config (global-set-key [f8] 'neotree-toggle)
   (setq neo-smart-open t)
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
 (use-package general
-  :ensure t
   :config (general-define-key "C-'" 'avy-goto-char-timer)
           (general-define-key "C-M-'" 'avy-goto-line))
 
 (use-package projectile
   :diminish projectile-mode
-  :ensure t
   :config (projectile-mode))
 
 (use-package helm-projectile
-  :ensure t
   :bind
   ("C-c f" . helm-projectile)
   ("C-c s" . helm-projectile-ag)
@@ -204,27 +187,22 @@
 
 (use-package flx-ido
   :requires ido
-  :ensure t
   :config (flx-ido-mode))
 
 (use-package ido-vertical-mode
-  :ensure t
   :config (ido-vertical-mode 1))
 
 (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)
 
 (use-package avy
-  :ensure t
   :commands (avy-goto-char-timer))
 
 (use-package smex
-  :ensure t
   :bind ("M-x" . smex))
 
-(use-package ivy :ensure t)
+(use-package ivy)
 
 (use-package which-key
-  :ensure t
   :diminish which-key-mode
   :config (which-key-mode)
   (setq which-key-idle-delay 0.05))
@@ -237,7 +215,6 @@
 
 ;;;; autocompletion
 (use-package company
-  :ensure t
   :diminish company-mode
   :bind ("TAB" . company-indent-or-complete-common)
   :config
@@ -253,19 +230,16 @@
   )
 
 (use-package company-lua
-  :ensure t
   :hook (lua-mode . company-mode)
   :config (setq company-idle-delay 0.05
                 company-minimum-prefix-length 2))
 
 (use-package company-ghci
-  :ensure t
   :hook (haskell-mode . company-mode)
   :config (setq company-idle-delay 0.05
                 company-minimum-prefix-length 2))
 
 (use-package company-ghc
-  :ensure t
   :hook (haskell-mode . company-mode)
   :config (setq company-idle-delay 0.05
                 company-minimum-prefix-length 2))
@@ -273,7 +247,6 @@
 
 ;;;; syntax checking
 (use-package flycheck
-  :ensure t
   :diminish flycheck-mode
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode)
@@ -290,7 +263,6 @@
 (require 'flycheck-inline)
 
 (use-package flycheck
-  :ensure t
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode)
   (add-hook 'flycheck-mode-hook #'flycheck-inline-mode)
@@ -299,17 +271,14 @@
 
 ;;;; clojure
 (use-package rainbow-delimiters
-  :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package clojure-mode
-  :ensure t
   :config
   (add-hook 'clojure-mode-hook 'paredit-mode)
   (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode))
 
 (use-package paredit
-  :ensure t
   :config
   (add-hook 'clojure-mode-hook 'enable-paredit-mode)
   (add-hook 'clojure-repl-mode-hook 'enable-paredit-mode)
@@ -327,7 +296,6 @@
 ;;(global-set-key (kbd "TAB") #'company-indent-or-complete-common)
 
 (use-package cider
-  :ensure t
   :init (add-hook 'clojure-mode-hook #'cider-mode)
   :config
   (setq nrepl-log-messages t)
@@ -337,7 +305,6 @@
   (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode))
 
 (use-package aggressive-indent
-  :ensure t
   :init (add-hook 'clojure-mode-hook #'aggressive-indent-mode))
 
 
@@ -349,28 +316,24 @@
 
 ;;;; php
 (use-package php-mode
-  :ensure t)
+)
 
 
 ;;;; haskell
 (use-package haskell-mode
-  :ensure t
   :config
   (add-to-list 'auto-mode-alist '("\\.hs\\'" . haskell-mode))
   (add-hook 'haskell-mode-hook 'subword-mode))
 
 (use-package hasklig-mode
-  :ensure t
   :config
   :hook (haskell-mode))
 
 (use-package intero
-  :ensure t
   :config
   :hook (haskell-mode))
 
 ;;(use-package intero
-;;  :ensure t
 ;;  :config
 ;;  (add-hook 'haskell-mode #'intero-mode)
 ;;  (intero-global-mode 1))
@@ -384,7 +347,7 @@
 
 (use-package company-lsp :commands company-lsp)
 (use-package helm-lsp :commands helm-lsp-workspace-symbol)
-(use-package yasnippet :ensure t)
+(use-package yasnippet)
 (use-package lsp-ui
    :config (lsp-ui-flycheck-enable t)
    :custom
@@ -417,46 +380,33 @@
          ("C-c C-d"   . ladicle/toggle-lsp-ui-doc)))
 
 ;; java lsp
-(use-package lsp-java :ensure t :after lsp
+(use-package lsp-java :after lsp
   :config (add-hook 'java-mode-hook 'lsp)
   (require 'dap-java))
 
 (add-hook 'haskell-mode-hook 'flycheck-mode)
 
 (use-package dap-mode
-  :ensure t :after lsp-mode
+  :after lsp-mode
   :requires 'dap-java
   :config
   (dap-mode t)
   (dap-ui-mode t))
 
-;; haskell lsp
-(require 'lsp-haskell)
-(add-hook 'haskell-mode-hook #'lsp)
+
+(use-package lsp-haskell :after lsp
+  :config (add-hook 'haskell-mode-hook 'lsp))
+
+;;;; haskell lsp
+;;(require 'lsp-haskell)
+;;(add-hook 'haskell-mode-hook #'lsp)
 
 ;;;; javascript
 (use-package js2-mode
-  :ensure t
   :config
   (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
 
-;;(use-package js2-refactor
-;;  :ensure t
-;;  :config
-;;  (add-hook 'js2-mode-hook #'js2-refactor-mode)
-;;  (js2r-add-keybindings-with-prefix "C-c C-r"))
 
-;;(use-package xref-js2
-;;  :ensure t
-;;  :config
-;;  (add-hook 'js2-mode-hook #'js2-refactor-mode))
-;;
-;;
-;;(use-package rjsx-mode
-;;  :ensure t
-;;  :config
-;;  (add-to-list 'auto-mode-alist '("*.js" . rjsx-mode)))
-;
 ;;;; purescript
 (use-package purescript-mode
              :commands purescript-mode
@@ -464,8 +414,7 @@
              :config
              (add-hook 'purescript-mode-hook 'turn-on-purescript-indentation))
 
-(use-package psc-ide
-  :ensure t)
+(use-package psc-ide)
 
 (add-hook 'purescript-mode-hook
           (lambda ()
@@ -474,25 +423,13 @@
             (turn-on-purescript-indentation)
             (customize-set-variable 'psc-ide-add-import-on-completion t)))
 
-;;(use-package psc-ide
-;;             :ensure nil
-;;             :load-path "site-lisp/psc-ide-emacs"
-;;             :init
-;;             ;; psc-ide
-;;             (setq psc-ide-client-executable "~/.psvm/current/bin/psc-ide-client")
-;;             (setq psc-ide-server-executable "~/.psvm/current/bin/psc-ide-server")
-;;             (setq psc-ide-rebuild-on-save t)
-;;             :config
-;;               (add-hook 'purescript-mode-hook 'psc-ide-mode))
 
 ;;;; groovy
 (use-package groovy-mode
-  :ensure t
   :config (add-to-list 'auto-mode-alist '("Jenkinsfile" . groovy-mode)))
 
 ;; for html templates
 (use-package web-mode
-  :ensure t
   :config
   (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
@@ -501,7 +438,6 @@
 
 ;;;; yml
 (use-package yaml-mode
-  :ensure t
   :config (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
 
 
@@ -515,8 +451,7 @@
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
 ;; graphviz
-(use-package graphviz-dot-mode
-  :ensure t)
+(use-package graphviz-dot-mode)
 
 ;; tex
 (use-package tex
@@ -531,8 +466,7 @@
 
 ;;; godot
 
-(use-package gdscript-mode
-  :ensure t)
+(use-package gdscript-mode)
 
 
 (provide 'init)
