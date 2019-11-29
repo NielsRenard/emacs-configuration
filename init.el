@@ -256,7 +256,7 @@
 
 ;; Nope, I want my copies in the system temp dir.
 (setq flymake-run-in-place nil)
-;; This lets me say where my temp dir is.
+;; This lets me say where my temp dir is. (make sure it exists)
 (setq temporary-file-directory "~/.emacs.d/tmp")
 
 (add-to-list 'load-path "~/.emacs.d/flycheck-inline")
