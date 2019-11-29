@@ -408,6 +408,13 @@
 (use-package graphviz-dot-mode
   :ensure t)
 
+
+(use-package tex
+  :ensure auctex
+  :defer t
+  :config
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t))
 ;; emacs-reveal for presentations
 ;;(load "~/.emacs.d/emacs-reveal/reveal-config.el")
 
