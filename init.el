@@ -315,8 +315,7 @@
 (add-to-list 'auto-mode-alist '("\\.pl\\'" . cperl-mode))
 
 ;;;; php
-(use-package php-mode
-)
+(use-package php-mode)
 
 
 ;;;; haskell
@@ -329,9 +328,9 @@
   :config
   :hook (haskell-mode))
 
-(use-package intero
-  :config
-  :hook (haskell-mode))
+;;(use-package intero
+;;  :config
+;;  :hook (haskell-mode))
 
 ;;(use-package intero
 ;;  :config
@@ -494,7 +493,8 @@
  '(lsp-ui-peek-fontify (quote on-demand))
  '(lsp-ui-peek-list-width 50)
  '(lsp-ui-peek-peek-height 20)
- '(lsp-ui-sideline-code-actions-prefix "👻" t)
+ '(lsp-ui-sideline-code-actions-prefix "✡" t
+   )
  '(lsp-ui-sideline-enable nil t)
  '(lsp-ui-sideline-ignore-duplicate t t)
  '(lsp-ui-sideline-show-code-actions t)
