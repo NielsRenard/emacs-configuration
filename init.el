@@ -2,6 +2,9 @@
 ;;; Commentary:
 (package-initialize)
 
+;; Melpa
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
 ;;; Code:
 ;; Bootstrap 'use-package'
 (unless (package-installed-p 'use-package)
@@ -11,18 +14,36 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/") t)
-
-
 ;;;; generic
 
 ;; starts garbage-collection after 20 megabytes
 ;; to improve performance
 (setq gc-cons-threshold 20000000)
 
-(add-to-list 'load-path "~/.emacs.d/better-defaults")
-(require 'better-defaults)
+;;"A defined abbrev is a word which expands
+(setq-default abbrev-mode t)
+;;(add-to-list 'load-path "~/.emacs.d/better-defaults")
+;;(require 'better-defaults)
+;; inline better-default fns for now
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(global-set-key (kbd "M-z") 'zap-up-to-char)
+(global-set-key (kbd "C-s") 'isearch-forward-regexp)
+(global-set-key (kbd "C-r") 'isearch-backward-regexp)
+(global-set-key (kbd "C-M-s") 'isearch-forward)
+(global-set-key (kbd "C-M-r") 'isearch-backward)
+(show-paren-mode 1)
+(setq save-interprogram-paste-before-kill t
+        apropos-do-all t
+        mouse-yank-at-point t
+        require-final-newline t
+        load-prefer-newer t
+        ediff-window-setup-function 'ediff-setup-windows-plain
+        save-place-file (concat user-emacs-directory "places")
+        backup-directory-alist `(("." . ,(concat user-emacs-directory
+                                                 "backups"))))
+
 
 ;; disable minimizing frame
 (global-unset-key (kbd "C-z"))
@@ -41,9 +62,6 @@
 ;; hit this to fix whitespace, nice to use use together with M-^
 (define-key global-map "\M-space" 'fixup-whitespace)
 
-;; removes trailing whitespace on save
-(add-hook 'before-save-hook 'whitespace-cleanup)
-
 (use-package undo-tree
   :ensure t
   :config
@@ -54,7 +72,7 @@
 
 (use-package zone
   :ensure t
-  :config (zone-when-idle 520))
+  :config (zone-when-idle 1028))
 
 
 ;;;; looks
@@ -66,11 +84,7 @@
 (use-package doom-themes
   :ensure t
   :config (setq inhibit-startup-screen t)
-  (set-face-attribute 'default nil
-                    :family "Hasklig"
-                    :height 150
-                    :weight 'normal
-                    :width 'normal))
+  (set-default-font "-ADBO-Hasklig-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1"))
 
 (if (display-graphic-p)
     (load-theme 'doom-solarized-light t)
@@ -117,6 +131,8 @@
 
 
 ;;;; navigation
+
+(which-function-mode t)
 
 (use-package smooth-scrolling
   :ensure t
@@ -265,16 +281,21 @@
   ("C-c n" . flycheck-next-error)
 )
 
-(use-package flycheck-joker
-  :ensure t)
+;; Nope, I want my copies in the system temp dir.
+(setq flymake-run-in-place nil)
+;; This lets me say where my temp dir is.
+(setq temporary-file-directory "~/.emacs.d/tmp")
 
-(use-package flycheck-haskell
-  :ensure t)
+(add-to-list 'load-path "~/.emacs.d/flycheck-inline")
+(require 'flycheck-inline)
 
-(use-package perlcritic
+(use-package flycheck
   :ensure t
-  :config (setq flycheck-perlcritic-severity 1
-                flycheck-perlcriticrc "~/.perlcritic.rc"))
+  :config
+  (add-hook 'after-init-hook #'global-flycheck-mode)
+  (add-hook 'flycheck-mode-hook #'flycheck-inline-mode)
+  :bind
+  ("C-c n" . flycheck-next-error))
 
 ;;;; clojure
 (use-package rainbow-delimiters
@@ -346,34 +367,123 @@
 (use-package intero
   :ensure t
   :config
-  (add-hook 'haskell-mode #'intero-mode)
-  (intero-global-mode 1))
+  :hook (haskell-mode))
 
-(flycheck-add-next-checker 'intero '(warning . haskell-hlint))
+;;(use-package intero
+;;  :ensure t
+;;  :config
+;;  (add-hook 'haskell-mode #'intero-mode)
+;;  (intero-global-mode 1))
+;;
+;;(flycheck-add-next-checker 'intero '(warning . haskell-hlint))
 
+;;;; lsp
+(use-package lsp-mode
+  :commands lsp
+  :config  (setq lsp-prefer-flymake nil))
+
+(use-package company-lsp :commands company-lsp)
+(use-package helm-lsp :commands helm-lsp-workspace-symbol)
+(use-package yasnippet :ensure t)
+(use-package lsp-ui
+   :config (lsp-ui-flycheck-enable t)
+   :custom
+   (lsp-ui-doc-enable nil)
+   (lsp-ui-sideline-enable nil)
+   (lsp-ui-sideline-ignore-duplicate t)
+   (lsp-ui-sideline-show-symbol t)
+   (lsp-ui-sideline-show-hover t)
+   (lsp-ui-sideline-show-diagnostics nil)
+   ;; to put a different side-actions colour:
+   ;;(custom-set-faces '(lsp-ui-sideline-code-action ((t (:foreground "#268bd2")))))
+;   (lsp-ui-sideline-show-code-actions t)
+   (lsp-ui-imenu-enable t)
+   (lsp-ui-imenu-kind-position 'top)
+   :preface
+   (defun ladicle/toggle-lsp-ui-doc ()
+     (interactive)
+     (if lsp-ui-doc-mode
+         (progn
+           (lsp-ui-doc-mode -1)
+           (lsp-ui-doc--hide-frame))
+       (lsp-ui-doc-mode 1)))
+   :bind
+   (:map lsp-mode-map
+         ("C-c C-t" . lsp-describe-thing-at-point)
+         ("C-c C-r" . lsp-ui-peek-find-references)
+         ("C-c C-j" . lsp-ui-peek-find-definitions)
+         ("C-c C-m"   . lsp-ui-imenu)
+         ("C-c C-s"   . lsp-ui-sideline-mode)
+         ("C-c C-d"   . ladicle/toggle-lsp-ui-doc)))
+
+;; java lsp
+(use-package lsp-java :ensure t :after lsp
+  :config (add-hook 'java-mode-hook 'lsp)
+  (require 'dap-java))
+
+(add-hook 'haskell-mode-hook 'flycheck-mode)
+
+(use-package dap-mode
+  :ensure t :after lsp-mode
+  :requires 'dap-java
+  :config
+  (dap-mode t)
+  (dap-ui-mode t))
+
+;; haskell lsp
+(require 'lsp-haskell)
+(add-hook 'haskell-mode-hook #'lsp)
 
 ;;;; javascript
-;(use-package js2-mode
-;  :ensure t
-;  :config
-;  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-;  (setq js2-mode-show-strict-warnings nil))
-;
-;(use-package js2-refactor
-;  :ensure t
-;  :config
-;  (add-hook 'js2-mode-hook #'js2-refactor-mode)
-;  (js2r-add-keybindings-with-prefix "C-c C-r"))
-;
-;(use-package xref-js2
-;  :ensure t
-;  :config
-;  (add-hook 'js2-mode-hook #'js2-refactor-mode))
-;
-(use-package rjsx-mode
+(use-package js2-mode
   :ensure t
   :config
-  (add-to-list 'auto-mode-alist '("*.js" . rjsx-mode)))
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
+
+;;(use-package js2-refactor
+;;  :ensure t
+;;  :config
+;;  (add-hook 'js2-mode-hook #'js2-refactor-mode)
+;;  (js2r-add-keybindings-with-prefix "C-c C-r"))
+
+;;(use-package xref-js2
+;;  :ensure t
+;;  :config
+;;  (add-hook 'js2-mode-hook #'js2-refactor-mode))
+;;
+;;
+;;(use-package rjsx-mode
+;;  :ensure t
+;;  :config
+;;  (add-to-list 'auto-mode-alist '("*.js" . rjsx-mode)))
+;
+;;;; purescript
+(use-package purescript-mode
+             :commands purescript-mode
+             :mode (("\\.purs$" . purescript-mode))
+             :config
+             (add-hook 'purescript-mode-hook 'turn-on-purescript-indentation))
+
+(use-package psc-ide
+  :ensure t)
+
+(add-hook 'purescript-mode-hook
+          (lambda ()
+            (psc-ide-mode)
+            (company-mode)
+            (turn-on-purescript-indentation)
+            (customize-set-variable 'psc-ide-add-import-on-completion t)))
+
+;;(use-package psc-ide
+;;             :ensure nil
+;;             :load-path "site-lisp/psc-ide-emacs"
+;;             :init
+;;             ;; psc-ide
+;;             (setq psc-ide-client-executable "~/.psvm/current/bin/psc-ide-client")
+;;             (setq psc-ide-server-executable "~/.psvm/current/bin/psc-ide-server")
+;;             (setq psc-ide-rebuild-on-save t)
+;;             :config
+;;               (add-hook 'purescript-mode-hook 'psc-ide-mode))
 
 ;;;; groovy
 (use-package groovy-mode
@@ -408,13 +518,14 @@
 (use-package graphviz-dot-mode
   :ensure t)
 
-
+;; tex
 (use-package tex
-  :ensure auctex
+  ;; apt install texlive-latex-extra
   :defer t
+  :ensure auctex
   :config
-  (setq TeX-auto-save t)
-  (setq TeX-parse-self t))
+  (setq TeX-auto-save t))
+
 ;; emacs-reveal for presentations
 ;;(load "~/.emacs.d/emacs-reveal/reveal-config.el")
 
@@ -431,21 +542,61 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-names-vector
+   ["#FDF6E3" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#556b72"])
  '(cperl-indent-level 4)
  '(custom-safe-themes
    (quote
-    ("49ec957b508c7d64708b40b0273697a84d3fee4f15dd9fc4a9588016adee3dad" "d1b4990bd599f5e2186c3f75769a2c5334063e9e541e37514942c27975700370" "cd736a63aa586be066d5a1f0e51179239fe70e16a9f18991f6f5d99732cabb32" "a3fa4abaf08cc169b61dea8f6df1bbe4123ec1d2afeb01c17e11fdc31fc66379" "93a0885d5f46d2aeac12bf6be1754faa7d5e28b27926b8aa812840fe7d0b7983" "10461a3c8ca61c52dfbbdedd974319b7f7fd720b091996481c8fb1dded6c6116" "bd7b7c5df1174796deefce5debc2d976b264585d51852c962362be83932873d9" "4697a2d4afca3f5ed4fdf5f715e36a6cac5c6154e105f3596b44a4874ae52c45" "7e78a1030293619094ea6ae80a7579a562068087080e01c2b8b503b27900165c" "6b289bab28a7e511f9c54496be647dc60f5bd8f9917c9495978762b99d8c96a0" "8aca557e9a17174d8f847fb02870cb2bb67f3b6e808e46c0e54a44e3e18e1020" "75d3dde259ce79660bac8e9e237b55674b910b470f313cdf4b019230d01a982a" "1c082c9b84449e54af757bcae23617d11f563fc9f33a832a8a2813c4d7dfb652" "6d589ac0e52375d311afaa745205abb6ccb3b21f6ba037104d71111e7e76a3fc" "100e7c5956d7bb3fd0eebff57fde6de8f3b9fafa056a2519f169f85199cc1c96" default)))
+    ("f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" "49ec957b508c7d64708b40b0273697a84d3fee4f15dd9fc4a9588016adee3dad" "d1b4990bd599f5e2186c3f75769a2c5334063e9e541e37514942c27975700370" "cd736a63aa586be066d5a1f0e51179239fe70e16a9f18991f6f5d99732cabb32" "a3fa4abaf08cc169b61dea8f6df1bbe4123ec1d2afeb01c17e11fdc31fc66379" "93a0885d5f46d2aeac12bf6be1754faa7d5e28b27926b8aa812840fe7d0b7983" "10461a3c8ca61c52dfbbdedd974319b7f7fd720b091996481c8fb1dded6c6116" "bd7b7c5df1174796deefce5debc2d976b264585d51852c962362be83932873d9" "4697a2d4afca3f5ed4fdf5f715e36a6cac5c6154e105f3596b44a4874ae52c45" "7e78a1030293619094ea6ae80a7579a562068087080e01c2b8b503b27900165c" "6b289bab28a7e511f9c54496be647dc60f5bd8f9917c9495978762b99d8c96a0" "8aca557e9a17174d8f847fb02870cb2bb67f3b6e808e46c0e54a44e3e18e1020" "75d3dde259ce79660bac8e9e237b55674b910b470f313cdf4b019230d01a982a" "1c082c9b84449e54af757bcae23617d11f563fc9f33a832a8a2813c4d7dfb652" "6d589ac0e52375d311afaa745205abb6ccb3b21f6ba037104d71111e7e76a3fc" "100e7c5956d7bb3fd0eebff57fde6de8f3b9fafa056a2519f169f85199cc1c96" default)))
+ '(fci-rule-color "#D6D6D6")
  '(jdee-db-active-breakpoint-face-colors (cons "#FFFBF0" "#268bd2"))
  '(jdee-db-requested-breakpoint-face-colors (cons "#FFFBF0" "#859900"))
  '(jdee-db-spec-breakpoint-face-colors (cons "#FFFBF0" "#E1DBCD"))
  '(js-indent-level 2)
+ '(lsp-ui-doc-enable nil t)
+ '(lsp-ui-imenu-enable t t)
+ '(lsp-ui-imenu-kind-position (quote top) t)
+ '(lsp-ui-peek-enable t)
+ '(lsp-ui-peek-fontify (quote on-demand))
+ '(lsp-ui-peek-list-width 50)
+ '(lsp-ui-peek-peek-height 20)
+ '(lsp-ui-sideline-code-actions-prefix "👻" t)
+ '(lsp-ui-sideline-enable nil t)
+ '(lsp-ui-sideline-ignore-duplicate t t)
+ '(lsp-ui-sideline-show-code-actions t)
+ '(lsp-ui-sideline-show-diagnostics nil t)
+ '(lsp-ui-sideline-show-hover t t)
+ '(lsp-ui-sideline-show-symbol t t)
  '(org-agenda-files (quote ("~/code/FH/webqube/api-mojo/notes.org")))
  '(package-selected-packages
    (quote
-    (hasklig-mode groovy-mode helm-projectile gdscript-mode rjsx-mode expand-region smooth-scrolling xbm-life threes xref-js2 js2-refactor web-mode diminish intero zygospore which-key volatile-highlights use-package undo-tree smex rainbow-mode rainbow-delimiters projectile plantuml-mode perlcritic org-ref org-jira org-bullets org nov neotree monokai-theme markdown-mode magit ido-vertical-mode highlight-indentation ghub general flycheck-kotlin flycheck-joker flycheck-haskell flycheck-clojure flx-ido ensime docker-compose-mode docker company-lua company-ghci company-ghc clj-refactor avy aggressive-indent))))
+    (lsp-ui-flycheck zygospore yasnippet yaml-mode which-key web-mode volatile-highlights use-package undo-tree transpose-frame smooth-scrolling smex rainbow-mode rainbow-delimiters purescript-mode psc-ide php-mode paredit org-bullets neotree multiple-cursors magit lsp-ui lsp-java lsp-haskell js2-mode ivy ido-vertical-mode helm-rg helm-projectile helm-lsp helm-ag hasklig-mode groovy-mode graphviz-dot-mode general gdscript-mode flycheck-joker flycheck-haskell flx-ido expand-region doom-themes diminish dap-mode company-lua company-lsp company-ghci company-ghc cider auctex all-the-icons aggressive-indent)))
+ '(vc-annotate-background "#FDF6E3")
+ '(vc-annotate-color-map
+   (list
+    (cons 20 "#859900")
+    (cons 40 "#959300")
+    (cons 60 "#a58e00")
+    (cons 80 "#b58900")
+    (cons 100 "#bc7407")
+    (cons 120 "#c35f0e")
+    (cons 140 "#cb4b16")
+    (cons 160 "#cd4439")
+    (cons 180 "#d03d5d")
+    (cons 200 "#d33682")
+    (cons 220 "#d63466")
+    (cons 240 "#d9334a")
+    (cons 260 "#dc322f")
+    (cons 280 "#dd5c56")
+    (cons 300 "#de867e")
+    (cons 320 "#dfb0a5")
+    (cons 340 "#D6D6D6")
+    (cons 360 "#D6D6D6")))
+ '(vc-annotate-very-old-color nil)
+ '(which-function-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(lsp-ui-sideline-code-action ((t (:foreground "#268bd2")))))
