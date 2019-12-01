@@ -73,6 +73,7 @@
 (use-package zone
   :config (zone-when-idle 1028))
 
+;;;; looks
 
 
 (use-package doom-themes
@@ -80,6 +81,7 @@
   :config (setq inhibit-startup-screen t)
   (set-default-font "-ADBO-Hasklig-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1"))
 
+;; changes themes based on time of day
 (use-package theme-changer
   :config
   (setq calendar-latitude 52)
@@ -88,6 +90,7 @@
 
 (setq custom-safe-themes t)
 
+;; always use dark theme in terminal mode
 (if (not(display-graphic-p))
   (load-theme 'doom-laserwave))
 
