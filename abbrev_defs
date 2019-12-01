@@ -85,6 +85,8 @@
     ("while" "while" cperl-electric-keyword 0)
    ))
 
+(define-abbrev-table 'dap-server-log-mode-abbrev-table '())
+
 (define-abbrev-table 'diff-mode-abbrev-table '())
 
 (define-abbrev-table 'edit-abbrevs-mode-abbrev-table '())
@@ -93,7 +95,17 @@
 
 (define-abbrev-table 'emacs-lisp-mode-abbrev-table '())
 
+(define-abbrev-table 'epa-info-mode-abbrev-table '())
+
+(define-abbrev-table 'epa-key-list-mode-abbrev-table '())
+
+(define-abbrev-table 'epa-key-mode-abbrev-table '())
+
 (define-abbrev-table 'flycheck-error-list-mode-abbrev-table '())
+
+(define-abbrev-table 'flycheck-error-message-mode-abbrev-table '())
+
+(define-abbrev-table 'flymake-diagnostics-buffer-mode-abbrev-table '())
 
 (define-abbrev-table 'fundamental-mode-abbrev-table '())
 
@@ -107,6 +119,8 @@
 
 (define-abbrev-table 'global-abbrev-table
   '(
+    ("langp" "{-# LANGUAGE  #-}" nil 8)
+    ("langprag" "{-# LANGUAGE  #-}" nil 8)
     ("lp os" "{-# LANGUAGE OverloadedStrings #-}" nil 6)
     ("lp qq" "{-# LANGUAGE QuasiQuotes #-}" nil 6)
     ("lpos" "{-# LANGUAGE OverloadedStrings #-}" nil 7)
@@ -146,6 +160,8 @@
 
 (define-abbrev-table 'helm-moccur-mode-abbrev-table '())
 
+(define-abbrev-table 'helm-occur-mode-abbrev-table '())
+
 (define-abbrev-table 'help-mode-abbrev-table '())
 
 (define-abbrev-table 'html-mode-abbrev-table '())
@@ -168,6 +184,20 @@
 
 (define-abbrev-table 'java-mode-abbrev-table
   '(
+    ("newclass" "package myPackage;    
+    
+public class MyClass {
+    public static void main(String[] args) {
+	myMethod(\"☃\");
+    }
+
+    public static void myMethod (String s){
+	System.out.println(s);
+    }
+}" nil 7)
+    ("psvm" "public static void main(String[] args) {
+	System.out.println(\"☃\");
+	}" nil 6)
    ))
 
 (define-abbrev-table 'js-jsx-mode-abbrev-table '())
@@ -187,6 +217,10 @@
 (define-abbrev-table 'lsp-browser-mode-abbrev-table '())
 
 (define-abbrev-table 'lsp-log-io-mode-abbrev-table '())
+
+(define-abbrev-table 'lsp-rust-analyzer-status-mode-abbrev-table '())
+
+(define-abbrev-table 'lsp-rust-analyzer-syntax-tree-mode-abbrev-table '())
 
 (define-abbrev-table 'lsp-ui-flycheck-list-mode-abbrev-table '())
 
@@ -309,6 +343,8 @@
 (define-abbrev-table 'web-mode-abbrev-table '())
 
 (define-abbrev-table 'xref--xref-buffer-mode-abbrev-table '())
+
+(define-abbrev-table 'xwidget-webkit-mode-abbrev-table '())
 
 (define-abbrev-table 'yaml-mode-abbrev-table '())
 
