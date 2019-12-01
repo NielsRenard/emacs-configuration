@@ -14,6 +14,8 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+;;(setq package-check-signature nil)
+
 ;;;; generic
 
 ;; starts garbage-collection after 20 megabytes
@@ -54,7 +56,6 @@
 
 ;;  version control
 (use-package magit
-  :ensure t
   :bind ("C-c g" . magit-status))
 
 
@@ -63,7 +64,6 @@
 (define-key global-map "\M-space" 'fixup-whitespace)
 
 (use-package undo-tree
-  :ensure t
   :config
   ;; autosave the undo-tree history
   (setq undo-tree-history-directory-alist
@@ -71,14 +71,8 @@
   (setq undo-tree-auto-save-history t))
 
 (use-package zone
-  :ensure t
   :config (zone-when-idle 1028))
 
-
-;;;; looks
-;;(use-package monokai-theme
-;;  :ensure t
-;;  :config (setq inhibit-startup-screen t))
 
 
 (use-package doom-themes
@@ -86,18 +80,23 @@
   :config (setq inhibit-startup-screen t)
   (set-default-font "-ADBO-Hasklig-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1"))
 
-(if (display-graphic-p)
-    (load-theme 'doom-solarized-light t)
-  (load-theme 'wheatgrass))
+(use-package theme-changer
+  :config
+  (setq calendar-latitude 52)
+  (setq calendar-longitude 5)
+  (change-theme 'doom-solarized-light 'doom-laserwave))
+
+(setq custom-safe-themes t)
+
+(if (not(display-graphic-p))
+  (load-theme 'doom-laserwave))
 
 (use-package volatile-highlights
-  :ensure t
   :diminish volatile-highlights-mode
   :config
   (volatile-highlights-mode +1))
 
 (use-package rainbow-mode
-  :ensure t
   :diminish rainbow-mode
   :config
   (add-hook 'prog-mode-hook #'rainbow-mode))
@@ -108,7 +107,7 @@
   ;; In order for the icons to work it is very important that you install the Resource Fonts included
   ;; M-x all-the-icons-install-fonts
   ;; Bear in mind, this will also run fc-cache -f -v on MacOS and Linux which can take some time to complete.
-  :ensure t)
+)
 
 ;; mouse-wheel scrolling
 (global-set-key [C-mouse-4] 'text-scale-increase)
@@ -118,12 +117,10 @@
 (global-linum-mode)
 
 ;; less clutter in mode-line
-(use-package diminish
-  :ensure t)
+(use-package diminish)
 
 ;;;; editing
 (use-package multiple-cursors
-  :ensure t
   :config  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
   (global-set-key (kbd "C->") 'mc/mark-next-like-this)
   (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
@@ -139,7 +136,6 @@
 (which-function-mode t)
 
 (use-package smooth-scrolling
-  :ensure t
   :config
   (smooth-scrolling-mode)
   (setq redisplay-dont-pause t
@@ -150,31 +146,25 @@
 
 ;; swap easily between vertical/horizontal arrangement
 (use-package transpose-frame
-  :ensure t
   :config (global-set-key (kbd "C-|") 'transpose-frame))
 
 (use-package zygospore
-  :ensure t
   :config (global-set-key (kbd "C-x 1") 'zygospore-toggle-delete-other-windows))
 
 (use-package neotree
-  :ensure t
   :config (global-set-key [f8] 'neotree-toggle)
   (setq neo-smart-open t)
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
 (use-package general
-  :ensure t
   :config (general-define-key "C-'" 'avy-goto-char-timer)
           (general-define-key "C-M-'" 'avy-goto-line))
 
 (use-package projectile
   :diminish projectile-mode
-  :ensure t
   :config (projectile-mode))
 
 (use-package helm-projectile
-  :ensure t
   :bind
   ("C-c f" . helm-projectile)
   ("C-c s" . helm-projectile-ag)
@@ -208,27 +198,22 @@
 
 (use-package flx-ido
   :requires ido
-  :ensure t
   :config (flx-ido-mode))
 
 (use-package ido-vertical-mode
-  :ensure t
   :config (ido-vertical-mode 1))
 
 (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)
 
 (use-package avy
-  :ensure t
   :commands (avy-goto-char-timer))
 
 (use-package smex
-  :ensure t
   :bind ("M-x" . smex))
 
-(use-package ivy :ensure t)
+(use-package ivy)
 
 (use-package which-key
-  :ensure t
   :diminish which-key-mode
   :config (which-key-mode)
   (setq which-key-idle-delay 0.05))
@@ -241,7 +226,6 @@
 
 ;;;; autocompletion
 (use-package company
-  :ensure t
   :diminish company-mode
   :bind ("TAB" . company-indent-or-complete-common)
   :config
@@ -257,36 +241,39 @@
   )
 
 (use-package company-lua
-  :ensure t
   :hook (lua-mode . company-mode)
   :config (setq company-idle-delay 0.05
                 company-minimum-prefix-length 2))
 
 (use-package company-ghci
-  :ensure t
   :hook (haskell-mode . company-mode)
   :config (setq company-idle-delay 0.05
                 company-minimum-prefix-length 2))
 
 (use-package company-ghc
-  :ensure t
   :hook (haskell-mode . company-mode)
   :config (setq company-idle-delay 0.05
                 company-minimum-prefix-length 2))
 
 
 ;;;; syntax checking
+(use-package flycheck
+  :diminish flycheck-mode
+  :config
+  (add-hook 'after-init-hook #'global-flycheck-mode)
+  :bind
+  ("C-c n" . flycheck-next-error)
+)
 
 ;; Nope, I want my copies in the system temp dir.
 (setq flymake-run-in-place nil)
-;; This lets me say where my temp dir is.
+;; This lets me say where my temp dir is. (make sure it exists)
 (setq temporary-file-directory "~/.emacs.d/tmp")
 
 (add-to-list 'load-path "~/.emacs.d/flycheck-inline")
 (require 'flycheck-inline)
 
 (use-package flycheck
-  :ensure t
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode)
   (add-hook 'flycheck-mode-hook #'flycheck-inline-mode)
@@ -295,17 +282,14 @@
 
 ;;;; clojure
 (use-package rainbow-delimiters
-  :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package clojure-mode
-  :ensure t
   :config
   (add-hook 'clojure-mode-hook 'paredit-mode)
   (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode))
 
 (use-package paredit
-  :ensure t
   :config
   (add-hook 'clojure-mode-hook 'enable-paredit-mode)
   (add-hook 'clojure-repl-mode-hook 'enable-paredit-mode)
@@ -323,7 +307,6 @@
 ;;(global-set-key (kbd "TAB") #'company-indent-or-complete-common)
 
 (use-package cider
-  :ensure t
   :init (add-hook 'clojure-mode-hook #'cider-mode)
   :config
   (setq nrepl-log-messages t)
@@ -333,7 +316,6 @@
   (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode))
 
 (use-package aggressive-indent
-  :ensure t
   :init (add-hook 'clojure-mode-hook #'aggressive-indent-mode))
 
 
@@ -344,24 +326,24 @@
 (add-to-list 'auto-mode-alist '("\\.pl\\'" . cperl-mode))
 
 ;;;; php
-(use-package php-mode
-  :ensure t)
+(use-package php-mode)
 
 
 ;;;; haskell
 (use-package haskell-mode
-  :ensure t
   :config
   (add-to-list 'auto-mode-alist '("\\.hs\\'" . haskell-mode))
   (add-hook 'haskell-mode-hook 'subword-mode))
 
 (use-package hasklig-mode
-  :ensure t
   :config
   :hook (haskell-mode))
 
 ;;(use-package intero
-;;  :ensure t
+;;  :config
+;;  :hook (haskell-mode))
+
+;;(use-package intero
 ;;  :config
 ;;  (add-hook 'haskell-mode #'intero-mode)
 ;;  (intero-global-mode 1))
@@ -375,7 +357,7 @@
 
 (use-package company-lsp :commands company-lsp)
 (use-package helm-lsp :commands helm-lsp-workspace-symbol)
-(use-package yasnippet :ensure t)
+(use-package yasnippet)
 (use-package lsp-ui
    :config (lsp-ui-flycheck-enable t)
    :custom
@@ -400,7 +382,7 @@
        (lsp-ui-doc-mode 1)))
    :bind
    (:map lsp-mode-map
-	 ("C-c C-t" . lsp-describe-thing-at-point)
+         ("C-c C-t" . lsp-describe-thing-at-point)
          ("C-c C-r" . lsp-ui-peek-find-references)
          ("C-c C-j" . lsp-ui-peek-find-definitions)
          ("C-c C-m"   . lsp-ui-imenu)
@@ -408,46 +390,33 @@
          ("C-c C-d"   . ladicle/toggle-lsp-ui-doc)))
 
 ;; java lsp
-(use-package lsp-java :ensure t :after lsp
+(use-package lsp-java :after lsp
   :config (add-hook 'java-mode-hook 'lsp)
   (require 'dap-java))
 
 (add-hook 'haskell-mode-hook 'flycheck-mode)
 
 (use-package dap-mode
-  :ensure t :after lsp-mode
+  :after lsp-mode
   :requires 'dap-java
   :config
   (dap-mode t)
   (dap-ui-mode t))
 
-;; haskell lsp
-(require 'lsp-haskell)
-(add-hook 'haskell-mode-hook #'lsp)
+
+(use-package lsp-haskell :after lsp
+  :config (add-hook 'haskell-mode-hook 'lsp))
+
+;;;; haskell lsp
+;;(require 'lsp-haskell)
+;;(add-hook 'haskell-mode-hook #'lsp)
 
 ;;;; javascript
 (use-package js2-mode
-  :ensure t
   :config
   (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
 
-;;(use-package js2-refactor
-;;  :ensure t
-;;  :config
-;;  (add-hook 'js2-mode-hook #'js2-refactor-mode)
-;;  (js2r-add-keybindings-with-prefix "C-c C-r"))
 
-;;(use-package xref-js2
-;;  :ensure t
-;;  :config
-;;  (add-hook 'js2-mode-hook #'js2-refactor-mode))
-;;
-;;
-;;(use-package rjsx-mode
-;;  :ensure t
-;;  :config
-;;  (add-to-list 'auto-mode-alist '("*.js" . rjsx-mode)))
-;
 ;;;; purescript
 (use-package purescript-mode
              :commands purescript-mode
@@ -455,8 +424,7 @@
              :config
              (add-hook 'purescript-mode-hook 'turn-on-purescript-indentation))
 
-(use-package psc-ide
-  :ensure t)
+(use-package psc-ide)
 
 (add-hook 'purescript-mode-hook
           (lambda ()
@@ -465,25 +433,13 @@
             (turn-on-purescript-indentation)
             (customize-set-variable 'psc-ide-add-import-on-completion t)))
 
-;;(use-package psc-ide
-;;             :ensure nil
-;;             :load-path "site-lisp/psc-ide-emacs"
-;;             :init
-;;             ;; psc-ide
-;;             (setq psc-ide-client-executable "~/.psvm/current/bin/psc-ide-client")
-;;             (setq psc-ide-server-executable "~/.psvm/current/bin/psc-ide-server")
-;;             (setq psc-ide-rebuild-on-save t)
-;;             :config
-;;               (add-hook 'purescript-mode-hook 'psc-ide-mode))
 
 ;;;; groovy
 (use-package groovy-mode
-  :ensure t
   :config (add-to-list 'auto-mode-alist '("Jenkinsfile" . groovy-mode)))
 
 ;; for html templates
 (use-package web-mode
-  :ensure t
   :config
   (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
@@ -492,7 +448,6 @@
 
 ;;;; yml
 (use-package yaml-mode
-  :ensure t
   :config (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
 
 
@@ -506,11 +461,9 @@
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
 ;; graphviz
-(use-package graphviz-dot-mode
-  :ensure t)
+(use-package graphviz-dot-mode)
 
 ;; tex
-
 (use-package tex
   ;; apt install texlive-latex-extra
   :defer t
@@ -523,8 +476,7 @@
 
 ;;; godot
 
-(use-package gdscript-mode
-  :ensure t)
+(use-package gdscript-mode)
 
 
 (provide 'init)
@@ -539,7 +491,7 @@
  '(cperl-indent-level 4)
  '(custom-safe-themes
    (quote
-    ("b462d00de785490a0b6861807a360f5c1e05b48a159a99786145de7e3cce3afe" "7ffb0d3d0c797b980ed7330adc04a66516d49a61e4187a7054dda014676421d9" "001c2ff8afde9c3e707a2eb3e810a0a36fb2b466e96377ac95968e7f8930a7c5" "7f74a3b9a1f5e3d31358b48b8f8a1154aab2534fae82c9e918fb389fca776788" "f30aded97e67a487d30f38a1ac48eddb49fdb06ac01ebeaff39439997cbdd869" "cdb3e7a8864cede434b168c9a060bf853eeb5b3f9f758310d2a2e23be41a24ae" "428754d8f3ed6449c1078ed5b4335f4949dc2ad54ed9de43c56ea9b803375c23" "3952ef318c8cbccf09954ecf43250ac0cbd1f4ae66b4abe569491b260f6e054b" "7d56fb712ad356e2dacb43af7ec255c761a590e1182fe0537e1ec824b7897357" "0713580a6845e8075113a70275b3421333cfe7079e48228c52300606fa5ce73b" "f951343d4bbe5a90dba0f058de8317ca58a6822faa65d8463b0e751a07ec887c" "70cc30fd9d27a8d0d3ae82974ac2c409fd2cd5746470e2246778c6bec2d4857c" "f2b83b9388b1a57f6286153130ee704243870d40ae9ec931d0a1798a5a916e76" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" "49ec957b508c7d64708b40b0273697a84d3fee4f15dd9fc4a9588016adee3dad" "d1b4990bd599f5e2186c3f75769a2c5334063e9e541e37514942c27975700370" "cd736a63aa586be066d5a1f0e51179239fe70e16a9f18991f6f5d99732cabb32" "a3fa4abaf08cc169b61dea8f6df1bbe4123ec1d2afeb01c17e11fdc31fc66379" "93a0885d5f46d2aeac12bf6be1754faa7d5e28b27926b8aa812840fe7d0b7983" "10461a3c8ca61c52dfbbdedd974319b7f7fd720b091996481c8fb1dded6c6116" "bd7b7c5df1174796deefce5debc2d976b264585d51852c962362be83932873d9" "4697a2d4afca3f5ed4fdf5f715e36a6cac5c6154e105f3596b44a4874ae52c45" "7e78a1030293619094ea6ae80a7579a562068087080e01c2b8b503b27900165c" "6b289bab28a7e511f9c54496be647dc60f5bd8f9917c9495978762b99d8c96a0" "8aca557e9a17174d8f847fb02870cb2bb67f3b6e808e46c0e54a44e3e18e1020" "75d3dde259ce79660bac8e9e237b55674b910b470f313cdf4b019230d01a982a" "1c082c9b84449e54af757bcae23617d11f563fc9f33a832a8a2813c4d7dfb652" "6d589ac0e52375d311afaa745205abb6ccb3b21f6ba037104d71111e7e76a3fc" "100e7c5956d7bb3fd0eebff57fde6de8f3b9fafa056a2519f169f85199cc1c96" default)))
+    ("1ca1f43ca32d30b05980e01fa60c107b02240226ac486f41f9b790899f6f6e67" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" "49ec957b508c7d64708b40b0273697a84d3fee4f15dd9fc4a9588016adee3dad" "d1b4990bd599f5e2186c3f75769a2c5334063e9e541e37514942c27975700370" "cd736a63aa586be066d5a1f0e51179239fe70e16a9f18991f6f5d99732cabb32" "a3fa4abaf08cc169b61dea8f6df1bbe4123ec1d2afeb01c17e11fdc31fc66379" "93a0885d5f46d2aeac12bf6be1754faa7d5e28b27926b8aa812840fe7d0b7983" "10461a3c8ca61c52dfbbdedd974319b7f7fd720b091996481c8fb1dded6c6116" "bd7b7c5df1174796deefce5debc2d976b264585d51852c962362be83932873d9" "4697a2d4afca3f5ed4fdf5f715e36a6cac5c6154e105f3596b44a4874ae52c45" "7e78a1030293619094ea6ae80a7579a562068087080e01c2b8b503b27900165c" "6b289bab28a7e511f9c54496be647dc60f5bd8f9917c9495978762b99d8c96a0" "8aca557e9a17174d8f847fb02870cb2bb67f3b6e808e46c0e54a44e3e18e1020" "75d3dde259ce79660bac8e9e237b55674b910b470f313cdf4b019230d01a982a" "1c082c9b84449e54af757bcae23617d11f563fc9f33a832a8a2813c4d7dfb652" "6d589ac0e52375d311afaa745205abb6ccb3b21f6ba037104d71111e7e76a3fc" "100e7c5956d7bb3fd0eebff57fde6de8f3b9fafa056a2519f169f85199cc1c96" default)))
  '(fci-rule-color "#D6D6D6")
  '(jdee-db-active-breakpoint-face-colors (cons "#FFFBF0" "#268bd2"))
  '(jdee-db-requested-breakpoint-face-colors (cons "#FFFBF0" "#859900"))
@@ -552,9 +504,9 @@
  '(lsp-ui-peek-fontify (quote on-demand))
  '(lsp-ui-peek-list-width 50)
  '(lsp-ui-peek-peek-height 20)
- '(lsp-ui-sideline-code-actions-prefix "👻" t)
- '(lsp-ui-sideline-enable nil t)
- '(lsp-ui-sideline-ignore-duplicate t t)
+ '(lsp-ui-sideline-code-actions-prefix "✡" t)
+ '(lsp-ui-sideline-enable nil)
+ '(lsp-ui-sideline-ignore-duplicate t)
  '(lsp-ui-sideline-show-code-actions t)
  '(lsp-ui-sideline-show-diagnostics nil t)
  '(lsp-ui-sideline-show-hover t t)
@@ -563,10 +515,7 @@
  '(org-agenda-files (quote ("~/code/FH/webqube/api-mojo/notes.org")))
  '(package-selected-packages
    (quote
-    (lsp-ui-flycheck zygospore yasnippet yaml-mode which-key web-mode volatile-highlights use-package undo-tree transpose-frame smooth-scrolling smex rainbow-mode rainbow-delimiters purescript-mode psc-ide php-mode paredit org-bullets neotree multiple-cursors magit lsp-ui lsp-java lsp-haskell js2-mode ivy ido-vertical-mode helm-rg helm-projectile helm-lsp helm-ag hasklig-mode groovy-mode graphviz-dot-mode general gdscript-mode flycheck-joker flycheck-haskell flx-ido expand-region doom-themes diminish dap-mode company-lua company-lsp company-ghci company-ghc cider auctex all-the-icons aggressive-indent)))
- '(projectile-globally-ignored-directories (quote (".git" "node_modules")))
- '(projectile-globally-unignored-files (quote (".git")))
- '(projectile-mode t nil (projectile))
+    (theme-changer lsp-ui-flycheck zygospore yasnippet yaml-mode which-key web-mode volatile-highlights use-package undo-tree transpose-frame smooth-scrolling smex rainbow-mode rainbow-delimiters purescript-mode psc-ide php-mode paredit org-bullets neotree multiple-cursors magit lsp-ui lsp-java lsp-haskell js2-mode ivy ido-vertical-mode helm-rg helm-projectile helm-lsp helm-ag hasklig-mode groovy-mode graphviz-dot-mode general gdscript-mode flycheck-joker flycheck-haskell flx-ido expand-region doom-themes diminish dap-mode company-lua company-lsp company-ghci company-ghc cider auctex all-the-icons aggressive-indent)))
  '(vc-annotate-background "#FDF6E3")
  '(vc-annotate-color-map
    (list
