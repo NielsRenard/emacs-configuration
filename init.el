@@ -37,14 +37,14 @@
 (global-set-key (kbd "C-M-r") 'isearch-backward)
 (show-paren-mode 1)
 (setq save-interprogram-paste-before-kill t
-        apropos-do-all t
-        mouse-yank-at-point t
-        require-final-newline t
-        load-prefer-newer t
-        ediff-window-setup-function 'ediff-setup-windows-plain
-        save-place-file (concat user-emacs-directory "places")
-        backup-directory-alist `(("." . ,(concat user-emacs-directory
-                                                 "backups"))))
+      apropos-do-all t
+      mouse-yank-at-point t
+      require-final-newline t
+      load-prefer-newer t
+      ediff-window-setup-function 'ediff-setup-windows-plain
+      save-place-file (concat user-emacs-directory "places")
+      backup-directory-alist `(("." . ,(concat user-emacs-directory
+					       "backups"))))
 
 
 ;; disable minimizing frame
@@ -91,7 +91,7 @@
 
 ;; always use dark theme in terminal mode
 (if (not(display-graphic-p))
-  (load-theme 'doom-laserwave))
+    (load-theme 'doom-laserwave))
 
 (use-package volatile-highlights
   :diminish volatile-highlights-mode
@@ -109,7 +109,7 @@
   ;; In order for the icons to work it is very important that you install the Resource Fonts included
   ;; M-x all-the-icons-install-fonts
   ;; Bear in mind, this will also run fc-cache -f -v on MacOS and Linux which can take some time to complete.
-)
+  )
 
 ;; mouse-wheel scrolling
 (global-set-key [C-mouse-4] 'text-scale-increase)
@@ -138,10 +138,10 @@
   :config
   (smooth-scrolling-mode)
   (setq redisplay-dont-pause t
-  scroll-margin 1
-  scroll-step 1
-  scroll-conservatively 10000
-  scroll-preserve-screen-position 1))
+	scroll-margin 1
+	scroll-step 1
+	scroll-conservatively 10000
+	scroll-preserve-screen-position 1))
 
 ;; swap easily between vertical/horizontal arrangement
 (use-package transpose-frame
@@ -157,7 +157,7 @@
 
 (use-package general
   :config (general-define-key "C-'" 'avy-goto-char-timer)
-          (general-define-key "C-M-'" 'avy-goto-line))
+  (general-define-key "C-M-'" 'avy-goto-line))
 
 (use-package projectile
   :diminish projectile-mode
@@ -262,7 +262,7 @@
   (add-hook 'after-init-hook #'global-flycheck-mode)
   :bind
   ("C-c n" . flycheck-next-error)
-)
+  )
 
 ;; Nope, I want my copies in the system temp dir.
 (setq flymake-run-in-place nil)
@@ -297,7 +297,7 @@
 (defun my-clojure-mode-hook ()
   "Initialize clojure refactoring and code snippets."
   (yas-minor-mode 1) ;;for adding require/use/import statements
-)
+  )
 
 
 
@@ -358,35 +358,35 @@
 (use-package helm-lsp :commands helm-lsp-workspace-symbol)
 (use-package yasnippet)
 (use-package lsp-ui
-   :config (lsp-ui-flycheck-enable t)
-   :custom
-   (lsp-ui-doc-enable nil)
-   (lsp-ui-sideline-enable nil)
-   (lsp-ui-sideline-ignore-duplicate t)
-   (lsp-ui-sideline-show-symbol t)
-   (lsp-ui-sideline-show-hover t)
-   (lsp-ui-sideline-show-diagnostics nil)
-   ;; to put a different side-actions colour:
-   ;;(custom-set-faces '(lsp-ui-sideline-code-action ((t (:foreground "#268bd2")))))
-;   (lsp-ui-sideline-show-code-actions t)
-   (lsp-ui-imenu-enable t)
-   (lsp-ui-imenu-kind-position 'top)
-   :preface
-   (defun ladicle/toggle-lsp-ui-doc ()
-     (interactive)
-     (if lsp-ui-doc-mode
-         (progn
-           (lsp-ui-doc-mode -1)
-           (lsp-ui-doc--hide-frame))
-       (lsp-ui-doc-mode 1)))
-   :bind
-   (:map lsp-mode-map
-         ("C-c C-t" . lsp-describe-thing-at-point)
-         ("C-c C-r" . lsp-ui-peek-find-references)
-         ("C-c C-j" . lsp-ui-peek-find-definitions)
-         ("C-c C-m"   . lsp-ui-imenu)
-         ("C-c C-s"   . lsp-ui-sideline-mode)
-         ("C-c C-d"   . ladicle/toggle-lsp-ui-doc)))
+  :config (lsp-ui-flycheck-enable t)
+  :custom
+  (lsp-ui-doc-enable nil)
+  (lsp-ui-sideline-enable nil)
+  (lsp-ui-sideline-ignore-duplicate t)
+  (lsp-ui-sideline-show-symbol t)
+  (lsp-ui-sideline-show-hover t)
+  (lsp-ui-sideline-show-diagnostics nil)
+  ;; to put a different side-actions colour:
+  ;;(custom-set-faces '(lsp-ui-sideline-code-action ((t (:foreground "#268bd2")))))
+					;   (lsp-ui-sideline-show-code-actions t)
+  (lsp-ui-imenu-enable t)
+  (lsp-ui-imenu-kind-position 'top)
+  :preface
+  (defun ladicle/toggle-lsp-ui-doc ()
+    (interactive)
+    (if lsp-ui-doc-mode
+	(progn
+	  (lsp-ui-doc-mode -1)
+	  (lsp-ui-doc--hide-frame))
+      (lsp-ui-doc-mode 1)))
+  :bind
+  (:map lsp-mode-map
+	("C-c C-t" . lsp-describe-thing-at-point)
+	("C-c C-r" . lsp-ui-peek-find-references)
+	("C-c C-j" . lsp-ui-peek-find-definitions)
+	("C-c C-m"   . lsp-ui-imenu)
+	("C-c C-s"   . lsp-ui-sideline-mode)
+	("C-c C-d"   . ladicle/toggle-lsp-ui-doc)))
 
 ;; java lsp
 (use-package lsp-java :after lsp
@@ -423,10 +423,10 @@
 
 ;;;; purescript
 (use-package purescript-mode
-             :commands purescript-mode
-             :mode (("\\.purs$" . purescript-mode))
-             :config
-             (add-hook 'purescript-mode-hook 'turn-on-purescript-indentation))
+  :commands purescript-mode
+  :mode (("\\.purs$" . purescript-mode))
+  :config
+  (add-hook 'purescript-mode-hook 'turn-on-purescript-indentation))
 
 (use-package psc-ide)
 
@@ -500,9 +500,10 @@
  '(jdee-db-requested-breakpoint-face-colors (cons "#FFFBF0" "#859900"))
  '(jdee-db-spec-breakpoint-face-colors (cons "#FFFBF0" "#E1DBCD"))
  '(js-indent-level 2)
- '(lsp-ui-doc-enable nil t)
- '(lsp-ui-imenu-enable t t)
- '(lsp-ui-imenu-kind-position (quote top) t)
+ '(lsp-java-import-gradle-enabled t)
+ '(lsp-ui-doc-enable nil)
+ '(lsp-ui-imenu-enable t)
+ '(lsp-ui-imenu-kind-position (quote top))
  '(lsp-ui-peek-enable t)
  '(lsp-ui-peek-fontify (quote on-demand))
  '(lsp-ui-peek-list-width 50)
@@ -511,9 +512,9 @@
  '(lsp-ui-sideline-enable nil)
  '(lsp-ui-sideline-ignore-duplicate t)
  '(lsp-ui-sideline-show-code-actions t)
- '(lsp-ui-sideline-show-diagnostics nil t)
- '(lsp-ui-sideline-show-hover t t)
- '(lsp-ui-sideline-show-symbol t t)
+ '(lsp-ui-sideline-show-diagnostics nil)
+ '(lsp-ui-sideline-show-hover t)
+ '(lsp-ui-sideline-show-symbol t)
  '(objed-cursor-color "#D70000")
  '(org-agenda-files (quote ("~/code/FH/webqube/api-mojo/notes.org")))
  '(package-selected-packages
