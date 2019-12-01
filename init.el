@@ -75,7 +75,6 @@
 
 ;;;; looks
 
-
 (use-package doom-themes
   :ensure t
   :config (setq inhibit-startup-screen t)
@@ -131,9 +130,6 @@
 
 
 ;;;; navigation
-
-
-(setq default-directory "~/code/notes/")
 
 ;; modeline shows name of the function you are in
 (which-function-mode t)
@@ -399,7 +395,13 @@
   (add-hook 'java-mode-hook 'subword-mode)
   (require 'dap-java))
 
-(add-hook 'haskell-mode-hook 'flycheck-mode)
+;; fix dap-java-run-test ansi color escape codes
+(require 'ansi-color)
+(defun colorize-compilation-buffer ()
+  (toggle-read-only)
+  (ansi-color-apply-on-region compilation-filter-start (point))
+  (toggle-read-only))
+(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
 
 (use-package dap-mode
   :after lsp-mode
@@ -412,15 +414,12 @@
 (use-package lsp-haskell :after lsp
   :config (add-hook 'haskell-mode-hook 'lsp))
 
-;;;; haskell lsp
-;;(require 'lsp-haskell)
-;;(add-hook 'haskell-mode-hook #'lsp)
+(add-hook 'haskell-mode-hook 'flycheck-mode)
 
 ;;;; javascript
 (use-package js2-mode
   :config
   (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
-
 
 ;;;; purescript
 (use-package purescript-mode
@@ -437,7 +436,6 @@
             (company-mode)
             (turn-on-purescript-indentation)
             (customize-set-variable 'psc-ide-add-import-on-completion t)))
-
 
 ;;;; groovy
 (use-package groovy-mode
