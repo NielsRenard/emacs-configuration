@@ -132,6 +132,10 @@
 
 ;;;; navigation
 
+
+(setq default-directory "~/code/notes/")
+
+;; modeline shows name of the function you are in
 (which-function-mode t)
 
 (use-package smooth-scrolling
@@ -535,30 +539,34 @@
  '(cperl-indent-level 4)
  '(custom-safe-themes
    (quote
-    ("f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" "49ec957b508c7d64708b40b0273697a84d3fee4f15dd9fc4a9588016adee3dad" "d1b4990bd599f5e2186c3f75769a2c5334063e9e541e37514942c27975700370" "cd736a63aa586be066d5a1f0e51179239fe70e16a9f18991f6f5d99732cabb32" "a3fa4abaf08cc169b61dea8f6df1bbe4123ec1d2afeb01c17e11fdc31fc66379" "93a0885d5f46d2aeac12bf6be1754faa7d5e28b27926b8aa812840fe7d0b7983" "10461a3c8ca61c52dfbbdedd974319b7f7fd720b091996481c8fb1dded6c6116" "bd7b7c5df1174796deefce5debc2d976b264585d51852c962362be83932873d9" "4697a2d4afca3f5ed4fdf5f715e36a6cac5c6154e105f3596b44a4874ae52c45" "7e78a1030293619094ea6ae80a7579a562068087080e01c2b8b503b27900165c" "6b289bab28a7e511f9c54496be647dc60f5bd8f9917c9495978762b99d8c96a0" "8aca557e9a17174d8f847fb02870cb2bb67f3b6e808e46c0e54a44e3e18e1020" "75d3dde259ce79660bac8e9e237b55674b910b470f313cdf4b019230d01a982a" "1c082c9b84449e54af757bcae23617d11f563fc9f33a832a8a2813c4d7dfb652" "6d589ac0e52375d311afaa745205abb6ccb3b21f6ba037104d71111e7e76a3fc" "100e7c5956d7bb3fd0eebff57fde6de8f3b9fafa056a2519f169f85199cc1c96" default)))
+    ("b462d00de785490a0b6861807a360f5c1e05b48a159a99786145de7e3cce3afe" "7ffb0d3d0c797b980ed7330adc04a66516d49a61e4187a7054dda014676421d9" "001c2ff8afde9c3e707a2eb3e810a0a36fb2b466e96377ac95968e7f8930a7c5" "7f74a3b9a1f5e3d31358b48b8f8a1154aab2534fae82c9e918fb389fca776788" "f30aded97e67a487d30f38a1ac48eddb49fdb06ac01ebeaff39439997cbdd869" "cdb3e7a8864cede434b168c9a060bf853eeb5b3f9f758310d2a2e23be41a24ae" "428754d8f3ed6449c1078ed5b4335f4949dc2ad54ed9de43c56ea9b803375c23" "3952ef318c8cbccf09954ecf43250ac0cbd1f4ae66b4abe569491b260f6e054b" "7d56fb712ad356e2dacb43af7ec255c761a590e1182fe0537e1ec824b7897357" "0713580a6845e8075113a70275b3421333cfe7079e48228c52300606fa5ce73b" "f951343d4bbe5a90dba0f058de8317ca58a6822faa65d8463b0e751a07ec887c" "70cc30fd9d27a8d0d3ae82974ac2c409fd2cd5746470e2246778c6bec2d4857c" "f2b83b9388b1a57f6286153130ee704243870d40ae9ec931d0a1798a5a916e76" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" "49ec957b508c7d64708b40b0273697a84d3fee4f15dd9fc4a9588016adee3dad" "d1b4990bd599f5e2186c3f75769a2c5334063e9e541e37514942c27975700370" "cd736a63aa586be066d5a1f0e51179239fe70e16a9f18991f6f5d99732cabb32" "a3fa4abaf08cc169b61dea8f6df1bbe4123ec1d2afeb01c17e11fdc31fc66379" "93a0885d5f46d2aeac12bf6be1754faa7d5e28b27926b8aa812840fe7d0b7983" "10461a3c8ca61c52dfbbdedd974319b7f7fd720b091996481c8fb1dded6c6116" "bd7b7c5df1174796deefce5debc2d976b264585d51852c962362be83932873d9" "4697a2d4afca3f5ed4fdf5f715e36a6cac5c6154e105f3596b44a4874ae52c45" "7e78a1030293619094ea6ae80a7579a562068087080e01c2b8b503b27900165c" "6b289bab28a7e511f9c54496be647dc60f5bd8f9917c9495978762b99d8c96a0" "8aca557e9a17174d8f847fb02870cb2bb67f3b6e808e46c0e54a44e3e18e1020" "75d3dde259ce79660bac8e9e237b55674b910b470f313cdf4b019230d01a982a" "1c082c9b84449e54af757bcae23617d11f563fc9f33a832a8a2813c4d7dfb652" "6d589ac0e52375d311afaa745205abb6ccb3b21f6ba037104d71111e7e76a3fc" "100e7c5956d7bb3fd0eebff57fde6de8f3b9fafa056a2519f169f85199cc1c96" default)))
  '(fci-rule-color "#D6D6D6")
  '(jdee-db-active-breakpoint-face-colors (cons "#FFFBF0" "#268bd2"))
  '(jdee-db-requested-breakpoint-face-colors (cons "#FFFBF0" "#859900"))
  '(jdee-db-spec-breakpoint-face-colors (cons "#FFFBF0" "#E1DBCD"))
  '(js-indent-level 2)
- '(lsp-ui-doc-enable nil)
- '(lsp-ui-imenu-enable t)
- '(lsp-ui-imenu-kind-position (quote top))
+ '(lsp-ui-doc-enable nil t)
+ '(lsp-ui-imenu-enable t t)
+ '(lsp-ui-imenu-kind-position (quote top) t)
  '(lsp-ui-peek-enable t)
  '(lsp-ui-peek-fontify (quote on-demand))
  '(lsp-ui-peek-list-width 50)
  '(lsp-ui-peek-peek-height 20)
  '(lsp-ui-sideline-code-actions-prefix "👻" t)
- '(lsp-ui-sideline-enable nil)
- '(lsp-ui-sideline-ignore-duplicate t)
+ '(lsp-ui-sideline-enable nil t)
+ '(lsp-ui-sideline-ignore-duplicate t t)
  '(lsp-ui-sideline-show-code-actions t)
- '(lsp-ui-sideline-show-diagnostics nil)
- '(lsp-ui-sideline-show-hover t)
- '(lsp-ui-sideline-show-symbol t)
+ '(lsp-ui-sideline-show-diagnostics nil t)
+ '(lsp-ui-sideline-show-hover t t)
+ '(lsp-ui-sideline-show-symbol t t)
+ '(objed-cursor-color "#D70000")
  '(org-agenda-files (quote ("~/code/FH/webqube/api-mojo/notes.org")))
  '(package-selected-packages
    (quote
     (lsp-ui-flycheck zygospore yasnippet yaml-mode which-key web-mode volatile-highlights use-package undo-tree transpose-frame smooth-scrolling smex rainbow-mode rainbow-delimiters purescript-mode psc-ide php-mode paredit org-bullets neotree multiple-cursors magit lsp-ui lsp-java lsp-haskell js2-mode ivy ido-vertical-mode helm-rg helm-projectile helm-lsp helm-ag hasklig-mode groovy-mode graphviz-dot-mode general gdscript-mode flycheck-joker flycheck-haskell flx-ido expand-region doom-themes diminish dap-mode company-lua company-lsp company-ghci company-ghc cider auctex all-the-icons aggressive-indent)))
+ '(projectile-globally-ignored-directories (quote (".git" "node_modules")))
+ '(projectile-globally-unignored-files (quote (".git")))
+ '(projectile-mode t nil (projectile))
  '(vc-annotate-background "#FDF6E3")
  '(vc-annotate-color-map
    (list
