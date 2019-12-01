@@ -391,7 +391,9 @@
 
 ;; java lsp
 (use-package lsp-java :after lsp
-  :config (add-hook 'java-mode-hook 'lsp)
+  :config
+  (add-hook 'java-mode-hook 'lsp)
+  (add-hook 'java-mode-hook 'subword-mode)
   (require 'dap-java))
 
 (add-hook 'haskell-mode-hook 'flycheck-mode)
