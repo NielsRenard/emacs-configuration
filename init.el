@@ -352,7 +352,9 @@
 ;;;; lsp
 (use-package lsp-mode
   :commands lsp
-  :config  (setq lsp-prefer-flymake nil))
+  :config  (setq lsp-prefer-flymake nil)
+  :hook (haskell-mode . lsp-deferred)
+  :commands (lsp lsp-deferred))
 
 (use-package company-lsp :commands company-lsp)
 (use-package helm-lsp :commands helm-lsp-workspace-symbol)
@@ -384,9 +386,10 @@
 	("C-c C-t" . lsp-describe-thing-at-point)
 	("C-c C-r" . lsp-ui-peek-find-references)
 	("C-c C-j" . lsp-ui-peek-find-definitions)
-	("C-c C-m"   . lsp-ui-imenu)
-	("C-c C-s"   . lsp-ui-sideline-mode)
-	("C-c C-d"   . ladicle/toggle-lsp-ui-doc)))
+	("C-c C-m" . lsp-ui-imenu)
+	("C-c C-s" . lsp-ui-sideline-mode)
+	("M-RET"   . lsp-ui-sideline-apply-code-actions)
+	("C-c C-d" . ladicle/toggle-lsp-ui-doc)))
 
 ;; java lsp
 (use-package lsp-java :after lsp
@@ -396,12 +399,12 @@
   (require 'dap-java))
 
 ;; fix dap-java-run-test ansi color escape codes
-(require 'ansi-color)
-(defun colorize-compilation-buffer ()
-  (toggle-read-only)
-  (ansi-color-apply-on-region compilation-filter-start (point))
-  (toggle-read-only))
-(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
+;;(require 'ansi-color)
+;;(defun colorize-compilation-buffer ()
+;;  (toggle-read-only)
+;;  (ansi-color-apply-on-region compilation-filter-start (point))
+;;  (toggle-read-only))
+;;(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
 
 (use-package dap-mode
   :after lsp-mode
@@ -410,11 +413,10 @@
   (dap-mode t)
   (dap-ui-mode t))
 
+(use-package lsp-haskell :after lsp )
+;;(add-hook 'haskell-mode-hook 'lsp)
 
-(use-package lsp-haskell :after lsp
-  :config (add-hook 'haskell-mode-hook 'lsp))
-
-(add-hook 'haskell-mode-hook 'flycheck-mode)
+;;(add-hook 'haskell-mode-hook 'flycheck-mode)
 
 ;;;; javascript
 (use-package js2-mode
@@ -509,7 +511,7 @@
  '(lsp-ui-peek-list-width 50)
  '(lsp-ui-peek-peek-height 20)
  '(lsp-ui-sideline-code-actions-prefix "✡" t)
- '(lsp-ui-sideline-enable nil)
+ '(lsp-ui-sideline-enable t)
  '(lsp-ui-sideline-ignore-duplicate t)
  '(lsp-ui-sideline-show-code-actions t)
  '(lsp-ui-sideline-show-diagnostics nil)
@@ -519,7 +521,7 @@
  '(org-agenda-files (quote ("~/code/FH/webqube/api-mojo/notes.org")))
  '(package-selected-packages
    (quote
-    (theme-changer lsp-ui-flycheck zygospore yasnippet yaml-mode which-key web-mode volatile-highlights use-package undo-tree transpose-frame smooth-scrolling smex rainbow-mode rainbow-delimiters purescript-mode psc-ide php-mode paredit org-bullets neotree multiple-cursors magit lsp-ui lsp-java lsp-haskell js2-mode ivy ido-vertical-mode helm-rg helm-projectile helm-lsp helm-ag hasklig-mode groovy-mode graphviz-dot-mode general gdscript-mode flycheck-joker flycheck-haskell flx-ido expand-region doom-themes diminish dap-mode company-lua company-lsp company-ghci company-ghc cider auctex all-the-icons aggressive-indent)))
+    (lsp-mode theme-changer lsp-ui-flycheck zygospore yasnippet yaml-mode which-key web-mode volatile-highlights use-package undo-tree transpose-frame smooth-scrolling smex rainbow-mode rainbow-delimiters purescript-mode psc-ide php-mode paredit org-bullets neotree multiple-cursors magit lsp-ui lsp-java lsp-haskell js2-mode ivy ido-vertical-mode helm-rg helm-projectile helm-lsp helm-ag hasklig-mode groovy-mode graphviz-dot-mode general gdscript-mode flycheck-joker flycheck-haskell flx-ido expand-region doom-themes diminish dap-mode company-lua company-lsp company-ghci company-ghc cider auctex all-the-icons aggressive-indent)))
  '(vc-annotate-background "#FDF6E3")
  '(vc-annotate-color-map
    (list
