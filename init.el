@@ -30,7 +30,10 @@
 ;; inline better-default fns for now
 (menu-bar-mode -1)
 (tool-bar-mode -1)
-(scroll-bar-mode -1)
+;;(scroll-bar-mode -1)
+;; set linenumbers by default
+;;(global-linum-mode)
+
 (global-set-key (kbd "M-z") 'zap-up-to-char)
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
 (global-set-key (kbd "C-r") 'isearch-backward-regexp)
@@ -115,9 +118,6 @@
 ;; mouse-wheel scrolling
 (global-set-key [C-mouse-4] 'text-scale-increase)
 (global-set-key [C-mouse-5] 'text-scale-decrease)
-
-;; set linenumbers by default
-(global-linum-mode)
 
 ;; less clutter in mode-line
 (use-package diminish)
@@ -305,6 +305,17 @@
 ;;;; php
 (use-package php-mode)
 
+;;;; rust
+(use-package toml-mode)
+
+(use-package rust-mode
+  :hook (rust-mode . lsp-deferred))
+
+(use-package cargo
+  :hook (rust-mode . cargo-minor-mode))
+
+(use-package flycheck-rust
+  :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
 ;;;; haskell
 (use-package haskell-mode
@@ -331,7 +342,6 @@
 (use-package lsp-mode
   :commands lsp
   :config  (setq lsp-prefer-flymake nil)
-  :hook (haskell-mode . lsp-deferred)
   :commands (lsp-deferred))
 
 (use-package company-lsp :commands company-lsp)
@@ -391,8 +401,9 @@
   (dap-mode t)
   (dap-ui-mode t))
 
-(use-package lsp-haskell :after lsp )
-;;(add-hook 'haskell-mode-hook 'lsp)
+(use-package lsp-haskell :after lsp)
+
+(add-hook 'haskell-mode-hook 'lsp-deffered)
 
 ;;(add-hook 'haskell-mode-hook 'flycheck-mode)
 
