@@ -339,6 +339,10 @@
 ;;
 ;;(flycheck-add-next-checker 'intero '(warning . haskell-hlint))
 
+;;;; elm
+
+(use-package elm-mode)
+
 ;;;; lsp
 (use-package lsp-mode
   :commands lsp
