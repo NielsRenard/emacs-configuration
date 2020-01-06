@@ -309,7 +309,8 @@
 (use-package toml-mode)
 
 (use-package rust-mode
-  :hook (rust-mode . lsp-deferred))
+  :hook (rust-mode . lsp-deferred)
+  :config (add-hook 'rust-mode-hook 'subword-mode))
 
 (use-package cargo
   :hook (rust-mode . cargo-minor-mode))
