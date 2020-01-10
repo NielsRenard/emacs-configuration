@@ -1,3 +1,7 @@
+.lsp-session*
+eclipse.jdt.ls
+init.el.rej
+workspace
 /tmp
 *~
 *\#*
