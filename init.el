@@ -25,9 +25,7 @@
 
 ;;"A defined abbrev is a word which expands
 (setq-default abbrev-mode t)
-;;(add-to-list 'load-path "~/.emacs.d/better-defaults")
-;;(require 'better-defaults)
-;; inline better-default fns for now
+
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 ;;(scroll-bar-mode -1)
@@ -82,13 +80,14 @@
 (use-package doom-themes
   :ensure t
   :config (setq inhibit-startup-screen t)
-  (set-default-font "-ADBO-Hasklig-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1"))
+  ;;(set-default-font "-ADBO-Hasklig-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1")
+  (set-default-font "-PfEd-Fantasque Sans Mono-normal-normal-normal-*-35-*-*-*-m-0-iso10646-1"))
 
 ;; changes themes based on time of day
 (use-package theme-changer
   :config
-  (setq calendar-latitude 52)
-  (setq calendar-longitude 5)
+  (setq calendar-latitude 33)
+  (setq calendar-longitude 130)
   (change-theme 'doom-solarized-light 'doom-laserwave))
 
 (setq custom-safe-themes t)
@@ -115,7 +114,7 @@
   ;; Bear in mind, this will also run fc-cache -f -v on MacOS and Linux which can take some time to complete.
   )
 
-;; mouse-wheel scrolling
+;; mouse-wheel scrolling zoom
 (global-set-key [C-mouse-4] 'text-scale-increase)
 (global-set-key [C-mouse-5] 'text-scale-decrease)
 
@@ -124,7 +123,8 @@
 
 ;;;; editing
 (use-package multiple-cursors
-  :config  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+  :config
+  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
   (global-set-key (kbd "C->") 'mc/mark-next-like-this)
   (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
   (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
@@ -156,10 +156,6 @@
   (setq neo-smart-open t)
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
-(use-package general
-  :config (general-define-key "C-'" 'avy-goto-char-timer)
-  (general-define-key "C-M-'" 'avy-goto-line))
-
 (use-package projectile
   :diminish projectile-mode
   :config (projectile-mode))
@@ -167,17 +163,14 @@
 (use-package helm-projectile
   :bind
   ("C-c f" . helm-projectile)
-  ("C-c s" . helm-projectile-ag)
+  ("C-c s" . helm-rg)
   ("C-c i" . helm-imenu)
   ("C-c p" . helm-projectile-switch-project))
 
 (setq projectile-enable-caching t)
 (setq projectile-indexing-method 'native)
 (setq projectile-globally-ignored-directories '("node_modules"))
-
-(general-define-key
- :prefix "C-c"
- "."	'helm-projectile-find-file-dwim)
+(setq projectile-globally-ignored-directories '(".stack-work"))
 
 (use-package expand-region
   :bind ("C-=" . er/expand-region))
@@ -192,8 +185,12 @@
 (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)
 
 (use-package avy
-  :commands (avy-goto-char-timer))
+  :ensure t
+  :commands (avy-goto-char-timer)
+  :bind (("<C-return>" . avy-goto-char-timer)
+	 ("<C-M-return>" . avy-goto-line)))
 
+;; better running commands by name
 (use-package smex
   :bind ("M-x" . smex))
 
@@ -204,8 +201,6 @@
   :config (which-key-mode)
   (setq which-key-idle-delay 0.05))
 
-;; hit insert to cycle to next buffer
-(global-set-key (kbd "<insert>") 'other-window)
 ;; move around with shift+arrowkeys
 (windmove-default-keybindings)
 
@@ -243,7 +238,8 @@
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode)
   :bind
-  ("C-c n" . flycheck-next-error)
+  (("C-c C-n" . flycheck-next-error)
+   ("C-c C-p" . flycheck-previous-error))
   )
 
 ;; Nope, I want my copies in the system temp dir.
@@ -302,9 +298,6 @@
 (add-to-list 'auto-mode-alist '("\\.pm\\'" . cperl-mode))
 (add-to-list 'auto-mode-alist '("\\.pl\\'" . cperl-mode))
 
-;;;; php
-(use-package php-mode)
-
 ;;;; rust
 (use-package toml-mode)
 
@@ -327,17 +320,6 @@
 (use-package hasklig-mode
   :config
   :hook (haskell-mode))
-
-;;(use-package intero
-;;  :config
-;;  :hook (haskell-mode))
-
-;;(use-package intero
-;;  :config
-;;  (add-hook 'haskell-mode #'intero-mode)
-;;  (intero-global-mode 1))
-;;
-;;(flycheck-add-next-checker 'intero '(warning . haskell-hlint))
 
 ;;;; elm
 
@@ -408,9 +390,7 @@
 
 (use-package lsp-haskell :after lsp)
 
-(add-hook 'haskell-mode-hook 'lsp-deffered)
-
-;;(add-hook 'haskell-mode-hook 'flycheck-mode)
+(add-hook 'haskell-mode-hook 'lsp-deferred)
 
 ;;;; javascript
 (use-package js2-mode
@@ -490,7 +470,7 @@
  '(cperl-indent-level 4)
  '(custom-safe-themes
    (quote
-    ("7d56fb712ad356e2dacb43af7ec255c761a590e1182fe0537e1ec824b7897357" "3952ef318c8cbccf09954ecf43250ac0cbd1f4ae66b4abe569491b260f6e054b" "1ca1f43ca32d30b05980e01fa60c107b02240226ac486f41f9b790899f6f6e67" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" "49ec957b508c7d64708b40b0273697a84d3fee4f15dd9fc4a9588016adee3dad" "d1b4990bd599f5e2186c3f75769a2c5334063e9e541e37514942c27975700370" "cd736a63aa586be066d5a1f0e51179239fe70e16a9f18991f6f5d99732cabb32" "a3fa4abaf08cc169b61dea8f6df1bbe4123ec1d2afeb01c17e11fdc31fc66379" "93a0885d5f46d2aeac12bf6be1754faa7d5e28b27926b8aa812840fe7d0b7983" "10461a3c8ca61c52dfbbdedd974319b7f7fd720b091996481c8fb1dded6c6116" "bd7b7c5df1174796deefce5debc2d976b264585d51852c962362be83932873d9" "4697a2d4afca3f5ed4fdf5f715e36a6cac5c6154e105f3596b44a4874ae52c45" "7e78a1030293619094ea6ae80a7579a562068087080e01c2b8b503b27900165c" "6b289bab28a7e511f9c54496be647dc60f5bd8f9917c9495978762b99d8c96a0" "8aca557e9a17174d8f847fb02870cb2bb67f3b6e808e46c0e54a44e3e18e1020" "75d3dde259ce79660bac8e9e237b55674b910b470f313cdf4b019230d01a982a" "1c082c9b84449e54af757bcae23617d11f563fc9f33a832a8a2813c4d7dfb652" "6d589ac0e52375d311afaa745205abb6ccb3b21f6ba037104d71111e7e76a3fc" "100e7c5956d7bb3fd0eebff57fde6de8f3b9fafa056a2519f169f85199cc1c96" default)))
+    ("0d087b2853473609d9efd2e9fbeac088e89f36718c4a4c89c568dd1b628eae41" "428754d8f3ed6449c1078ed5b4335f4949dc2ad54ed9de43c56ea9b803375c23" "7d56fb712ad356e2dacb43af7ec255c761a590e1182fe0537e1ec824b7897357" "3952ef318c8cbccf09954ecf43250ac0cbd1f4ae66b4abe569491b260f6e054b" "1ca1f43ca32d30b05980e01fa60c107b02240226ac486f41f9b790899f6f6e67" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" "49ec957b508c7d64708b40b0273697a84d3fee4f15dd9fc4a9588016adee3dad" "d1b4990bd599f5e2186c3f75769a2c5334063e9e541e37514942c27975700370" "cd736a63aa586be066d5a1f0e51179239fe70e16a9f18991f6f5d99732cabb32" "a3fa4abaf08cc169b61dea8f6df1bbe4123ec1d2afeb01c17e11fdc31fc66379" "93a0885d5f46d2aeac12bf6be1754faa7d5e28b27926b8aa812840fe7d0b7983" "10461a3c8ca61c52dfbbdedd974319b7f7fd720b091996481c8fb1dded6c6116" "bd7b7c5df1174796deefce5debc2d976b264585d51852c962362be83932873d9" "4697a2d4afca3f5ed4fdf5f715e36a6cac5c6154e105f3596b44a4874ae52c45" "7e78a1030293619094ea6ae80a7579a562068087080e01c2b8b503b27900165c" "6b289bab28a7e511f9c54496be647dc60f5bd8f9917c9495978762b99d8c96a0" "8aca557e9a17174d8f847fb02870cb2bb67f3b6e808e46c0e54a44e3e18e1020" "75d3dde259ce79660bac8e9e237b55674b910b470f313cdf4b019230d01a982a" "1c082c9b84449e54af757bcae23617d11f563fc9f33a832a8a2813c4d7dfb652" "6d589ac0e52375d311afaa745205abb6ccb3b21f6ba037104d71111e7e76a3fc" "100e7c5956d7bb3fd0eebff57fde6de8f3b9fafa056a2519f169f85199cc1c96" default)))
  '(fci-rule-color "#D6D6D6")
  '(jdee-db-active-breakpoint-face-colors (cons "#FFFBF0" "#268bd2"))
  '(jdee-db-requested-breakpoint-face-colors (cons "#FFFBF0" "#859900"))
@@ -515,7 +495,7 @@
  '(org-agenda-files (quote ("~/code/FH/webqube/api-mojo/notes.org")))
  '(package-selected-packages
    (quote
-    (lsp-ui lsp-mode theme-changer lsp-ui-flycheck zygospore yasnippet yaml-mode which-key web-mode volatile-highlights use-package undo-tree transpose-frame smooth-scrolling smex rainbow-mode rainbow-delimiters purescript-mode psc-ide php-mode paredit org-bullets neotree multiple-cursors magit lsp-java lsp-haskell js2-mode ivy ido-vertical-mode helm-rg helm-projectile helm-lsp helm-ag hasklig-mode groovy-mode graphviz-dot-mode general gdscript-mode flycheck-joker flycheck-haskell flx-ido expand-region doom-themes diminish dap-mode company-lua company-lsp company-ghci company-ghc cider auctex all-the-icons aggressive-indent)))
+    (elm-mode lsp-ui lsp-mode theme-changer lsp-ui-flycheck zygospore yasnippet yaml-mode which-key web-mode volatile-highlights use-package undo-tree transpose-frame smooth-scrolling smex rainbow-mode rainbow-delimiters purescript-mode psc-ide php-mode paredit org-bullets neotree multiple-cursors magit lsp-java lsp-haskell js2-mode ivy ido-vertical-mode helm-rg helm-projectile helm-lsp helm-ag hasklig-mode groovy-mode graphviz-dot-mode general gdscript-mode flycheck-joker flycheck-haskell flx-ido expand-region doom-themes diminish dap-mode company-lua company-lsp company-ghci company-ghc cider auctex all-the-icons aggressive-indent)))
  '(vc-annotate-background "#FDF6E3")
  '(vc-annotate-color-map
    (list
