@@ -253,13 +253,6 @@
 (add-to-list 'load-path "~/.emacs.d/flycheck-inline")
 (require 'flycheck-inline)
 
-(use-package flycheck
-  :config
-  (add-hook 'after-init-hook #'global-flycheck-mode)
-  (add-hook 'flycheck-mode-hook #'flycheck-inline-mode)
-  :bind
-  ("C-c n" . flycheck-next-error))
-
 ;;;; clojure
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
