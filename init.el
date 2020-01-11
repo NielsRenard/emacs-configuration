@@ -171,7 +171,8 @@
   ("C-c p" . helm-projectile-switch-project))
 
 (setq projectile-enable-caching t)
-(setq projectile-indexing-method 'native)
+(setq projectile-indexing-method 'alien)
+(setq projectile-globally-ignored-directories '(".git"))
 (setq projectile-globally-ignored-directories '("node_modules"))
 (setq projectile-globally-ignored-directories '(".stack-work"))
 
