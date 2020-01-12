@@ -4,7 +4,7 @@
 
 ;; Melpa
 (add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/") t)
+	     '("melpa" . "https://melpa.org/packages/") t)
 ;;; Code:
 ;; Bootstrap 'use-package'
 (unless (package-installed-p 'use-package)
@@ -72,7 +72,7 @@
   :config
   ;; autosave the undo-tree history
   (setq undo-tree-history-directory-alist
-        `((".*" . ,temporary-file-directory)))
+	`((".*" . ,temporary-file-directory)))
   (setq undo-tree-auto-save-history t))
 
 (use-package zone
@@ -228,12 +228,12 @@
 (use-package company-ghci
   :hook (haskell-mode . company-mode)
   :config (setq company-idle-delay 0.05
-                company-minimum-prefix-length 2))
+		company-minimum-prefix-length 2))
 
 (use-package company-ghc
   :hook (haskell-mode . company-mode)
   :config (setq company-idle-delay 0.05
-                company-minimum-prefix-length 2))
+		company-minimum-prefix-length 2))
 
 
 ;;;; syntax checking
@@ -243,6 +243,7 @@
   (add-hook 'after-init-hook #'global-flycheck-mode)
   :bind
   (("C-c C-n" . flycheck-next-error)
+   ("C-c n" . flycheck-next-error)
    ("C-c C-p" . flycheck-previous-error))
   )
 
@@ -364,9 +365,9 @@
 	("C-c C-d" . ladicle/toggle-lsp-ui-doc)))
 
 ;; java lsp
-(use-package lsp-java :after lsp
+(use-package lsp-java
+  :hook (java-mode . lsp-deferred)
   :config
-  (add-hook 'java-mode-hook 'lsp)
   (add-hook 'java-mode-hook 'subword-mode)
   (require 'dap-java))
 
@@ -404,11 +405,11 @@
 (use-package psc-ide)
 
 (add-hook 'purescript-mode-hook
-          (lambda ()
-            (psc-ide-mode)
-            (company-mode)
-            (turn-on-purescript-indentation)
-            (customize-set-variable 'psc-ide-add-import-on-completion t)))
+	  (lambda ()
+	    (psc-ide-mode)
+	    (company-mode)
+	    (turn-on-purescript-indentation)
+	    (customize-set-variable 'psc-ide-add-import-on-completion t)))
 
 ;;;; groovy
 (use-package groovy-mode
@@ -435,6 +436,11 @@
 (use-package org-bullets
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
+;; easy templates for named org src blocks
+(add-to-list 'org-structure-template-alist '("n" "#+NAME: ?"))
+(add-to-list 'org-structure-template-alist
+	     '("s" "#+NAME: ?\n#+BEGIN_SRC \n\n#+END_SRC"))
 
 ;; graphviz
 (use-package graphviz-dot-mode)
