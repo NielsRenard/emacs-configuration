@@ -329,6 +329,10 @@
   :config  (setq lsp-prefer-flymake nil)
   :commands (lsp-deferred))
 
+
+(use-package lsp-haskell :after lsp)
+(add-hook 'haskell-mode-hook 'lsp-deferred)
+
 (use-package company-lsp :commands company-lsp)
 (use-package helm-lsp :commands helm-lsp-workspace-symbol)
 (use-package yasnippet)
@@ -364,20 +368,21 @@
 	("M-RET"   . lsp-ui-sideline-apply-code-actions)
 	("C-c C-d" . ladicle/toggle-lsp-ui-doc)))
 
-;; java lsp
+;;;; java
 (use-package lsp-java
   :hook (java-mode . lsp-deferred)
   :config
   (add-hook 'java-mode-hook 'subword-mode)
+
   (require 'dap-java))
 
 ;; fix dap-java-run-test ansi color escape codes
-;;(require 'ansi-color)
-;;(defun colorize-compilation-buffer ()
-;;  (toggle-read-only)
-;;  (ansi-color-apply-on-region compilation-filter-start (point))
-;;  (toggle-read-only))
-;;(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
+(require 'ansi-color)
+(defun colorize-compilation-buffer ()
+  (toggle-read-only)
+  (ansi-color-apply-on-region compilation-filter-start (point))
+  (toggle-read-only))
+(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
 
 (use-package dap-mode
   :after lsp-mode
@@ -386,9 +391,19 @@
   (dap-mode t)
   (dap-ui-mode t))
 
-(use-package lsp-haskell :after lsp)
+;; Java
+;; use C-c C-o to set offset
+;; use M-x c-show-syntactic-information (to show the variable that needs to be set)
 
-(add-hook 'haskell-mode-hook 'lsp-deferred)
+(use-package google-c-style
+  :config
+  (add-hook 'java-mode-hook
+	    (lambda ()
+            (subword-mode)
+            (google-set-c-style)
+            (google-make-newline-indent)
+            (setq c-basic-offset 2)
+	    )))
 
 ;;;; javascript
 (use-package js2-mode
