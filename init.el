@@ -191,6 +191,8 @@
 (use-package avy
   :ensure t
   :commands (avy-goto-char-timer)
+  :config
+  (setq avy-timeout-seconds 0.25)
   :bind (("<C-return>" . avy-goto-char-timer)
 	 ("<C-M-return>" . avy-goto-line)))
 
