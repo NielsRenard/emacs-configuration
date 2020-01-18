@@ -117,9 +117,13 @@
   ;; Bear in mind, this will also run fc-cache -f -v on MacOS and Linux which can take some time to complete.
   )
 
-;; mouse-wheel scrolling zoom
+;; mouse-wheel Ctrl-scroll zoom
 (global-set-key [C-mouse-4] 'text-scale-increase)
 (global-set-key [C-mouse-5] 'text-scale-decrease)
+;; make scrolling usable
+(setq mouse-wheel-scroll-amount '(0.02))
+(setq mouse-wheel-progressive-speed nil)
+(setq ring-bell-function 'ignore)
 
 ;; less clutter in mode-line
 (use-package diminish)
