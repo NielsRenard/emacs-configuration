@@ -88,9 +88,10 @@
 
 ;; changes themes based on time of day
 (use-package theme-changer
+  :after doom-themes
   :config
-  (setq calendar-latitude 33)
-  (setq calendar-longitude 130)
+  (setq calendar-latitude 52)
+  (setq calendar-longitude 4)
   (change-theme 'doom-solarized-light 'doom-laserwave))
 
 (setq custom-safe-themes t)
