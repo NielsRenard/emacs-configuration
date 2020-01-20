@@ -83,8 +83,9 @@
 (use-package doom-themes
   :ensure t
   :config (setq inhibit-startup-screen t)
-  ;;(set-default-font "-ADBO-Hasklig-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1")
-  (set-default-font "-PfEd-Fantasque Sans Mono-normal-normal-normal-*-35-*-*-*-m-0-iso10646-1"))
+  ;;(set-default-font "Hasklig")
+  ;;https://fontlibrary.org/en/font/fantasque-sans-mono
+  (set-default-font "Fantasque Sans Mono"))
 
 ;; changes themes based on time of day
 (use-package theme-changer
