@@ -85,7 +85,7 @@
   :config (setq inhibit-startup-screen t)
   ;;(set-default-font "Hasklig")
   ;;https://fontlibrary.org/en/font/fantasque-sans-mono
-  (set-default-font "Fantasque Sans Mono"))
+  (set-frame-font "Fantasque Sans Mono"))
 
 ;; changes themes based on time of day
 (use-package theme-changer
@@ -461,6 +461,7 @@
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
 ;; easy templates for named org src blocks
+(require 'org-tempo)
 (add-to-list 'org-structure-template-alist '("n" "#+NAME: ?"))
 (add-to-list 'org-structure-template-alist
 	     '("s" "#+NAME: ?\n#+BEGIN_SRC \n\n#+END_SRC"))
