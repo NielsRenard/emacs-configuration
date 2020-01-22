@@ -151,6 +151,9 @@
 	scroll-conservatively 10000
 	scroll-preserve-screen-position 1))
 
+(setq scroll-lock-mode t)
+(setq hl-line-mode t)
+(setq blink-cursor-mode nil)
 ;; swap easily between vertical/horizontal arrangement
 (use-package transpose-frame
   :config (global-set-key (kbd "C-|") 'transpose-frame))
