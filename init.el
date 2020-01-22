@@ -83,14 +83,16 @@
 (use-package doom-themes
   :ensure t
   :config (setq inhibit-startup-screen t)
-  ;;(set-default-font "-ADBO-Hasklig-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1")
-  (set-default-font "-PfEd-Fantasque Sans Mono-normal-normal-normal-*-35-*-*-*-m-0-iso10646-1"))
+  ;;(set-default-font "Hasklig")
+  ;;https://fontlibrary.org/en/font/fantasque-sans-mono
+  (set-frame-font "Fantasque Sans Mono"))
 
 ;; changes themes based on time of day
 (use-package theme-changer
+  :after doom-themes
   :config
-  (setq calendar-latitude 33)
-  (setq calendar-longitude 130)
+  (setq calendar-latitude 52)
+  (setq calendar-longitude 4)
   (change-theme 'doom-solarized-light 'doom-laserwave))
 
 (setq custom-safe-themes t)
@@ -462,6 +464,7 @@
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
 ;; easy templates for named org src blocks
+(require 'org-tempo)
 (add-to-list 'org-structure-template-alist '("n" "#+NAME: ?"))
 (add-to-list 'org-structure-template-alist
 	     '("s" "#+NAME: ?\n#+BEGIN_SRC \n\n#+END_SRC"))
