@@ -138,6 +138,10 @@
   (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
   (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
 
+(use-package evil-numbers
+  :bind
+  ("C-c +" . 'evil-numbers/inc-at-pt)
+  ("C-c -" . 'evil-numbers/dec-at-pt))
 
 ;;;; navigation
 
