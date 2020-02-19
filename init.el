@@ -33,7 +33,7 @@
 (tool-bar-mode -1)
 ;;(scroll-bar-mode -1)
 ;; set linenumbers by default
-;;(global-linum-mode)
+(global-linum-mode)
 
 (global-set-key (kbd "M-z") 'zap-up-to-char)
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
@@ -101,6 +101,9 @@
 (if (not(display-graphic-p))
     (load-theme 'doom-laserwave))
 
+;;(use-package indent-guide
+;;  :config (indent-guide-global-mode))
+
 (use-package volatile-highlights
   :diminish volatile-highlights-mode
   :config
@@ -157,8 +160,8 @@
 	scroll-conservatively 10000
 	scroll-preserve-screen-position 1))
 
-(setq scroll-lock-mode t)
-(setq hl-line-mode t)
+;;(setq scroll-lock-mode t)
+(global-hl-line-mode)
 (setq blink-cursor-mode nil)
 ;; swap easily between vertical/horizontal arrangement
 (use-package transpose-frame
@@ -179,7 +182,7 @@
 (use-package helm-projectile
   :bind
   ("C-c f" . helm-projectile)
-  ("C-c s" . helm-rg)
+  ("C-c s" . helm-projectile-ag)
   ("C-c i" . helm-imenu)
   ("C-c p" . helm-projectile-switch-project))
 
@@ -243,7 +246,7 @@
   :config
   (setq company-idle-delay 0.125)
   (setq company-show-numbers t)
-  (setq company-tooltip-limit 10)
+  (setq company-tooltip-limit 8)
   (setq company-minimum-prefix-length 2)
   (setq company-tooltip-align-annotations nil)
   ;; invert the navigation direction if the the completion popup-isearch-match
