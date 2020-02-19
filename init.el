@@ -402,9 +402,22 @@
 (use-package lsp-java
   :hook (java-mode . lsp-deferred)
   :config
+  (require 'lsp-java-boot)
+  (require 'dap-java)
   (add-hook 'java-mode-hook 'subword-mode)
-
-  (require 'dap-java))
+  (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
+  (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
+  (add-hook 'java-mode-hook #'yas-minor-mode)
+  ;; http://www.skybert.net/emacs/enterprise-java-development-in-emacs/
+  ;; make sure to put lombok.jar where it is expected
+  (setq lsp-java-vmargs
+       (list
+          "-noverify"
+          "-Xmx1G"
+          "-XX:+UseG1GC"
+          "-XX:+UseStringDeduplication"
+          "-javaagent:/usr/sbin/lombok.jar"))
+  )
 
 ;; fix dap-java-run-test ansi color escape codes
 (require 'ansi-color)
