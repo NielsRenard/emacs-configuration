@@ -146,6 +146,9 @@
   ("C-c +" . 'evil-numbers/inc-at-pt)
   ("C-c -" . 'evil-numbers/dec-at-pt))
 
+;; no tabs (use C-q when must use tabs)
+(setq-default indent-tabs-mode nil)
+
 ;;;; navigation
 
 ;; modeline shows name of the function you are in
