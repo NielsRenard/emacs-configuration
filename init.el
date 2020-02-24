@@ -174,7 +174,7 @@
   :config (global-set-key (kbd "C-x 1") 'zygospore-toggle-delete-other-windows))
 
 (use-package neotree
-  :config (global-set-key [f8] 'neotree-toggle)
+  :config  ;; (global-set-key [f8] 'neotree-toggle)
   (setq neo-smart-open t)
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
