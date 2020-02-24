@@ -366,13 +366,20 @@
 (use-package company-lsp :commands company-lsp)
 (use-package helm-lsp :commands helm-lsp-workspace-symbol)
 (use-package yasnippet)
+
+(use-package treemacs)
+(use-package treemacs-projectile)
+(use-package lsp-treemacs
+  :config (global-set-key [f8] 'treemacs)
+          (global-set-key [f9] 'lsp-treemacs-errors-list))
+
 (use-package lsp-ui
   :config (lsp-ui-flycheck-enable t)
   :custom
   (lsp-ui-doc-enable nil)
   (lsp-ui-sideline-enable nil)
   (lsp-ui-sideline-ignore-duplicate t)
-  (lsp-ui-sideline-show-symbol t)
+  (lsp-ui-sideline-show-symbol nil)
   (lsp-ui-sideline-show-hover t)
   (lsp-ui-sideline-show-diagnostics nil)
   ;; to put a different side-actions colour:
