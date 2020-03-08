@@ -205,6 +205,7 @@
      ("~" "~" nil org-mode)
      ("/" "/" nil org-mode)
      ("=" "=" nil org-mode)
+     ("+" "+" nil org-mode)
      ("_" "_" nil org-mode)
      ("$" "$" nil (org-mode latex-mode))))
   (add-hook 'org-mode-hook 'wrap-region-mode)
@@ -405,7 +406,8 @@
 	("C-c C-m" . lsp-ui-imenu)
 	("C-c C-s" . lsp-ui-sideline-mode)
 	("M-RET"   . lsp-ui-sideline-apply-code-actions)
-	("C-c C-d" . ladicle/toggle-lsp-ui-doc)))
+	("C-c C-d" . ladicle/toggle-lsp-ui-doc)
+        ("C-c d" . lsp-ui-doc-mode)))
 
 ;;;; java
 (use-package lsp-java
@@ -443,7 +445,9 @@
   (dap-mode t)
   (dap-ui-mode t))
 
-;; Java
+;; mode for gherkin / cucumber tests
+(use-package feature-mode)
+
 ;; use C-c C-o to set offset
 ;; use M-x c-show-syntactic-information (to show the variable that needs to be set)
 
@@ -502,6 +506,9 @@
 ;; A. like
 ;; B. this
 (setq org-list-allow-alphabetical t)
+
+(setq org-hide-emphasis-markers t)
+
 (use-package org-bullets
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
