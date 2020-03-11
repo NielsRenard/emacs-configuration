@@ -58,6 +58,8 @@
 (global-unset-key (kbd "<prior>"))
 (global-unset-key (kbd "<next>"))
 
+;; perform http calls
+(use-package restclient)
 
 ;;  version control
 (use-package magit
@@ -462,6 +464,9 @@
 	    )))
 
 ;;;; javascript
+
+(use-package json-mode)
+
 (use-package js2-mode
   :config
   (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
