@@ -353,7 +353,8 @@
 
 (use-package hasklig-mode
   :config
-  :hook (haskell-mode))
+;  :hook (haskell-mode)
+  )
 
 ;;;; elm
 
