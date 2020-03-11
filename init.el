@@ -515,6 +515,7 @@
 
 (setq org-hide-emphasis-markers t)
 
+(setq org-image-actual-width nil)
 (use-package org-bullets
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
