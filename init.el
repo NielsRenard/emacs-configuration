@@ -537,6 +537,8 @@
   (setq TeX-auto-save t))
 
 ;; emacs-reveal for presentations
+(add-to-list 'load-path "~/.emacs.d/emacs-reveal")
+(require 'emacs-reveal)
 ;;(load "~/.emacs.d/emacs-reveal/reveal-config.el")
 
 ;;; godot
