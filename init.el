@@ -357,7 +357,8 @@
 
 ;;;; elm
 
-(use-package elm-mode)
+(use-package elm-mode
+  :hook (elm-mode . lsp-deferred))
 
 ;;;; lsp
 (use-package lsp-mode
