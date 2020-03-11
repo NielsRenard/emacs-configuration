@@ -517,6 +517,10 @@
 (setq org-hide-emphasis-markers t)
 
 (setq org-image-actual-width nil)
+
+;; attach (drag) images from web/filesystem directly to org files
+(use-package org-download)
+
 (use-package org-bullets
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
