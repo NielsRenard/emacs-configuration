@@ -65,6 +65,21 @@
 (use-package magit
   :bind ("C-c g" . magit-status))
 
+(use-package git-timemachine
+  :bind ("C-c C-g" . git-timemachine-toggle))
+
+(use-package git-gutter
+    :custom
+    (git-gutter:modified-sign "~")
+    (git-gutter:added-sign    "+")
+    (git-gutter:deleted-sign  "-")
+    :custom-face
+    (git-gutter:modified ((t (:foreground "#000000" :background "#87cefa"))))
+    (git-gutter:added    ((t (:foreground "#000000" :background "#50fa7b"))))
+    (git-gutter:deleted  ((t (:foreground "#000000" :background "#ff79c6"))))
+    :config
+    (global-git-gutter-mode +1))
+
 
 ;; https://askubuntu.com/questions/30224/how-to-disable-the-alt-hotkey-behavior-on-gnome-terminal
 ;; hit this to fix whitespace, nice to use use together with M-^
