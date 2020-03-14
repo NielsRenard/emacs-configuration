@@ -249,12 +249,18 @@
 (use-package company
   :diminish company-mode
   :bind ("TAB" . company-indent-or-complete-common)
+  (:map company-active-map
+   ("C-n" . company-select-next)
+   ("C-p" . company-select-previous)
+   ("<tab>" . company-complete-common-or-cycle)
+   :map company-search-map
+   ("C-p" . company-select-previous)
+   ("C-n" . company-select-next))
+  :custom
+  (company-idle-delay 0)
+  (company-echo-delay 0)
+  (company-minimum-prefix-length 1)
   :config
-  (setq company-idle-delay 0.125)
-  (setq company-show-numbers t)
-  (setq company-tooltip-limit 8)
-  (setq company-minimum-prefix-length 2)
-  (setq company-tooltip-align-annotations nil)
   ;; invert the navigation direction if the the completion popup-isearch-match
   ;; is displayed on top (happens near the bottom of windows)
   (setq company-tooltip-flip-when-above t)
@@ -336,8 +342,9 @@
 (use-package toml-mode)
 
 (use-package rust-mode
-  :hook (rust-mode . lsp-deferred)
-  :config (add-hook 'rust-mode-hook 'subword-mode))
+  :hook ((rust-mode . lsp-deferred)
+         (rust-mode . subword-mode)
+         (rust-mode . yas-minor-mode)))
 
 (use-package cargo
   :hook (rust-mode . cargo-minor-mode))
@@ -378,7 +385,9 @@
 (use-package treemacs)
 (use-package treemacs-projectile)
 (use-package lsp-treemacs
-  :config (global-set-key [f8] 'treemacs))
+  :config (global-set-key [f8] 'treemacs)
+  :bind
+  ("C-c C-e" . lsp-treemacs-error-list-mode))
 
 (use-package lsp-ui
   :config (lsp-ui-flycheck-enable t)
@@ -410,8 +419,7 @@
 	("C-c C-m" . lsp-ui-imenu)
 	("C-c C-s" . lsp-ui-sideline-mode)
 	("M-RET"   . lsp-ui-sideline-apply-code-actions)
-	("C-c C-d" . ladicle/toggle-lsp-ui-doc)
-        ("C-c d" . lsp-ui-doc-mode)))
+	("C-c C-d" . ladicle/toggle-lsp-ui-doc)))
 
 ;;;; java
 (use-package lsp-java
