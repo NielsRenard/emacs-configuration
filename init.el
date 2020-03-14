@@ -31,9 +31,9 @@
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
-;;(scroll-bar-mode -1)
+(scroll-bar-mode -1)
 ;; set linenumbers by default
-(global-linum-mode)
+;;(global-linum-mode)
 
 (global-set-key (kbd "M-z") 'zap-up-to-char)
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
@@ -80,7 +80,7 @@
 (use-package zone
   :config (zone-when-idle 1028))
 
-;;;; looks
+;;;; visual / looks
 
 (use-package doom-themes
   :ensure t
@@ -105,6 +105,11 @@
 
 ;;(use-package indent-guide
 ;;  :config (indent-guide-global-mode))
+
+(use-package beacon
+  :custom
+  (beacon-color "#f1fa8c")
+  :hook (after-init . beacon-mode))
 
 (use-package volatile-highlights
   :diminish volatile-highlights-mode
@@ -390,27 +395,32 @@
   ("C-c C-e" . lsp-treemacs-error-list-mode))
 
 (use-package lsp-ui
+  :hook (lsp-mode . lsp-ui-sideline-mode)
   :config (lsp-ui-flycheck-enable t)
   :custom
+  ;; lsp-ui-doc
   (lsp-ui-doc-enable nil)
-  (lsp-ui-sideline-enable nil)
+  (lsp-ui-doc-header t)
+  (lsp-ui-doc-include-signature nil)
+  (lsp-ui-doc-position 'at-point)
+  (lsp-ui-doc-max-width 120)
+  (lsp-ui-doc-max-height 30)
+  (lsp-ui-doc-use-childframe t)
+  ;; lsp-ui-sideline
   (lsp-ui-sideline-ignore-duplicate t)
   (lsp-ui-sideline-show-symbol nil)
-  (lsp-ui-sideline-show-hover t)
+  (lsp-ui-sideline-show-hover nil)
   (lsp-ui-sideline-show-diagnostics nil)
-  ;; to put a different side-actions colour:
-  ;;(custom-set-faces '(lsp-ui-sideline-code-action ((t (:foreground "#268bd2")))))
-					;   (lsp-ui-sideline-show-code-actions t)
+  (lsp-ui-sideline-show-code-actions t)
+  ;; lsp-ui-imenu
   (lsp-ui-imenu-enable t)
   (lsp-ui-imenu-kind-position 'top)
-  :preface
-  (defun ladicle/toggle-lsp-ui-doc ()
-    (interactive)
-    (if lsp-ui-doc-mode
-	(progn
-	  (lsp-ui-doc-mode -1)
-	  (lsp-ui-doc--hide-frame))
-      (lsp-ui-doc-mode 1)))
+  ;; lsp-ui-peek
+  (lsp-ui-peek-enable t)
+  (lsp-ui-peek-show-directory t)
+  (lsp-ui-peek-peek-height 20)
+  (lsp-ui-peek-list-width 50)
+  (lsp-ui-peek-fontify 'always)
   :bind
   (:map lsp-mode-map
 	("C-c C-t" . lsp-describe-thing-at-point)
@@ -419,7 +429,7 @@
 	("C-c C-m" . lsp-ui-imenu)
 	("C-c C-s" . lsp-ui-sideline-mode)
 	("M-RET"   . lsp-ui-sideline-apply-code-actions)
-	("C-c C-d" . ladicle/toggle-lsp-ui-doc)))
+	("C-c C-d" . lsp-ui-doc-mode)))
 
 ;;;; java
 (use-package lsp-java
