@@ -173,6 +173,9 @@
 ;; no tabs (use C-q when must use tabs)
 (setq-default indent-tabs-mode nil)
 
+(setq show-trailing-whitespace t)
+(global-set-key (kbd "C-c <deletechar>") 'delete-trailing-whitespace)
+
 ;;;; navigation
 
 ;; modeline shows name of the function you are in
@@ -313,8 +316,8 @@
    ("C-c C-p" . flycheck-previous-error))
   )
 
-(use-package flycheck-pos-tip
-  :hook (flycheck-mode . flycheck-pos-tip-mode))
+(use-package flycheck-popup-tip
+  :hook (flycheck-mode . flycheck-popup-tip-mode))
 
 ;; Nope, I want my copies in the system temp dir.
 (setq flymake-run-in-place nil)
