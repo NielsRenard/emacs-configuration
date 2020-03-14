@@ -417,7 +417,7 @@
 (use-package lsp-treemacs
   :config (global-set-key [f8] 'treemacs)
   :bind
-  ("C-c C-e" . lsp-treemacs-error-list-mode))
+  ("C-c C-e" . lsp-treemacs-error-list))
 
 (use-package lsp-ui
   :config (lsp-ui-flycheck-enable t)
