@@ -16,9 +16,11 @@
 
 ;;;; generic
 
-;; to improve performance
+;;;; performance
 ;; starts garbage-collection after 20 megabytes
-(setq gc-cons-threshold 20000000)
+(setq gc-cons-threshold 100000000)
+(setq read-process-output-max (* 1024 1024)) ; 1mb
+
 (add-to-list 'load-path "~/.emacs.d/so-long")
 (require 'so-long)
 (global-so-long-mode 1)
@@ -400,8 +402,8 @@
   :commands (lsp-deferred))
 
 
-(use-package lsp-haskell :after lsp)
-(add-hook 'haskell-mode-hook 'lsp-deferred)
+(use-package lsp-haskell :after lsp
+  :hook (haskell-mode . lsp-deferred))
 
 (use-package company-lsp :commands company-lsp)
 (use-package helm-lsp :commands helm-lsp-workspace-symbol)
