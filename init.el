@@ -66,7 +66,7 @@
   :bind ("C-c g" . magit-status))
 
 (use-package git-timemachine
-  :bind ("C-c C-g" . git-timemachine-toggle))
+  :bind ("C-c C-h" . git-timemachine-toggle))
 
 (use-package git-gutter
     :custom
@@ -303,11 +303,16 @@
   :diminish flycheck-mode
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode)
+  :custom
+  (flycheck-display-errors-delay 0)
   :bind
   (("C-c C-n" . flycheck-next-error)
    ("C-c n" . flycheck-next-error)
    ("C-c C-p" . flycheck-previous-error))
   )
+
+(use-package flycheck-pos-tip
+  :hook (flycheck-mode . flycheck-pos-tip-mode))
 
 ;; Nope, I want my copies in the system temp dir.
 (setq flymake-run-in-place nil)
@@ -410,7 +415,6 @@
   ("C-c C-e" . lsp-treemacs-error-list-mode))
 
 (use-package lsp-ui
-  :hook (lsp-mode . lsp-ui-sideline-mode)
   :config (lsp-ui-flycheck-enable t)
   :custom
   ;; lsp-ui-doc
