@@ -112,7 +112,7 @@
   :config
   (setq calendar-latitude 52)
   (setq calendar-longitude 4)
-  (change-theme 'doom-solarized-light 'doom-laserwave))
+  (change-theme 'doom-solarized-light 'doom-manegarm))
 
 (setq custom-safe-themes t)
 
