@@ -32,10 +32,6 @@
     ("lpos" "{-# LANGUAGE OverloadedStrings #-}" nil :count 7)
     ("lpqq" "{-# LANGUAGE QuasiQuotes #-}" nil :count 7)
     ("lprag" "{-# LANGUAGE  #-}" nil :count 8)
-    ("pd" "print STDERR Dumper('☺');" nil :count 6)
-    ("pdd" "aowdakdiwd" nil :count 2)
-    ("sub" "sub name { my ( $args ) = @_; return 1;}" nil :count 2)
-    ("udd" "use Data::Dumper;" nil :count 3)
     ))
 
 (define-abbrev-table 'java-mode-abbrev-table
