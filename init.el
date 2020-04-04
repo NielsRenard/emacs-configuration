@@ -25,6 +25,10 @@
 (require 'so-long)
 (global-so-long-mode 1)
 
+;; Faster than the default scp
+(defvar tramp-default-method "ssh" )
+(setq tramp-default-method "ssh")
+
 ;;"A defined abbrev is a word which expands
 (setq-default abbrev-mode t)
 
@@ -211,6 +215,7 @@
 
 (use-package helm-projectile
   :bind
+  ("C-x x" . helm-buffers-list)
   ("C-c f" . helm-projectile)
   ("C-c s" . helm-projectile-ag)
   ("C-c i" . helm-imenu)
@@ -259,6 +264,8 @@
 (use-package smex
   :bind ("M-x" . smex))
 
+
+
 (use-package ivy)
 
 (use-package which-key
@@ -292,6 +299,11 @@
   (global-company-mode)
   )
 
+(use-package company-posframe
+  :config
+  (company-posframe-mode 1)
+  )
+
 (use-package company-ghci
   :hook (haskell-mode . company-mode)
   :config (setq company-idle-delay 0.05
@@ -316,8 +328,8 @@
    ("C-c C-p" . flycheck-previous-error))
   )
 
-(use-package flycheck-popup-tip
-  :hook (flycheck-mode . flycheck-popup-tip-mode))
+(use-package flycheck-posframe
+  :hook (flycheck-mode . flycheck-posframe-mode))
 
 ;; Nope, I want my copies in the system temp dir.
 (setq flymake-run-in-place nil)
@@ -396,7 +408,8 @@
 ;;;; elm
 
 (use-package elm-mode
-  :hook (elm-mode . lsp-deferred))
+  :hook ((elm-mode . lsp-deferred)
+         (elm-mode . subword-mode)))
 
 ;;;; lsp
 (use-package lsp-mode
@@ -412,10 +425,10 @@
 (use-package helm-lsp :commands helm-lsp-workspace-symbol)
 (use-package yasnippet)
 
+(global-set-key [f8] 'treemacs)
 (use-package treemacs)
 (use-package treemacs-projectile)
 (use-package lsp-treemacs
-  :config (global-set-key [f8] 'treemacs)
   :bind
   ("C-c C-e" . lsp-treemacs-errors-list))
 
@@ -450,6 +463,7 @@
 	("C-c C-t" . lsp-describe-thing-at-point)
 	("C-c C-r" . lsp-ui-peek-find-references)
 	("C-c C-j" . lsp-ui-peek-find-definitions)
+	("C-c C-i" . lsp-goto-implementation)
 	("C-c C-m" . lsp-ui-imenu)
 	("C-c C-s" . lsp-ui-sideline-mode)
 	("M-RET"   . lsp-ui-sideline-apply-code-actions)
