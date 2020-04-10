@@ -320,24 +320,30 @@
   :diminish flycheck-mode
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode)
+  (setq flycheck-display-errors-function #'flycheck-display-error-messages-unless-error-list)
+  (set-face-underline 'flycheck-warning nil)
   :custom
   (flycheck-display-errors-delay 0)
   :bind
-  (("C-c C-n" . flycheck-next-error)
+  (("C-c C-e" . list-flycheck-errors)
+   ("C-c C-n" . flycheck-next-error)
    ("C-c n" . flycheck-next-error)
    ("C-c C-p" . flycheck-previous-error))
-  )
+)
 
-(use-package flycheck-posframe
-  :hook (flycheck-mode . flycheck-posframe-mode))
+;; (use-package flycheck-posframe
+;;   :hook (flycheck-mode . flycheck-posframe-mode)
+;;   :config
+;;   (flycheck-posframe-configure-pretty-defaults)
+;;   (setq flycheck-posframe-border-width 30))
 
 ;; Nope, I want my copies in the system temp dir.
 (setq flymake-run-in-place nil)
 ;; This lets me say where my temp dir is. (make sure it exists)
 (setq temporary-file-directory "~/.emacs.d/tmp")
 
-(add-to-list 'load-path "~/.emacs.d/flycheck-inline")
-(require 'flycheck-inline)
+;; (add-to-list 'load-path "~/.emacs.d/flycheck-inline")
+;; (require 'flycheck-inline)
 
 ;;;; clojure
 (use-package rainbow-delimiters
@@ -400,9 +406,12 @@
   (add-to-list 'auto-mode-alist '("\\.hs\\'" . haskell-mode))
   (add-hook 'haskell-mode-hook 'subword-mode))
 
+(use-package flycheck-haskell
+  :config (add-hook 'haskell-mode-hook #'flycheck-haskell-setup))
+
 (use-package hasklig-mode
   :config
-;  :hook (haskell-mode)
+                                        ;  :hook (haskell-mode)
   )
 
 ;;;; elm
@@ -429,11 +438,12 @@
 (use-package treemacs)
 (use-package treemacs-projectile)
 (use-package lsp-treemacs
-  :bind
-  ("C-c C-e" . lsp-treemacs-errors-list))
+  ;; :bind
+  ;; ("C-c C-e" . lsp-treemacs-errors-list)
+  )
 
 (use-package lsp-ui
-  :config (lsp-ui-flycheck-enable t)
+  :config (lsp-ui-flycheck-enable nil)
   :custom
   ;; lsp-ui-doc
   (lsp-ui-doc-enable nil)
