@@ -36,8 +36,7 @@
 
 (define-abbrev-table 'java-mode-abbrev-table
   '(
-    ("newclass" "package myPackage;
-public class MyClass {
+    ("newclass" "public class MyClass {
   public static void main(String[] args) {
     myMethod(\"☃\");
   }
