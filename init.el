@@ -548,14 +548,6 @@
 (use-package groovy-mode
   :config (add-to-list 'auto-mode-alist '("Jenkinsfile" . groovy-mode)))
 
-;; for html templates
-(use-package web-mode
-  :config
-  (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode)))
-
-
 ;;;; yml
 (use-package yaml-mode
   :config (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
