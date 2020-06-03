@@ -544,28 +544,6 @@
 
 (use-package json-mode)
 
-(use-package js2-mode
-  :config
-  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
-
-(use-package rjsx-mode)
-
-;;;; purescript
-(use-package purescript-mode
-  :commands purescript-mode
-  :mode (("\\.purs$" . purescript-mode))
-  :config
-  (add-hook 'purescript-mode-hook 'turn-on-purescript-indentation))
-
-(use-package psc-ide)
-
-(add-hook 'purescript-mode-hook
-	  (lambda ()
-	    (psc-ide-mode)
-	    (company-mode)
-	    (turn-on-purescript-indentation)
-	    (customize-set-variable 'psc-ide-add-import-on-completion t)))
-
 ;;;; groovy
 (use-package groovy-mode
   :config (add-to-list 'auto-mode-alist '("Jenkinsfile" . groovy-mode)))
