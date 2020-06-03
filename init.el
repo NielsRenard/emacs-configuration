@@ -613,11 +613,11 @@
 
 ;; emacs-reveal for presentations
 
-(use-package oer-reveal)
-(use-package org-re-reveal-ref)
-(use-package org-re-reveal)
-(add-to-list 'load-path "~/.emacs.d/emacs-reveal")
-(require 'emacs-reveal)
+;;;;(use-package oer-reveal)
+;;;;(use-package org-re-reveal-ref)
+;;;;(use-package org-re-reveal)
+;;;;(add-to-list 'load-path "~/.emacs.d/emacs-reveal")
+;;;;(require 'emacs-reveal)
 ;;(load "~/.emacs.d/emacs-reveal/reveal-config.el")
 
 ;;; godot
