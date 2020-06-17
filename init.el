@@ -43,7 +43,7 @@
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
-;; (scroll-bar-mode -1)
+(scroll-bar-mode -1)
 ;; set linenumbers by default
 ;;(global-linum-mode)
 
@@ -71,26 +71,30 @@
 (global-unset-key (kbd "<next>"))
 
 ;; perform http calls
-(use-package restclient)
+(use-package restclient
+  :defer t
+  )
 
 ;;  version control
 (use-package magit
+  :defer 2
   :bind ("C-c g" . magit-status))
 
 (use-package git-timemachine
+  :defer t
   :bind ("C-c C-h" . git-timemachine-toggle))
 
 (use-package git-gutter
-    :custom
-    (git-gutter:modified-sign "~")
-    (git-gutter:added-sign    "+")
-    (git-gutter:deleted-sign  "-")
-    :custom-face
-    (git-gutter:modified ((t (:foreground "#000000" :background "#87cefa"))))
-    (git-gutter:added    ((t (:foreground "#000000" :background "#50fa7b"))))
-    (git-gutter:deleted  ((t (:foreground "#000000" :background "#ff79c6"))))
-    :config
-    (global-git-gutter-mode +1))
+  :custom
+  (git-gutter:modified-sign "~")
+  (git-gutter:added-sign    "+")
+  (git-gutter:deleted-sign  "-")
+  :custom-face
+  (git-gutter:modified ((t (:foreground "#000000" :background "#87cefa"))))
+  (git-gutter:added    ((t (:foreground "#000000" :background "#50fa7b"))))
+  (git-gutter:deleted  ((t (:foreground "#000000" :background "#ff79c6"))))
+  :config
+  (global-git-gutter-mode +1))
 
 
 ;; https://askubuntu.com/questions/30224/how-to-disable-the-alt-hotkey-behavior-on-gnome-terminal
@@ -98,6 +102,7 @@
 (define-key global-map "\M-space" 'fixup-whitespace)
 
 (use-package undo-tree
+  :defer t
   :config
   ;; autosave the undo-tree history
   (setq undo-tree-history-directory-alist
@@ -120,12 +125,12 @@
   (set-frame-font "Fantasque Sans Mono"))
 
 ;; changes themes based on time of day
-(use-package theme-changer
-  :after doom-themes
-  :config
-  (setq calendar-latitude 52)
-  (setq calendar-longitude 4)
-  (change-theme 'doom-solarized-light 'doom-manegarm))
+ (use-package theme-changer
+   :after doom-themes
+   :config
+   (setq calendar-latitude 52)
+   (setq calendar-longitude 4)
+   (change-theme 'doom-solarized-light 'doom-one))
 
 (setq custom-safe-themes t)
 
@@ -137,6 +142,7 @@
 ;;  :config (indent-guide-global-mode))
 
 (use-package beacon
+  :defer 2
   :custom
   (beacon-color "#f1fa8c")
   :hook (after-init . beacon-mode)
@@ -148,12 +154,14 @@
   (volatile-highlights-mode +1))
 
 (use-package rainbow-mode
+  :defer 1
   :diminish rainbow-mode
   :config
   (add-hook 'prog-mode-hook #'rainbow-mode))
 
 ;; icons for neo-tree
 (use-package all-the-icons
+  :defer t
   ;; https://github.com/domtronn/all-the-icons.el#installing-fonts
   ;; In order for the icons to work it is very important that you install the Resource Fonts included
   ;; M-x all-the-icons-install-fonts
@@ -169,10 +177,13 @@
 (setq ring-bell-function 'ignore)
 
 ;; less clutter in mode-line
-(use-package diminish)
+(use-package diminish
+    :defer t
+  )
 
 ;;;; editing
 (use-package multiple-cursors
+  :defer 2
   :config
   (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
   (global-set-key (kbd "C->") 'mc/mark-next-like-this)
@@ -180,6 +191,7 @@
   (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
 
 (use-package evil-numbers
+  :defer t
   :bind
   ("C-c +" . 'evil-numbers/inc-at-pt)
   ("C-c -" . 'evil-numbers/dec-at-pt))
@@ -209,21 +221,26 @@
 (setq blink-cursor-mode nil)
 ;; swap easily between vertical/horizontal arrangement
 (use-package transpose-frame
+  :defer 2
   :config (global-set-key (kbd "C-|") 'transpose-frame))
 
 (use-package zygospore
+  :defer 2
   :config (global-set-key (kbd "C-x 1") 'zygospore-toggle-delete-other-windows))
 
 (use-package neotree
+  :defer t
   :config  ;; (global-set-key [f8] 'neotree-toggle)
   (setq neo-smart-open t)
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
 (use-package projectile
+  :defer 1
   :diminish projectile-mode
   :config (projectile-mode))
 
 (use-package helm-projectile
+  :defer 1
   :bind
   ("C-x x" . helm-buffers-list)
   ("C-c f" . helm-projectile)
@@ -238,6 +255,7 @@
 (setq projectile-globally-ignored-directories '(".stack-work"))
 
 (use-package expand-region
+  :defer t
   :bind ("C-=" . er/expand-region))
 
 (use-package wrap-region
@@ -254,10 +272,12 @@
   (add-hook 'latex-mode-hook 'wrap-region-mode))
 
 (use-package flx-ido
+  :ensure t
   :requires ido
   :config (flx-ido-mode))
 
 (use-package ido-vertical-mode
+  :ensure t
   :config (ido-vertical-mode 1))
 
 (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)
@@ -272,13 +292,17 @@
 
 ;; better running commands by name
 (use-package smex
+  :defer 1
   :bind ("M-x" . smex))
 
 
 
-(use-package ivy)
+(use-package ivy
+  :defer t
+  )
 
 (use-package which-key
+  :defer t
   :diminish which-key-mode
   :config (which-key-mode)
   (setq which-key-idle-delay 0.5))
@@ -289,15 +313,16 @@
 
 ;;;; autocompletion
 (use-package company
+  :defer 1
   :diminish company-mode
   :bind ("TAB" . company-indent-or-complete-common)
   (:map company-active-map
-   ("C-n" . company-select-next)
-   ("C-p" . company-select-previous)
-   ("<tab>" . company-complete-common-or-cycle)
-   :map company-search-map
-   ("C-p" . company-select-previous)
-   ("C-n" . company-select-next))
+        ("C-n" . company-select-next)
+        ("C-p" . company-select-previous)
+        ("<tab>" . company-complete-common-or-cycle)
+        :map company-search-map
+        ("C-p" . company-select-previous)
+        ("C-n" . company-select-next))
   :custom
   (company-idle-delay 0)
   (company-echo-delay 0)
@@ -310,16 +335,19 @@
   )
 
 (use-package company-posframe
+  :defer t
   :config
   (company-posframe-mode 1)
   )
 
 (use-package company-ghci
+  :defer t
   :hook (haskell-mode . company-mode)
   :config (setq company-idle-delay 0.05
 		company-minimum-prefix-length 2))
 
 (use-package company-ghc
+  :defer t
   :hook (haskell-mode . company-mode)
   :config (setq company-idle-delay 0.05
 		company-minimum-prefix-length 2))
@@ -327,6 +355,7 @@
 
 ;;;; syntax checking
 (use-package flycheck
+  :defer t
   :diminish flycheck-mode
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode)
@@ -339,7 +368,7 @@
    ("C-c C-n" . flycheck-next-error)
    ("C-c n" . flycheck-next-error)
    ("C-c C-p" . flycheck-previous-error))
-)
+  )
 
 ;; (use-package flycheck-posframe
 ;;   :hook (flycheck-mode . flycheck-posframe-mode)
@@ -357,14 +386,17 @@
 
 ;;;; clojure
 (use-package rainbow-delimiters
+  :defer t
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package clojure-mode
+  :defer t
   :config
   (add-hook 'clojure-mode-hook 'paredit-mode)
   (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode))
 
 (use-package paredit
+  :defer t
   :config
   (add-hook 'clojure-mode-hook 'enable-paredit-mode)
   (add-hook 'clojure-repl-mode-hook 'enable-paredit-mode)
@@ -378,6 +410,7 @@
 (global-set-key (kbd "C-c t") #'transpose-sexps)
 
 (use-package cider
+  :defer t
   :init (add-hook 'clojure-mode-hook #'cider-mode)
   :config
   (setq nrepl-log-messages t)
@@ -387,6 +420,7 @@
   (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode))
 
 (use-package aggressive-indent
+  :defer t
   :init (add-hook 'clojure-mode-hook #'aggressive-indent-mode))
 
 
@@ -400,14 +434,17 @@
 (use-package toml-mode)
 
 (use-package rust-mode
+  :defer t
   :hook ((rust-mode . lsp-deferred)
          (rust-mode . subword-mode)
          (rust-mode . yas-minor-mode)))
 
 (use-package cargo
+  :defer t
   :hook (rust-mode . cargo-minor-mode))
 
 (use-package flycheck-rust
+  :defer t
   :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
 ;;;; haskell
@@ -432,10 +469,12 @@
 
 ;;;; lsp
 (use-package lsp-mode
+  :defer t
   :commands lsp
   :config
   (setq lsp-prefer-flymake nil)
   '(lsp-lsp-flycheck-warning-unnecessary-face ((t (:underline "DarkOrange1"))) t)
+  (setq lsp-idle-delay 0.500)
 
   :commands (lsp-deferred))
 
@@ -444,13 +483,17 @@
   :hook (haskell-mode . lsp-deferred))
 
 (use-package company-lsp :commands company-lsp)
+(setq lsp-prefer-capf t)
 (use-package helm-lsp :commands helm-lsp-workspace-symbol)
 (use-package yasnippet)
 
 (global-set-key [f8] 'treemacs)
-(use-package treemacs)
+(use-package treemacs
+  :defer t
+  )
 (use-package treemacs-projectile)
 (use-package lsp-treemacs
+  :defer t
   ;; :bind
   ;; ("C-c C-e" . lsp-treemacs-errors-list)
   )
@@ -514,7 +557,9 @@
   )
 
 ;; fix dap-java-run-test ansi color escape codes
-(require 'ansi-color)
+(require 'ansi-color
+         :defer t
+         )
 (defun colorize-compilation-buffer ()
   (toggle-read-only)
   (ansi-color-apply-on-region compilation-filter-start (point))
@@ -529,12 +574,14 @@
   (dap-ui-mode t))
 
 ;; mode for gherkin / cucumber tests
-(use-package feature-mode)
+(use-package feature-mode
+  :defer t)
 
 ;; use C-c C-o to set offset
 ;; use M-x c-show-syntactic-information (to show the variable that needs to be set)
 
 (use-package google-c-style
+  :defer t
   :config
   (add-hook 'java-mode-hook
 	    (lambda ()
@@ -544,18 +591,24 @@
             (setq c-basic-offset 4)
 	    )))
 
-(use-package dtrt-indent)
+(use-package dtrt-indent
+  :defer t
+  )
 
 ;;;; javascript
 
-(use-package json-mode)
+(use-package json-mode
+  :defer t
+  )
 
 ;;;; groovy
 (use-package groovy-mode
+  :defer t
   :config (add-to-list 'auto-mode-alist '("Jenkinsfile" . groovy-mode)))
 
 ;;;; yml
 (use-package yaml-mode
+  :defer t
   :config (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
 
 
@@ -570,7 +623,9 @@
 (setq org-image-actual-width nil)
 
 ;; attach (drag) images from web/filesystem directly to org files
-(use-package org-download)
+(use-package org-download
+  :defer t
+  )
 
 (use-package org-bullets
   :config
@@ -596,10 +651,18 @@
 ;;;;(require 'emacs-reveal)
 ;;(load "~/.emacs.d/emacs-reveal/reveal-config.el")
 
-;;; godot
+;; godot
 
-(use-package gdscript-mode)
+(use-package gdscript-mode
+    :defer t
+)
 
+;; custom functions fns
+
+(defun er-find-user-init-file ()
+  "Edit the `user-init-file', in another window."
+  (interactive)
+  (find-file-other-window user-init-file))
 
 (provide 'init)
 ;;; init.el ends here
@@ -618,48 +681,52 @@
  '(cperl-indent-level 4)
  '(cua-mode nil nil (cua-base))
  '(custom-safe-themes
-   '("0cb1b0ea66b145ad9b9e34c850ea8e842c4c4c83abe04e37455a1ef4cc5b8791" "6177ecbffb8f37756012c9ee9fd73fc043520836d254397566e37c6204118852" "79278310dd6cacf2d2f491063c4ab8b129fee2a498e4c25912ddaa6c3c5b621e" "93ed23c504b202cf96ee591138b0012c295338f38046a1f3c14522d4a64d7308" "6bacece4cf10ea7dd5eae5bfc1019888f0cb62059ff905f37b33eec145a6a430" "361f5a2bc2a7d7387b442b2570b0ef35198442b38c2812bf3c70e1e091771d1a" "f2b56244ecc6f4b952b2bcb1d7e517f1f4272876a8c873b378f5cf68e904bd59" "7d708f0168f54b90fc91692811263c995bebb9f68b8b7525d0e2200da9bc903c" "fa3bdd59ea708164e7821574822ab82a3c51e262d419df941f26d64d015c90ee" "1ed5c8b7478d505a358f578c00b58b430dde379b856fbcb60ed8d345fc95594e" "0ad7f1c71fd0289f7549f0454c9b12005eddf9b76b7ead32a24d9cb1d16cbcbd" "76f66cbdf9ada1f86f9225c0f33ae60b40d04073146c4f5c49d8189d1157728b" "d74c5485d42ca4b7f3092e50db687600d0e16006d8fa335c69cf4f379dbd0eee" "a339f231e63aab2a17740e5b3965469e8c0b85eccdfb1f9dbd58a30bdad8562b" "99ea831ca79a916f1bd789de366b639d09811501e8c092c85b2cb7d697777f93" "e1ecb0536abec692b5a5e845067d75273fe36f24d01210bf0aa5842f2a7e029f" "285efd6352377e0e3b68c71ab12c43d2b72072f64d436584f9159a58c4ff545a" "cb96a06ed8f47b07c014e8637bd0fd0e6c555364171504680ac41930cfe5e11e" "6231254e74298a1cf8a5fee7ca64352943de4b495e615c449e9bb27e2ccae709" "b462d00de785490a0b6861807a360f5c1e05b48a159a99786145de7e3cce3afe" "cdb3e7a8864cede434b168c9a060bf853eeb5b3f9f758310d2a2e23be41a24ae" "0d087b2853473609d9efd2e9fbeac088e89f36718c4a4c89c568dd1b628eae41" "428754d8f3ed6449c1078ed5b4335f4949dc2ad54ed9de43c56ea9b803375c23" "7d56fb712ad356e2dacb43af7ec255c761a590e1182fe0537e1ec824b7897357" "3952ef318c8cbccf09954ecf43250ac0cbd1f4ae66b4abe569491b260f6e054b" "1ca1f43ca32d30b05980e01fa60c107b02240226ac486f41f9b790899f6f6e67" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" "49ec957b508c7d64708b40b0273697a84d3fee4f15dd9fc4a9588016adee3dad" "d1b4990bd599f5e2186c3f75769a2c5334063e9e541e37514942c27975700370" "cd736a63aa586be066d5a1f0e51179239fe70e16a9f18991f6f5d99732cabb32" "a3fa4abaf08cc169b61dea8f6df1bbe4123ec1d2afeb01c17e11fdc31fc66379" "93a0885d5f46d2aeac12bf6be1754faa7d5e28b27926b8aa812840fe7d0b7983" "10461a3c8ca61c52dfbbdedd974319b7f7fd720b091996481c8fb1dded6c6116" "bd7b7c5df1174796deefce5debc2d976b264585d51852c962362be83932873d9" "4697a2d4afca3f5ed4fdf5f715e36a6cac5c6154e105f3596b44a4874ae52c45" "7e78a1030293619094ea6ae80a7579a562068087080e01c2b8b503b27900165c" "6b289bab28a7e511f9c54496be647dc60f5bd8f9917c9495978762b99d8c96a0" "8aca557e9a17174d8f847fb02870cb2bb67f3b6e808e46c0e54a44e3e18e1020" "75d3dde259ce79660bac8e9e237b55674b910b470f313cdf4b019230d01a982a" "1c082c9b84449e54af757bcae23617d11f563fc9f33a832a8a2813c4d7dfb652" "6d589ac0e52375d311afaa745205abb6ccb3b21f6ba037104d71111e7e76a3fc" "100e7c5956d7bb3fd0eebff57fde6de8f3b9fafa056a2519f169f85199cc1c96" default))
+   '("2f1518e906a8b60fac943d02ad415f1d8b3933a5a7f75e307e6e9a26ef5bf570" "5b809c3eae60da2af8a8cfba4e9e04b4d608cb49584cb5998f6e4a1c87c057c4" "1623aa627fecd5877246f48199b8e2856647c99c6acdab506173f9bb8b0a41ac" "76bfa9318742342233d8b0b42e824130b3a50dcc732866ff8e47366aed69de11" "9b272154fb77a926f52f2756ed5872877ad8d73d018a426d44c6083d1ed972b1" "0cb1b0ea66b145ad9b9e34c850ea8e842c4c4c83abe04e37455a1ef4cc5b8791" "6177ecbffb8f37756012c9ee9fd73fc043520836d254397566e37c6204118852" "79278310dd6cacf2d2f491063c4ab8b129fee2a498e4c25912ddaa6c3c5b621e" "93ed23c504b202cf96ee591138b0012c295338f38046a1f3c14522d4a64d7308" "6bacece4cf10ea7dd5eae5bfc1019888f0cb62059ff905f37b33eec145a6a430" "361f5a2bc2a7d7387b442b2570b0ef35198442b38c2812bf3c70e1e091771d1a" "f2b56244ecc6f4b952b2bcb1d7e517f1f4272876a8c873b378f5cf68e904bd59" "7d708f0168f54b90fc91692811263c995bebb9f68b8b7525d0e2200da9bc903c" "fa3bdd59ea708164e7821574822ab82a3c51e262d419df941f26d64d015c90ee" "1ed5c8b7478d505a358f578c00b58b430dde379b856fbcb60ed8d345fc95594e" "0ad7f1c71fd0289f7549f0454c9b12005eddf9b76b7ead32a24d9cb1d16cbcbd" "76f66cbdf9ada1f86f9225c0f33ae60b40d04073146c4f5c49d8189d1157728b" "d74c5485d42ca4b7f3092e50db687600d0e16006d8fa335c69cf4f379dbd0eee" "a339f231e63aab2a17740e5b3965469e8c0b85eccdfb1f9dbd58a30bdad8562b" "99ea831ca79a916f1bd789de366b639d09811501e8c092c85b2cb7d697777f93" "e1ecb0536abec692b5a5e845067d75273fe36f24d01210bf0aa5842f2a7e029f" "285efd6352377e0e3b68c71ab12c43d2b72072f64d436584f9159a58c4ff545a" "cb96a06ed8f47b07c014e8637bd0fd0e6c555364171504680ac41930cfe5e11e" "6231254e74298a1cf8a5fee7ca64352943de4b495e615c449e9bb27e2ccae709" "b462d00de785490a0b6861807a360f5c1e05b48a159a99786145de7e3cce3afe" "cdb3e7a8864cede434b168c9a060bf853eeb5b3f9f758310d2a2e23be41a24ae" "0d087b2853473609d9efd2e9fbeac088e89f36718c4a4c89c568dd1b628eae41" "428754d8f3ed6449c1078ed5b4335f4949dc2ad54ed9de43c56ea9b803375c23" "7d56fb712ad356e2dacb43af7ec255c761a590e1182fe0537e1ec824b7897357" "3952ef318c8cbccf09954ecf43250ac0cbd1f4ae66b4abe569491b260f6e054b" "1ca1f43ca32d30b05980e01fa60c107b02240226ac486f41f9b790899f6f6e67" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" "49ec957b508c7d64708b40b0273697a84d3fee4f15dd9fc4a9588016adee3dad" "d1b4990bd599f5e2186c3f75769a2c5334063e9e541e37514942c27975700370" "cd736a63aa586be066d5a1f0e51179239fe70e16a9f18991f6f5d99732cabb32" "a3fa4abaf08cc169b61dea8f6df1bbe4123ec1d2afeb01c17e11fdc31fc66379" "93a0885d5f46d2aeac12bf6be1754faa7d5e28b27926b8aa812840fe7d0b7983" "10461a3c8ca61c52dfbbdedd974319b7f7fd720b091996481c8fb1dded6c6116" "bd7b7c5df1174796deefce5debc2d976b264585d51852c962362be83932873d9" "4697a2d4afca3f5ed4fdf5f715e36a6cac5c6154e105f3596b44a4874ae52c45" "7e78a1030293619094ea6ae80a7579a562068087080e01c2b8b503b27900165c" "6b289bab28a7e511f9c54496be647dc60f5bd8f9917c9495978762b99d8c96a0" "8aca557e9a17174d8f847fb02870cb2bb67f3b6e808e46c0e54a44e3e18e1020" "75d3dde259ce79660bac8e9e237b55674b910b470f313cdf4b019230d01a982a" "1c082c9b84449e54af757bcae23617d11f563fc9f33a832a8a2813c4d7dfb652" "6d589ac0e52375d311afaa745205abb6ccb3b21f6ba037104d71111e7e76a3fc" "100e7c5956d7bb3fd0eebff57fde6de8f3b9fafa056a2519f169f85199cc1c96" default))
  '(default-input-method "japanese")
  '(fci-rule-color "#D6D6D6")
  '(flycheck-display-errors-delay 0)
  '(git-gutter:added-sign "+")
  '(git-gutter:deleted-sign "-")
  '(git-gutter:modified-sign "~")
+ '(global-linum-mode t)
  '(jdee-db-active-breakpoint-face-colors (cons "#FFFBF0" "#268bd2"))
  '(jdee-db-requested-breakpoint-face-colors (cons "#FFFBF0" "#859900"))
  '(jdee-db-spec-breakpoint-face-colors (cons "#FFFBF0" "#E1DBCD"))
  '(js-indent-level 2)
  '(lsp-java-import-gradle-enabled t)
  '(lsp-lens-auto-enable t)
+ '(lsp-rust-analyzer-call-info-full t)
+ '(lsp-rust-analyzer-display-parameter-hints t)
  '(lsp-semantic-highlighting :immediate)
- '(lsp-ui-doc-enable nil t)
- '(lsp-ui-doc-header t t)
- '(lsp-ui-doc-include-signature nil t)
- '(lsp-ui-doc-max-height 30 t)
- '(lsp-ui-doc-max-width 120 t)
- '(lsp-ui-doc-position 'at-point t)
- '(lsp-ui-doc-use-childframe t t)
- '(lsp-ui-imenu-enable t t)
- '(lsp-ui-imenu-kind-position 'top t)
- '(lsp-ui-peek-enable t t)
- '(lsp-ui-peek-fontify 'on-demand t)
- '(lsp-ui-peek-list-width 50 t)
- '(lsp-ui-peek-peek-height 20 t)
- '(lsp-ui-peek-show-directory t t)
+ '(lsp-ui-doc-enable nil)
+ '(lsp-ui-doc-header t)
+ '(lsp-ui-doc-include-signature nil)
+ '(lsp-ui-doc-max-height 30)
+ '(lsp-ui-doc-max-width 120)
+ '(lsp-ui-doc-position 'at-point)
+ '(lsp-ui-doc-use-childframe t)
+ '(lsp-ui-imenu-enable t)
+ '(lsp-ui-imenu-kind-position 'top)
+ '(lsp-ui-peek-enable t)
+ '(lsp-ui-peek-fontify 'on-demand)
+ '(lsp-ui-peek-list-width 50)
+ '(lsp-ui-peek-peek-height 20)
+ '(lsp-ui-peek-show-directory t)
  '(lsp-ui-sideline-code-actions-prefix "✡" t)
  '(lsp-ui-sideline-enable nil)
- '(lsp-ui-sideline-ignore-duplicate t t)
- '(lsp-ui-sideline-show-code-actions t t)
- '(lsp-ui-sideline-show-diagnostics nil t)
- '(lsp-ui-sideline-show-hover t t)
- '(lsp-ui-sideline-show-symbol nil t)
+ '(lsp-ui-sideline-ignore-duplicate t)
+ '(lsp-ui-sideline-show-code-actions t)
+ '(lsp-ui-sideline-show-diagnostics nil)
+ '(lsp-ui-sideline-show-hover t)
+ '(lsp-ui-sideline-show-symbol nil)
  '(objed-cursor-color "#D70000")
  '(package-selected-packages
-   '(highlight-indentation zone-nyan zone-select nyan-mode dtrt-indent command-log-mode git-timemachine git-gutter beacon company-posframe company-box json-mode restclient org-download feature-mode rjsx-mode treemacs-projectile indent-guide highlight-indent-guides-method wrap-region evil-numbers elm-mode lsp-ui lsp-mode theme-changer lsp-ui-flycheck zygospore yasnippet yaml-mode which-key web-mode volatile-highlights use-package undo-tree transpose-frame smooth-scrolling smex rainbow-mode rainbow-delimiters purescript-mode psc-ide php-mode paredit org-bullets neotree multiple-cursors magit lsp-java lsp-haskell js2-mode ivy ido-vertical-mode helm-rg helm-projectile helm-lsp helm-ag hasklig-mode groovy-mode graphviz-dot-mode general gdscript-mode flycheck-joker flycheck-haskell flx-ido expand-region doom-themes diminish dap-mode company-lua company-lsp company-ghci company-ghc cider auctex all-the-icons aggressive-indent))
+   '(benchmark-init highlight-indentation zone-nyan zone-select nyan-mode dtrt-indent command-log-mode git-timemachine git-gutter beacon company-posframe company-box json-mode restclient org-download feature-mode rjsx-mode treemacs-projectile indent-guide highlight-indent-guides-method wrap-region evil-numbers elm-mode lsp-ui lsp-mode theme-changer lsp-ui-flycheck zygospore yasnippet yaml-mode which-key web-mode volatile-highlights use-package undo-tree transpose-frame smooth-scrolling smex rainbow-mode rainbow-delimiters purescript-mode psc-ide php-mode paredit org-bullets neotree multiple-cursors magit lsp-java lsp-haskell ivy ido-vertical-mode helm-rg helm-projectile helm-lsp helm-ag hasklig-mode groovy-mode graphviz-dot-mode general gdscript-mode flycheck-joker flycheck-haskell flx-ido expand-region doom-themes diminish dap-mode company-lua company-lsp company-ghci company-ghc cider auctex all-the-icons aggressive-indent))
  '(pdf-view-midnight-colors (cons "#556b72" "#FDF6E3"))
  '(rustic-ansi-faces
    ["#FDF6E3" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#556b72"])
  '(show-trailing-whitespace t)
+ '(treemacs-follow-mode t)
  '(vc-annotate-background "#FDF6E3")
  '(vc-annotate-color-map
    (list
@@ -683,7 +750,8 @@
     (cons 360 "#D6D6D6")))
  '(vc-annotate-very-old-color nil)
  '(which-function-mode t)
- '(which-key-mode t))
+ '(which-key-mode t)
+ '(window-divider-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
