@@ -291,10 +291,16 @@
 	 ("<C-M-return>" . avy-goto-line)))
 
 ;; better running commands by name
-(use-package smex
+(use-package amx
   :defer 1
-  :bind ("M-x" . smex))
+  :bind ("M-x" . amx)
+  )
 
+(use-package ido-completing-read+
+  :defer 1
+  :config
+  (ido-ubiquitous-mode 1)
+  )
 
 
 (use-package ivy
