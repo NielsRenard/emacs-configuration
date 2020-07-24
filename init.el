@@ -200,6 +200,12 @@
 (setq-default indent-tabs-mode nil)
 
 (setq show-trailing-whitespace t)
+
+(defun tf-toggle-show-trailing-whitespace ()
+  "Toggle show-trailing-whitespace between t and nil."
+  (interactive)
+  (setq show-trailing-whitespace (not show-trailing-whitespace)))
+
 (global-set-key (kbd "C-c <deletechar>") 'delete-trailing-whitespace)
 
 ;;;; navigation
@@ -290,18 +296,18 @@
   :bind (("<C-return>" . avy-goto-char-timer)
 	 ("<C-M-return>" . avy-goto-line)))
 
-;; better running commands by name
-(use-package amx
-  :defer 1
-  :bind ("M-x" . amx)
-  )
 
+;; fuzzy matching for amx-mode
 (use-package ido-completing-read+
-  :defer 1
   :config
   (ido-ubiquitous-mode 1)
+  (ido-everywhere 1)
   )
 
+;; better running commands by name
+(use-package amx
+  :bind ("M-x" . amx)
+  )
 
 (use-package ivy
   :defer t
@@ -384,6 +390,8 @@
 
 ;; Nope, I want my copies in the system temp dir.
 (setq flymake-run-in-place nil)
+;; Fix for hot reloaders freaking out over .#Files "[Error: ENOENT: no such file or directory"
+(setq create-lockfiles nil)
 ;; This lets me say where my temp dir is. (make sure it exists)
 (setq temporary-file-directory "~/.emacs.d/tmp")
 
@@ -467,6 +475,12 @@
                                         ;  :hook (haskell-mode)
   )
 
+;; nixos
+
+(use-package nix-mode
+  :defer 2
+)
+
 ;;;; elm
 
 (use-package elm-mode
@@ -475,7 +489,8 @@
 
 ;;;; lsp
 (use-package lsp-mode
-  :defer t
+  ;; :defer t
+  :ensure t
   :commands lsp
   :config
   (setq lsp-prefer-flymake nil)
@@ -543,11 +558,11 @@
 
 ;;;; java
 (use-package lsp-java
-  :after dap-mode
-  :hook (java-mode . lsp-deferred)
+                                        ;  :requires dap-mode
+  :ensure t
   :config
   (require 'lsp-java-boot)
-  (require 'dap-java)
+;;  (require 'dap-java)
   (add-hook 'java-mode-hook 'subword-mode)
   (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
   (add-hook 'java-mode-hook #'yas-minor-mode)
@@ -560,6 +575,7 @@
           "-XX:+UseG1GC"
           "-XX:+UseStringDeduplication"
           "-javaagent:/usr/sbin/lombok.jar"))
+  (add-hook 'java-mode-hook #'lsp)
   )
 
 ;; fix dap-java-run-test ansi color escape codes
@@ -574,7 +590,7 @@
 
 (use-package dap-mode
   :after lsp-mode
-  :requires 'dap-java
+;  :requires 'dap-java
   :config
   (dap-mode t)
   (dap-ui-mode t))
@@ -587,7 +603,7 @@
 ;; use M-x c-show-syntactic-information (to show the variable that needs to be set)
 
 (use-package google-c-style
-  :defer t
+  :defer 1
   :config
   (add-hook 'java-mode-hook
 	    (lambda ()
@@ -631,6 +647,34 @@
 ;; attach (drag) images from web/filesystem directly to org files
 (use-package org-download
   :defer t
+  )
+
+(use-package org-cliplink
+  :defer t
+  :bind ("C-x p l" . 'org-cliplink)
+  )
+
+(use-package nov
+  :defer 1
+  :config
+  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+  (setq nov-text-width 120)
+  (setq nov-text-width t)
+  (setq visual-fill-column-center-text t)
+  (add-hook 'nov-mode-hook 'visual-line-mode)
+  (add-hook 'nov-mode-hook 'visual-fill-column-mode)
+  (setq line-spacing 0.0)
+  )
+
+(use-package org-brain
+  :defer 2
+  :init
+  (setq org-brain-path "~/code/brain")
+  :config
+  (bind-key "C-c b" 'org-brain-prefix-map org-mode-map)
+  (setq org-id-track-globally t)
+  (setq org-id-locations-file "~/.emacs.d/.org-id-locations")
+  (add-hook 'before-save-hook #'org-brain-ensure-ids-in-buffer)
   )
 
 (use-package org-bullets
@@ -704,30 +748,30 @@
  '(lsp-rust-analyzer-call-info-full t)
  '(lsp-rust-analyzer-display-parameter-hints t)
  '(lsp-semantic-highlighting :immediate)
- '(lsp-ui-doc-enable nil)
- '(lsp-ui-doc-header t)
- '(lsp-ui-doc-include-signature nil)
- '(lsp-ui-doc-max-height 30)
- '(lsp-ui-doc-max-width 120)
- '(lsp-ui-doc-position 'at-point)
- '(lsp-ui-doc-use-childframe t)
- '(lsp-ui-imenu-enable t)
- '(lsp-ui-imenu-kind-position 'top)
- '(lsp-ui-peek-enable t)
- '(lsp-ui-peek-fontify 'on-demand)
- '(lsp-ui-peek-list-width 50)
- '(lsp-ui-peek-peek-height 20)
- '(lsp-ui-peek-show-directory t)
+ '(lsp-ui-doc-enable nil t)
+ '(lsp-ui-doc-header t t)
+ '(lsp-ui-doc-include-signature nil t)
+ '(lsp-ui-doc-max-height 30 t)
+ '(lsp-ui-doc-max-width 120 t)
+ '(lsp-ui-doc-position 'at-point t)
+ '(lsp-ui-doc-use-childframe t t)
+ '(lsp-ui-imenu-enable t t)
+ '(lsp-ui-imenu-kind-position 'top t)
+ '(lsp-ui-peek-enable t t)
+ '(lsp-ui-peek-fontify 'on-demand t)
+ '(lsp-ui-peek-list-width 50 t)
+ '(lsp-ui-peek-peek-height 20 t)
+ '(lsp-ui-peek-show-directory t t)
  '(lsp-ui-sideline-code-actions-prefix "✡" t)
  '(lsp-ui-sideline-enable nil)
- '(lsp-ui-sideline-ignore-duplicate t)
- '(lsp-ui-sideline-show-code-actions t)
- '(lsp-ui-sideline-show-diagnostics nil)
- '(lsp-ui-sideline-show-hover t)
- '(lsp-ui-sideline-show-symbol nil)
+ '(lsp-ui-sideline-ignore-duplicate t t)
+ '(lsp-ui-sideline-show-code-actions t t)
+ '(lsp-ui-sideline-show-diagnostics nil t)
+ '(lsp-ui-sideline-show-hover t t)
+ '(lsp-ui-sideline-show-symbol nil t)
  '(objed-cursor-color "#D70000")
  '(package-selected-packages
-   '(benchmark-init highlight-indentation zone-nyan zone-select nyan-mode dtrt-indent command-log-mode git-timemachine git-gutter beacon company-posframe company-box json-mode restclient org-download feature-mode rjsx-mode treemacs-projectile indent-guide highlight-indent-guides-method wrap-region evil-numbers elm-mode lsp-ui lsp-mode theme-changer lsp-ui-flycheck zygospore yasnippet yaml-mode which-key web-mode volatile-highlights use-package undo-tree transpose-frame smooth-scrolling smex rainbow-mode rainbow-delimiters purescript-mode psc-ide php-mode paredit org-bullets neotree multiple-cursors magit lsp-java lsp-haskell ivy ido-vertical-mode helm-rg helm-projectile helm-lsp helm-ag hasklig-mode groovy-mode graphviz-dot-mode general gdscript-mode flycheck-joker flycheck-haskell flx-ido expand-region doom-themes diminish dap-mode company-lua company-lsp company-ghci company-ghc cider auctex all-the-icons aggressive-indent))
+   '(nix-mode nixos-mode ido-completing-read+ amx nov nov-mode ron-mode org-brain org-cliplink benchmark-init highlight-indentation zone-nyan zone-select nyan-mode dtrt-indent command-log-mode git-timemachine git-gutter beacon company-posframe company-box json-mode restclient org-download feature-mode rjsx-mode treemacs-projectile indent-guide highlight-indent-guides-method wrap-region evil-numbers elm-mode lsp-ui lsp-mode theme-changer lsp-ui-flycheck zygospore yasnippet yaml-mode which-key web-mode volatile-highlights use-package undo-tree transpose-frame smooth-scrolling smex rainbow-mode rainbow-delimiters purescript-mode psc-ide php-mode paredit org-bullets neotree multiple-cursors magit lsp-java lsp-haskell ivy ido-vertical-mode helm-rg helm-projectile helm-lsp helm-ag hasklig-mode groovy-mode graphviz-dot-mode general gdscript-mode flycheck-joker flycheck-haskell flx-ido expand-region doom-themes diminish dap-mode company-lua company-lsp company-ghci company-ghc cider auctex all-the-icons aggressive-indent))
  '(pdf-view-midnight-colors (cons "#556b72" "#FDF6E3"))
  '(rustic-ansi-faces
    ["#FDF6E3" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#556b72"])
