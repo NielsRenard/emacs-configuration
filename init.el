@@ -297,17 +297,9 @@
 	 ("<C-M-return>" . avy-goto-line)))
 
 
-;; fuzzy matching for amx-mode
-(use-package ido-completing-read+
-  :config
-  (ido-ubiquitous-mode 1)
-  (ido-everywhere 1)
-  )
-
 ;; better running commands by name
-(use-package amx
-  :bind ("M-x" . amx)
-  )
+(use-package smex
+  :bind ("M-x" . smex))
 
 (use-package ivy
   :defer t
@@ -701,13 +693,27 @@
 ;;;;(require 'emacs-reveal)
 ;;(load "~/.emacs.d/emacs-reveal/reveal-config.el")
 
-;; godot
-
-(use-package gdscript-mode
-    :defer t
-)
-
 ;; custom functions fns
+
+(defun jisho-org-link ()
+  "Generate org-mode jisho link from word."
+  (interactive)
+  (let ((query (thing-at-point 'word 'no-properties))
+        (jisho-url "https://jisho.org/search/"))
+    (progn
+      (kill-word 1)
+      (org-insert-link t (concat jisho-url query) query)
+      )))
+
+(defun jisho-org-link-region (start end)
+  "Generate org-mode jisho search link from region."
+  (interactive "r")
+  (let ((query (buffer-substring start end))
+        (jisho-url "https://jisho.org/search/"))
+    (progn
+      (kill-region start end)
+      (org-insert-link nil (concat jisho-url query) query)
+      )))
 
 (defun er-find-user-init-file ()
   "Edit the `user-init-file', in another window."
@@ -721,6 +727,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(amx-backend 'ido)
+ '(amx-mode t)
  '(ansi-color-names-vector
    ["#FDF6E3" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#556b72"])
  '(beacon-color "#f1fa8c")
@@ -748,30 +756,30 @@
  '(lsp-rust-analyzer-call-info-full t)
  '(lsp-rust-analyzer-display-parameter-hints t)
  '(lsp-semantic-highlighting :immediate)
- '(lsp-ui-doc-enable nil t)
- '(lsp-ui-doc-header t t)
- '(lsp-ui-doc-include-signature nil t)
- '(lsp-ui-doc-max-height 30 t)
- '(lsp-ui-doc-max-width 120 t)
- '(lsp-ui-doc-position 'at-point t)
- '(lsp-ui-doc-use-childframe t t)
- '(lsp-ui-imenu-enable t t)
- '(lsp-ui-imenu-kind-position 'top t)
- '(lsp-ui-peek-enable t t)
- '(lsp-ui-peek-fontify 'on-demand t)
- '(lsp-ui-peek-list-width 50 t)
- '(lsp-ui-peek-peek-height 20 t)
- '(lsp-ui-peek-show-directory t t)
+ '(lsp-ui-doc-enable nil)
+ '(lsp-ui-doc-header t)
+ '(lsp-ui-doc-include-signature nil)
+ '(lsp-ui-doc-max-height 30)
+ '(lsp-ui-doc-max-width 120)
+ '(lsp-ui-doc-position 'at-point)
+ '(lsp-ui-doc-use-childframe t)
+ '(lsp-ui-imenu-enable t)
+ '(lsp-ui-imenu-kind-position 'top)
+ '(lsp-ui-peek-enable t)
+ '(lsp-ui-peek-fontify 'on-demand)
+ '(lsp-ui-peek-list-width 50)
+ '(lsp-ui-peek-peek-height 20)
+ '(lsp-ui-peek-show-directory t)
  '(lsp-ui-sideline-code-actions-prefix "✡" t)
  '(lsp-ui-sideline-enable nil)
- '(lsp-ui-sideline-ignore-duplicate t t)
- '(lsp-ui-sideline-show-code-actions t t)
- '(lsp-ui-sideline-show-diagnostics nil t)
- '(lsp-ui-sideline-show-hover t t)
- '(lsp-ui-sideline-show-symbol nil t)
+ '(lsp-ui-sideline-ignore-duplicate t)
+ '(lsp-ui-sideline-show-code-actions t)
+ '(lsp-ui-sideline-show-diagnostics nil)
+ '(lsp-ui-sideline-show-hover t)
+ '(lsp-ui-sideline-show-symbol nil)
  '(objed-cursor-color "#D70000")
  '(package-selected-packages
-   '(nix-mode nixos-mode ido-completing-read+ amx nov nov-mode ron-mode org-brain org-cliplink benchmark-init highlight-indentation zone-nyan zone-select nyan-mode dtrt-indent command-log-mode git-timemachine git-gutter beacon company-posframe company-box json-mode restclient org-download feature-mode rjsx-mode treemacs-projectile indent-guide highlight-indent-guides-method wrap-region evil-numbers elm-mode lsp-ui lsp-mode theme-changer lsp-ui-flycheck zygospore yasnippet yaml-mode which-key web-mode volatile-highlights use-package undo-tree transpose-frame smooth-scrolling smex rainbow-mode rainbow-delimiters purescript-mode psc-ide php-mode paredit org-bullets neotree multiple-cursors magit lsp-java lsp-haskell ivy ido-vertical-mode helm-rg helm-projectile helm-lsp helm-ag hasklig-mode groovy-mode graphviz-dot-mode general gdscript-mode flycheck-joker flycheck-haskell flx-ido expand-region doom-themes diminish dap-mode company-lua company-lsp company-ghci company-ghc cider auctex all-the-icons aggressive-indent))
+   '(ivy-completing-read ivy-completing-read+ nix-mode nixos-mode ido-completing-read+ amx nov nov-mode ron-mode org-brain org-cliplink benchmark-init highlight-indentation zone-nyan zone-select nyan-mode dtrt-indent command-log-mode git-timemachine git-gutter beacon company-posframe company-box json-mode restclient org-download feature-mode rjsx-mode treemacs-projectile indent-guide highlight-indent-guides-method wrap-region evil-numbers elm-mode lsp-ui lsp-mode theme-changer lsp-ui-flycheck zygospore yasnippet yaml-mode which-key web-mode volatile-highlights use-package undo-tree transpose-frame smooth-scrolling smex rainbow-mode rainbow-delimiters purescript-mode psc-ide php-mode paredit org-bullets neotree multiple-cursors magit lsp-java lsp-haskell ivy ido-vertical-mode helm-rg helm-projectile helm-lsp helm-ag hasklig-mode groovy-mode graphviz-dot-mode general gdscript-mode flycheck-joker flycheck-haskell flx-ido expand-region doom-themes diminish dap-mode company-lua company-lsp company-ghci company-ghc cider auctex all-the-icons aggressive-indent))
  '(pdf-view-midnight-colors (cons "#556b72" "#FDF6E3"))
  '(rustic-ansi-faces
    ["#FDF6E3" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#556b72"])
