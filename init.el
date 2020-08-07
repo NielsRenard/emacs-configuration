@@ -199,7 +199,7 @@
 ;; no tabs (use C-q when must use tabs)
 (setq-default indent-tabs-mode nil)
 
-(setq show-trailing-whitespace t)
+(setq show-trailing-whitespace nil)
 
 (defun tf-toggle-show-trailing-whitespace ()
   "Toggle show-trailing-whitespace between t and nil."
@@ -635,6 +635,8 @@
 (setq org-hide-emphasis-markers t)
 
 (setq org-image-actual-width nil)
+
+(setq org-tags-column 75)
 
 ;; attach (drag) images from web/filesystem directly to org files
 (use-package org-download
