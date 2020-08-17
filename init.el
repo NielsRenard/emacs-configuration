@@ -648,6 +648,8 @@
 
 (setq org-tags-column 75)
 
+(setq org-html-htmlize-output-type 'css)
+
 ;; attach (drag) images from web/filesystem directly to org files
 (use-package org-download
   :defer t
@@ -707,15 +709,17 @@
 
 ;; custom functions fns
 
-(defun jisho-org-link ()
-  "Generate org-mode jisho link from word."
-  (interactive)
-  (let ((query (thing-at-point 'word 'no-properties))
-        (jisho-url "https://jisho.org/search/"))
+(defun jisho-org-link (word tooltip)
+  "Generate org-mode jisho link from word and insert macro for tooltip in html export."
+  (interactive "MWord:\nMTooltip:")
+  (let ((jisho-url "https://jisho.org/search/"))
     (progn
-      (kill-word 1)
-      (org-insert-link t (concat jisho-url query) query)
+      (insert (concat "{{{kanji(" tooltip ")}}}"))
+      (newline-and-indent)
+      (org-insert-link t (concat jisho-url word) word)
       )))
+(global-set-key (kbd "C-x C-j") 'jisho-org-link)
+
 
 (defun jisho-org-link-region (start end)
   "Generate org-mode jisho search link from region."
