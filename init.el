@@ -300,6 +300,7 @@
 
 ;; better running commands by name (needs ido-completing-read+ for fuzzy matching)
 (use-package amx
+  :ensure t
   :bind ("M-x" . amx))
 
 ;; accompanies amx
@@ -418,7 +419,7 @@
   (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode))
 
 (use-package paredit
-  :defer t
+  :defer 4
   :config
   (add-hook 'clojure-mode-hook 'enable-paredit-mode)
   (add-hook 'clojure-repl-mode-hook 'enable-paredit-mode)
@@ -642,7 +643,8 @@
   :config (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
 
 
-;;;; docs
+;;;; docs / org-mode
+
 ;; letters as ordered list bullets
 ;; A. like
 ;; B. this
