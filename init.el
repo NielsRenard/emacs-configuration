@@ -75,6 +75,14 @@
   :defer t
   )
 
+(use-package company-restclient
+  :defer 2
+  :config (add-to-list 'company-backends 'company-restclient)
+  )
+
+(use-package jq-mode
+  :defer 2)
+
 ;;  version control
 (use-package magit
   :defer 2
@@ -85,6 +93,7 @@
   :bind ("C-c C-h" . git-timemachine-toggle))
 
 (use-package git-gutter
+  :diminish git-gutter-mode
   :custom
   (git-gutter:modified-sign "~")
   (git-gutter:added-sign    "+")
@@ -223,7 +232,7 @@
 	scroll-conservatively 10000
 	scroll-preserve-screen-position 1))
 
-;;(setq scroll-lock-mode t)
+(setq scroll-lock-mode t)
 (global-hl-line-mode)
 (setq blink-cursor-mode nil)
 ;; swap easily between vertical/horizontal arrangement
@@ -462,7 +471,9 @@
          (rust-mode . subword-mode)
          (rust-mode . yas-minor-mode)))
 
-(use-package rustic)
+(use-package rustic
+  :diminish rustic-mode
+  )
 
 (use-package cargo
   :defer t
@@ -512,7 +523,10 @@
 
 
 (use-package lsp-haskell :after lsp
-  :hook (haskell-mode . lsp-deferred))
+  :hook (haskell-mode . lsp-deferred)
+  :config
+  (setq lsp-haskell-process-path-hie "haskell-language-server-wrapper")
+  )
 
 (use-package company-lsp :commands company-lsp)
 (setq lsp-prefer-capf t)
@@ -660,7 +674,7 @@
 
 (use-package htmlize
   :config
-  borders around exported org tables
+  ;;borders around exported org tables
   (setq org-html-table-default-attributes
         (plist-put org-html-table-default-attributes :rules "all"))
   (setq org-html-table-default-attributes
