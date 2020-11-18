@@ -35,7 +35,7 @@
   ;; To disable collection of benchmark data after init is done.
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
-;;"A defined abbrev is a word which expands
+;;"A defined abbrev is a word which expands"
 (setq-default abbrev-mode t)
 
 ;; can just type y instead of yes
@@ -69,6 +69,11 @@
 ;; disable page-up and page-down
 (global-unset-key (kbd "<prior>"))
 (global-unset-key (kbd "<next>"))
+
+;; pick up environment variables from .envrc files
+(use-package direnv
+ :config
+ (direnv-mode))
 
 ;; perform http calls
 (use-package restclient
@@ -522,14 +527,14 @@
   :commands (lsp-deferred))
 
 
-(use-package lsp-haskell :after lsp
+(use-package lsp-haskell
   :hook (haskell-mode . lsp-deferred)
   :config
   (setq lsp-haskell-process-path-hie "haskell-language-server-wrapper")
   )
 
-(use-package company-lsp :commands company-lsp)
-(setq lsp-prefer-capf t)
+;(use-package company-lsp :commands company-lsp)
+;(setq lsp-prefer-capf t)
 (use-package helm-lsp :commands helm-lsp-workspace-symbol)
 (use-package yasnippet)
 
@@ -545,7 +550,6 @@
   )
 
 (use-package lsp-ui
-  :config (lsp-ui-flycheck-enable nil)
   :custom
   ;; lsp-ui-doc
   (lsp-ui-doc-enable nil)
@@ -668,6 +672,8 @@
 
 (setq org-hide-emphasis-markers t)
 
+(setq org-startup-with-inline-images t)
+
 (setq org-image-actual-width nil)
 
 (setq org-tags-column 75)
@@ -707,6 +713,7 @@
 ;;;; org-babel
 
 (use-package ob-rust :defer 2)
+(use-package ob-restclient :defer 2)
 
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -714,7 +721,11 @@
    (C . t)
    (shell . t)
    (haskell . t)
-   (rust . t)))
+   (rust . t)
+   (restclient . t)
+   (dot . t)
+   (java . t))
+ )
 
 ;; plotting formulas
 (use-package gnuplot :defer t)
@@ -734,6 +745,9 @@
 (use-package org-bullets
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
+;; recipes
+(use-package org-chef)
 
 ;; graphviz
 (use-package graphviz-dot-mode)
@@ -793,8 +807,11 @@
  ;; If there is more than one, they won't work right.
  '(amx-backend 'ido)
  '(amx-mode t)
+ '(ansi-color-names-vector
+   ["#f7f3ee" "#955f5f" "#81895d" "#957f5f" "#7382a0" "#9c739c" "#5f8c7d" "#605a52"])
  '(beacon-color "#f1fa8c")
  '(beacon-mode t)
+ '(blink-cursor-mode nil)
  '(browse-url-browser-function 'browse-url-firefox)
  '(company-echo-delay 0 t)
  '(company-idle-delay 0)
@@ -803,19 +820,24 @@
  '(css-indent-offset 2)
  '(cua-mode nil nil (cua-base))
  '(custom-safe-themes
-   '("71e5acf6053215f553036482f3340a5445aee364fb2e292c70d9175fb0cc8af7" "4f01c1df1d203787560a67c1b295423174fd49934deb5e6789abd1e61dba9552" "711efe8b1233f2cf52f338fd7f15ce11c836d0b6240a18fffffc2cbd5bfe61b0" "01cf34eca93938925143f402c2e6141f03abb341f27d1c2dba3d50af9357ce70" "4bca89c1004e24981c840d3a32755bf859a6910c65b829d9441814000cf6c3d0" "37144b437478e4c235824f0e94afa740ee2c7d16952e69ac3c5ed4352209eefb" "9f15d03580b08dae41a1e5c1f00d1f1aa99fea121ca32c28e2abec9563c6e32c" "730a87ed3dc2bf318f3ea3626ce21fb054cd3a1471dcd59c81a4071df02cb601" "5d09b4ad5649fea40249dd937eaaa8f8a229db1cec9a1a0ef0de3ccf63523014" "2f1518e906a8b60fac943d02ad415f1d8b3933a5a7f75e307e6e9a26ef5bf570" "5b809c3eae60da2af8a8cfba4e9e04b4d608cb49584cb5998f6e4a1c87c057c4" "1623aa627fecd5877246f48199b8e2856647c99c6acdab506173f9bb8b0a41ac" "76bfa9318742342233d8b0b42e824130b3a50dcc732866ff8e47366aed69de11" "9b272154fb77a926f52f2756ed5872877ad8d73d018a426d44c6083d1ed972b1" "0cb1b0ea66b145ad9b9e34c850ea8e842c4c4c83abe04e37455a1ef4cc5b8791" "6177ecbffb8f37756012c9ee9fd73fc043520836d254397566e37c6204118852" "79278310dd6cacf2d2f491063c4ab8b129fee2a498e4c25912ddaa6c3c5b621e" "93ed23c504b202cf96ee591138b0012c295338f38046a1f3c14522d4a64d7308" "6bacece4cf10ea7dd5eae5bfc1019888f0cb62059ff905f37b33eec145a6a430" "361f5a2bc2a7d7387b442b2570b0ef35198442b38c2812bf3c70e1e091771d1a" "f2b56244ecc6f4b952b2bcb1d7e517f1f4272876a8c873b378f5cf68e904bd59" "7d708f0168f54b90fc91692811263c995bebb9f68b8b7525d0e2200da9bc903c" "fa3bdd59ea708164e7821574822ab82a3c51e262d419df941f26d64d015c90ee" "1ed5c8b7478d505a358f578c00b58b430dde379b856fbcb60ed8d345fc95594e" "0ad7f1c71fd0289f7549f0454c9b12005eddf9b76b7ead32a24d9cb1d16cbcbd" "76f66cbdf9ada1f86f9225c0f33ae60b40d04073146c4f5c49d8189d1157728b" "d74c5485d42ca4b7f3092e50db687600d0e16006d8fa335c69cf4f379dbd0eee" "a339f231e63aab2a17740e5b3965469e8c0b85eccdfb1f9dbd58a30bdad8562b" "99ea831ca79a916f1bd789de366b639d09811501e8c092c85b2cb7d697777f93" "e1ecb0536abec692b5a5e845067d75273fe36f24d01210bf0aa5842f2a7e029f" "285efd6352377e0e3b68c71ab12c43d2b72072f64d436584f9159a58c4ff545a" "cb96a06ed8f47b07c014e8637bd0fd0e6c555364171504680ac41930cfe5e11e" "6231254e74298a1cf8a5fee7ca64352943de4b495e615c449e9bb27e2ccae709" "b462d00de785490a0b6861807a360f5c1e05b48a159a99786145de7e3cce3afe" "cdb3e7a8864cede434b168c9a060bf853eeb5b3f9f758310d2a2e23be41a24ae" "0d087b2853473609d9efd2e9fbeac088e89f36718c4a4c89c568dd1b628eae41" "428754d8f3ed6449c1078ed5b4335f4949dc2ad54ed9de43c56ea9b803375c23" "7d56fb712ad356e2dacb43af7ec255c761a590e1182fe0537e1ec824b7897357" "3952ef318c8cbccf09954ecf43250ac0cbd1f4ae66b4abe569491b260f6e054b" "1ca1f43ca32d30b05980e01fa60c107b02240226ac486f41f9b790899f6f6e67" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" "49ec957b508c7d64708b40b0273697a84d3fee4f15dd9fc4a9588016adee3dad" "d1b4990bd599f5e2186c3f75769a2c5334063e9e541e37514942c27975700370" "cd736a63aa586be066d5a1f0e51179239fe70e16a9f18991f6f5d99732cabb32" "a3fa4abaf08cc169b61dea8f6df1bbe4123ec1d2afeb01c17e11fdc31fc66379" "93a0885d5f46d2aeac12bf6be1754faa7d5e28b27926b8aa812840fe7d0b7983" "10461a3c8ca61c52dfbbdedd974319b7f7fd720b091996481c8fb1dded6c6116" "bd7b7c5df1174796deefce5debc2d976b264585d51852c962362be83932873d9" "4697a2d4afca3f5ed4fdf5f715e36a6cac5c6154e105f3596b44a4874ae52c45" "7e78a1030293619094ea6ae80a7579a562068087080e01c2b8b503b27900165c" "6b289bab28a7e511f9c54496be647dc60f5bd8f9917c9495978762b99d8c96a0" "8aca557e9a17174d8f847fb02870cb2bb67f3b6e808e46c0e54a44e3e18e1020" "75d3dde259ce79660bac8e9e237b55674b910b470f313cdf4b019230d01a982a" "1c082c9b84449e54af757bcae23617d11f563fc9f33a832a8a2813c4d7dfb652" "6d589ac0e52375d311afaa745205abb6ccb3b21f6ba037104d71111e7e76a3fc" "100e7c5956d7bb3fd0eebff57fde6de8f3b9fafa056a2519f169f85199cc1c96" default))
+   '("9efb2d10bfb38fe7cd4586afb3e644d082cbcdb7435f3d1e8dd9413cbe5e61fc" "37a4701758378c93159ad6c7aceb19fd6fb523e044efe47f2116bc7398ce20c9" "71e5acf6053215f553036482f3340a5445aee364fb2e292c70d9175fb0cc8af7" "4f01c1df1d203787560a67c1b295423174fd49934deb5e6789abd1e61dba9552" "711efe8b1233f2cf52f338fd7f15ce11c836d0b6240a18fffffc2cbd5bfe61b0" "01cf34eca93938925143f402c2e6141f03abb341f27d1c2dba3d50af9357ce70" "4bca89c1004e24981c840d3a32755bf859a6910c65b829d9441814000cf6c3d0" "37144b437478e4c235824f0e94afa740ee2c7d16952e69ac3c5ed4352209eefb" "9f15d03580b08dae41a1e5c1f00d1f1aa99fea121ca32c28e2abec9563c6e32c" "730a87ed3dc2bf318f3ea3626ce21fb054cd3a1471dcd59c81a4071df02cb601" "5d09b4ad5649fea40249dd937eaaa8f8a229db1cec9a1a0ef0de3ccf63523014" "2f1518e906a8b60fac943d02ad415f1d8b3933a5a7f75e307e6e9a26ef5bf570" "5b809c3eae60da2af8a8cfba4e9e04b4d608cb49584cb5998f6e4a1c87c057c4" "1623aa627fecd5877246f48199b8e2856647c99c6acdab506173f9bb8b0a41ac" "76bfa9318742342233d8b0b42e824130b3a50dcc732866ff8e47366aed69de11" "9b272154fb77a926f52f2756ed5872877ad8d73d018a426d44c6083d1ed972b1" "0cb1b0ea66b145ad9b9e34c850ea8e842c4c4c83abe04e37455a1ef4cc5b8791" "6177ecbffb8f37756012c9ee9fd73fc043520836d254397566e37c6204118852" "79278310dd6cacf2d2f491063c4ab8b129fee2a498e4c25912ddaa6c3c5b621e" "93ed23c504b202cf96ee591138b0012c295338f38046a1f3c14522d4a64d7308" "6bacece4cf10ea7dd5eae5bfc1019888f0cb62059ff905f37b33eec145a6a430" "361f5a2bc2a7d7387b442b2570b0ef35198442b38c2812bf3c70e1e091771d1a" "f2b56244ecc6f4b952b2bcb1d7e517f1f4272876a8c873b378f5cf68e904bd59" "7d708f0168f54b90fc91692811263c995bebb9f68b8b7525d0e2200da9bc903c" "fa3bdd59ea708164e7821574822ab82a3c51e262d419df941f26d64d015c90ee" "1ed5c8b7478d505a358f578c00b58b430dde379b856fbcb60ed8d345fc95594e" "0ad7f1c71fd0289f7549f0454c9b12005eddf9b76b7ead32a24d9cb1d16cbcbd" "76f66cbdf9ada1f86f9225c0f33ae60b40d04073146c4f5c49d8189d1157728b" "d74c5485d42ca4b7f3092e50db687600d0e16006d8fa335c69cf4f379dbd0eee" "a339f231e63aab2a17740e5b3965469e8c0b85eccdfb1f9dbd58a30bdad8562b" "99ea831ca79a916f1bd789de366b639d09811501e8c092c85b2cb7d697777f93" "e1ecb0536abec692b5a5e845067d75273fe36f24d01210bf0aa5842f2a7e029f" "285efd6352377e0e3b68c71ab12c43d2b72072f64d436584f9159a58c4ff545a" "cb96a06ed8f47b07c014e8637bd0fd0e6c555364171504680ac41930cfe5e11e" "6231254e74298a1cf8a5fee7ca64352943de4b495e615c449e9bb27e2ccae709" "b462d00de785490a0b6861807a360f5c1e05b48a159a99786145de7e3cce3afe" "cdb3e7a8864cede434b168c9a060bf853eeb5b3f9f758310d2a2e23be41a24ae" "0d087b2853473609d9efd2e9fbeac088e89f36718c4a4c89c568dd1b628eae41" "428754d8f3ed6449c1078ed5b4335f4949dc2ad54ed9de43c56ea9b803375c23" "7d56fb712ad356e2dacb43af7ec255c761a590e1182fe0537e1ec824b7897357" "3952ef318c8cbccf09954ecf43250ac0cbd1f4ae66b4abe569491b260f6e054b" "1ca1f43ca32d30b05980e01fa60c107b02240226ac486f41f9b790899f6f6e67" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" "49ec957b508c7d64708b40b0273697a84d3fee4f15dd9fc4a9588016adee3dad" "d1b4990bd599f5e2186c3f75769a2c5334063e9e541e37514942c27975700370" "cd736a63aa586be066d5a1f0e51179239fe70e16a9f18991f6f5d99732cabb32" "a3fa4abaf08cc169b61dea8f6df1bbe4123ec1d2afeb01c17e11fdc31fc66379" "93a0885d5f46d2aeac12bf6be1754faa7d5e28b27926b8aa812840fe7d0b7983" "10461a3c8ca61c52dfbbdedd974319b7f7fd720b091996481c8fb1dded6c6116" "bd7b7c5df1174796deefce5debc2d976b264585d51852c962362be83932873d9" "4697a2d4afca3f5ed4fdf5f715e36a6cac5c6154e105f3596b44a4874ae52c45" "7e78a1030293619094ea6ae80a7579a562068087080e01c2b8b503b27900165c" "6b289bab28a7e511f9c54496be647dc60f5bd8f9917c9495978762b99d8c96a0" "8aca557e9a17174d8f847fb02870cb2bb67f3b6e808e46c0e54a44e3e18e1020" "75d3dde259ce79660bac8e9e237b55674b910b470f313cdf4b019230d01a982a" "1c082c9b84449e54af757bcae23617d11f563fc9f33a832a8a2813c4d7dfb652" "6d589ac0e52375d311afaa745205abb6ccb3b21f6ba037104d71111e7e76a3fc" "100e7c5956d7bb3fd0eebff57fde6de8f3b9fafa056a2519f169f85199cc1c96" default))
  '(default-input-method "japanese")
+ '(fci-rule-color "#605a52")
  '(flycheck-display-errors-delay 0)
  '(git-gutter:added-sign "+")
  '(git-gutter:deleted-sign "-")
  '(git-gutter:modified-sign "~")
  '(global-linum-mode t)
+ '(graphviz-dot-view-command "dotty %s")
  '(helm-mode-fuzzy-match nil)
  '(ido-enable-flex-matching t)
  '(ido-separator nil)
+ '(jdee-db-active-breakpoint-face-colors (cons "#f1ece4" "#7382a0"))
+ '(jdee-db-requested-breakpoint-face-colors (cons "#f1ece4" "#81895d"))
+ '(jdee-db-spec-breakpoint-face-colors (cons "#f1ece4" "#b9a992"))
  '(js-indent-level 2)
  '(linum-format 'dynamic)
- '(lsp-haskell-process-path-hie "haskell-language-server-wrapper")
+ '(lsp-haskell-process-path-hie "haskell-language-server-wrapper" t)
  '(lsp-java-boot-enabled nil)
  '(lsp-java-import-gradle-enabled t)
  '(lsp-java-inhibit-message nil)
@@ -845,11 +867,37 @@
  '(lsp-ui-sideline-show-diagnostics nil)
  '(lsp-ui-sideline-show-hover t)
  '(lsp-ui-sideline-show-symbol nil)
+ '(objed-cursor-color "#955f5f")
  '(org-agenda-files '("~/code/notes/job/ns/ns.org"))
  '(package-selected-packages
-   '(jq-mode company-restclient htmlize rustic gnuplot gnuplot-mode ivy-completing-read ivy-completing-read+ nix-mode nixos-mode ido-completing-read+ amx nov nov-mode ron-mode org-brain org-cliplink benchmark-init highlight-indentation zone-nyan zone-select nyan-mode dtrt-indent command-log-mode git-timemachine git-gutter beacon company-posframe company-box json-mode restclient org-download feature-mode rjsx-mode treemacs-projectile indent-guide highlight-indent-guides-method wrap-region evil-numbers elm-mode lsp-ui lsp-mode theme-changer lsp-ui-flycheck zygospore yasnippet yaml-mode which-key web-mode volatile-highlights use-package undo-tree transpose-frame smooth-scrolling smex rainbow-mode rainbow-delimiters purescript-mode psc-ide php-mode paredit org-bullets neotree multiple-cursors magit lsp-java lsp-haskell ivy helm-rg helm-projectile helm-lsp helm-ag hasklig-mode groovy-mode graphviz-dot-mode general gdscript-mode flycheck-joker flycheck-haskell expand-region doom-themes diminish dap-mode company-lua company-lsp company-ghci company-ghc cider auctex all-the-icons aggressive-indent))
+   '(ob-java ob-restclient direnv org-chef jq-mode company-restclient htmlize rustic gnuplot gnuplot-mode ivy-completing-read ivy-completing-read+ nix-mode nixos-mode ido-completing-read+ amx nov nov-mode ron-mode org-brain org-cliplink benchmark-init highlight-indentation zone-nyan zone-select nyan-mode dtrt-indent command-log-mode git-timemachine git-gutter beacon company-posframe company-box json-mode restclient org-download feature-mode rjsx-mode treemacs-projectile indent-guide highlight-indent-guides-method wrap-region evil-numbers elm-mode lsp-ui lsp-mode theme-changer lsp-ui-flycheck zygospore yasnippet yaml-mode which-key web-mode volatile-highlights use-package undo-tree transpose-frame smooth-scrolling smex rainbow-mode rainbow-delimiters purescript-mode psc-ide php-mode paredit org-bullets neotree multiple-cursors magit lsp-java lsp-haskell ivy helm-rg helm-projectile helm-lsp helm-ag hasklig-mode groovy-mode graphviz-dot-mode general gdscript-mode flycheck-joker flycheck-haskell expand-region doom-themes diminish dap-mode company-lua company-lsp company-ghci company-ghc cider auctex all-the-icons aggressive-indent))
+ '(pdf-view-midnight-colors (cons "#605a52" "#f7f3ee"))
+ '(rustic-ansi-faces
+   ["#f7f3ee" "#955f5f" "#81895d" "#957f5f" "#7382a0" "#9c739c" "#5f8c7d" "#605a52"])
  '(show-trailing-whitespace nil)
  '(treemacs-follow-mode t)
+ '(vc-annotate-background "#f7f3ee")
+ '(vc-annotate-color-map
+   (list
+    (cons 20 "#81895d")
+    (cons 40 "#87855d")
+    (cons 60 "#8e825e")
+    (cons 80 "#957f5f")
+    (cons 100 "#957f5f")
+    (cons 120 "#957f5f")
+    (cons 140 "#957f5f")
+    (cons 160 "#977b73")
+    (cons 180 "#997787")
+    (cons 200 "#9c739c")
+    (cons 220 "#996c87")
+    (cons 240 "#976573")
+    (cons 260 "#955f5f")
+    (cons 280 "#9e716b")
+    (cons 300 "#a78378")
+    (cons 320 "#b09685")
+    (cons 340 "#605a52")
+    (cons 360 "#605a52")))
+ '(vc-annotate-very-old-color nil)
  '(which-function-mode t)
  '(which-key-mode t)
  '(window-divider-mode t))
