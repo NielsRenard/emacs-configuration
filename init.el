@@ -663,7 +663,7 @@
   :config (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
 
 
-;;;; docs / org-mode
+;;;; docs / org-mode / Org mode
 
 ;; letters as ordered list bullets
 ;; A. like
@@ -677,6 +677,16 @@
 (setq org-image-actual-width nil)
 
 (setq org-tags-column 75)
+
+(setq org-modules (quote (org-habit)))
+
+;; org-agenda
+
+(setq org-agenda-files (list "~/code/notes/agenda"))
+
+(define-key global-map (kbd "C-c l") 'org-store-link)
+(define-key global-map (kbd "C-c a") 'org-agenda)
+(setq org-log-done t)
 
 (use-package htmlize
   :config
@@ -846,29 +856,30 @@
  '(lsp-rust-analyzer-call-info-full t)
  '(lsp-rust-analyzer-display-parameter-hints t)
  '(lsp-semantic-highlighting :immediate)
- '(lsp-ui-doc-enable nil)
- '(lsp-ui-doc-header t)
- '(lsp-ui-doc-include-signature nil)
- '(lsp-ui-doc-max-height 30)
- '(lsp-ui-doc-max-width 120)
- '(lsp-ui-doc-position 'at-point)
- '(lsp-ui-doc-use-childframe t)
- '(lsp-ui-imenu-enable t)
- '(lsp-ui-imenu-kind-position 'top)
- '(lsp-ui-peek-enable t)
- '(lsp-ui-peek-fontify 'on-demand)
- '(lsp-ui-peek-list-width 50)
- '(lsp-ui-peek-peek-height 20)
- '(lsp-ui-peek-show-directory t)
+ '(lsp-ui-doc-enable nil t)
+ '(lsp-ui-doc-header t t)
+ '(lsp-ui-doc-include-signature nil t)
+ '(lsp-ui-doc-max-height 30 t)
+ '(lsp-ui-doc-max-width 120 t)
+ '(lsp-ui-doc-position 'at-point t)
+ '(lsp-ui-doc-use-childframe t t)
+ '(lsp-ui-imenu-enable t t)
+ '(lsp-ui-imenu-kind-position 'top t)
+ '(lsp-ui-peek-enable t t)
+ '(lsp-ui-peek-fontify 'on-demand t)
+ '(lsp-ui-peek-list-width 50 t)
+ '(lsp-ui-peek-peek-height 20 t)
+ '(lsp-ui-peek-show-directory t t)
  '(lsp-ui-sideline-code-actions-prefix "✡" t)
  '(lsp-ui-sideline-enable nil)
- '(lsp-ui-sideline-ignore-duplicate t)
- '(lsp-ui-sideline-show-code-actions t)
- '(lsp-ui-sideline-show-diagnostics nil)
- '(lsp-ui-sideline-show-hover t)
- '(lsp-ui-sideline-show-symbol nil)
+ '(lsp-ui-sideline-ignore-duplicate t t)
+ '(lsp-ui-sideline-show-code-actions t t)
+ '(lsp-ui-sideline-show-diagnostics nil t)
+ '(lsp-ui-sideline-show-hover t t)
+ '(lsp-ui-sideline-show-symbol nil t)
  '(objed-cursor-color "#955f5f")
- '(org-agenda-files '("~/code/notes/job/ns/ns.org"))
+ '(org-agenda-files '("~/code/notes/agenda"))
+ '(org-modules '(org-habit))
  '(package-selected-packages
    '(ob-java ob-restclient direnv org-chef jq-mode company-restclient htmlize rustic gnuplot gnuplot-mode ivy-completing-read ivy-completing-read+ nix-mode nixos-mode ido-completing-read+ amx nov nov-mode ron-mode org-brain org-cliplink benchmark-init highlight-indentation zone-nyan zone-select nyan-mode dtrt-indent command-log-mode git-timemachine git-gutter beacon company-posframe company-box json-mode restclient org-download feature-mode rjsx-mode treemacs-projectile indent-guide highlight-indent-guides-method wrap-region evil-numbers elm-mode lsp-ui lsp-mode theme-changer lsp-ui-flycheck zygospore yasnippet yaml-mode which-key web-mode volatile-highlights use-package undo-tree transpose-frame smooth-scrolling smex rainbow-mode rainbow-delimiters purescript-mode psc-ide php-mode paredit org-bullets neotree multiple-cursors magit lsp-java lsp-haskell ivy helm-rg helm-projectile helm-lsp helm-ag hasklig-mode groovy-mode graphviz-dot-mode general gdscript-mode flycheck-joker flycheck-haskell expand-region doom-themes diminish dap-mode company-lua company-lsp company-ghci company-ghc cider auctex all-the-icons aggressive-indent))
  '(pdf-view-midnight-colors (cons "#605a52" "#f7f3ee"))
