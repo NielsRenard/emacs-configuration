@@ -917,9 +917,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(flycheck-warning ((t (:background "orange1" :underline nil))))
  '(git-gutter:added ((t (:foreground "#000000" :background "#50fa7b"))))
  '(git-gutter:deleted ((t (:foreground "#000000" :background "#ff79c6"))))
- '(git-gutter:modified ((t (:foreground "#000000" :background "#87cefa"))))
- '(lsp-lsp-flycheck-warning-unnecessary-face ((t (:underline "DarkOrange1"))) t))
+ '(git-gutter:modified ((t (:foreground "#000000" :background "#87cefa")))))
 (put 'narrow-to-region 'disabled nil)
