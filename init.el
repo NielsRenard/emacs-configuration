@@ -1,6 +1,6 @@
 ;;; package --- Summary:
 ;;; Commentary:
-(package-initialize)
+;; (package-initialize)
 
 ;; Melpa
 (add-to-list 'package-archives
@@ -29,11 +29,11 @@
 (defvar tramp-default-method "ssh" )
 (setq tramp-default-method "ssh")
 
-(use-package benchmark-init
-  :ensure t
-  :config
-  ;; To disable collection of benchmark data after init is done.
-  (add-hook 'after-init-hook 'benchmark-init/deactivate))
+;; (use-package benchmark-init
+;;   :ensure t
+;;   :config
+;;   ;; To disable collection of benchmark data after init is done.
+;;   (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 ;;"A defined abbrev is a word which expands"
 (setq-default abbrev-mode t)
@@ -189,6 +189,9 @@
 ;; make scrolling usable
 (setq mouse-wheel-scroll-amount '(0.02))
 (setq mouse-wheel-progressive-speed nil)
+(setq scroll-conservatively 10000
+      scroll-preserve-screen-position 1)
+
 (setq ring-bell-function 'ignore)
 
 ;; less clutter in mode-line
@@ -237,7 +240,7 @@
 	scroll-conservatively 10000
 	scroll-preserve-screen-position 1))
 
-(setq scroll-lock-mode t)
+;;(setq scroll-lock-mode t)
 (global-hl-line-mode)
 (setq blink-cursor-mode nil)
 ;; swap easily between vertical/horizontal arrangement
@@ -381,11 +384,11 @@
   :config (setq company-idle-delay 0.05
 		company-minimum-prefix-length 2))
 
-(use-package company-ghc
-  :defer t
-  :hook (haskell-mode . company-mode)
-  :config (setq company-idle-delay 0.05
-		company-minimum-prefix-length 2))
+;; (use-package company-ghc
+;;   :defer t
+;;   :hook (haskell-mode . company-mode)
+;;   :config (setq company-idle-delay 0.05
+;; 		company-minimum-prefix-length 2))
 
 
 ;;;; syntax checking
@@ -679,6 +682,14 @@
 (setq org-tags-column 75)
 
 (setq org-modules (quote (org-habit)))
+(setq org-log-done t) ;; Necessary to timestamp habits
+(setq org-habit-preceding-days 30
+      org-habit-graph-column 40
+      org-habit-following-days 7
+      org-habit-graph-column 80
+      org-habit-show-habits-only-for-today t
+      org-habit-show-all-today t)
+
 
 ;; org-agenda
 
@@ -686,7 +697,7 @@
 
 (define-key global-map (kbd "C-c l") 'org-store-link)
 (define-key global-map (kbd "C-c a") 'org-agenda)
-(setq org-log-done t)
+(setq calendar-mark-diary-entries-flag t) ;; Highlights days with tasks on them.
 
 (use-package htmlize
   :config
@@ -772,12 +783,31 @@
 
 ;; emacs-reveal for presentations
 
-;;;;(use-package oer-reveal)
-;;;;(use-package org-re-reveal-ref)
-;;;;(use-package org-re-reveal)
-;;;;(add-to-list 'load-path "~/.emacs.d/emacs-reveal")
-;;;;(require 'emacs-reveal)
+;;(use-package oer-reveal)
+;;(use-package org-re-reveal-ref)
+;;(use-package org-re-reveal)
+(add-to-list 'load-path "~/.emacs.d/emacs-reveal")
+(require 'emacs-reveal)
 ;;(load "~/.emacs.d/emacs-reveal/reveal-config.el")
+
+;; Japanese language
+
+(use-package google-translate
+  :ensure t
+  :custom
+  (google-translate-backend-method 'curl)
+  :config
+  (setq google-translate-translation-directions-alist
+        '(("ja" . "en") ("en" . "ja")))
+  (setq google-translate-show-phonetic t)
+  (progn
+    ;; To fix error: google-translate--search-tkk: Search failed: ",tkk:'"
+    ;; https://github.com/atykhonov/google-translate/issues/52#issuecomment-727920888
+    (defun google-translate--search-tkk () "Search TKK." (list 430675 2721866130))
+    (defalias 'gt 'google-translate-smooth-translate)
+    ))
+
+
 
 ;; custom functions fns
 
@@ -856,35 +886,50 @@
  '(lsp-rust-analyzer-call-info-full t)
  '(lsp-rust-analyzer-display-parameter-hints t)
  '(lsp-semantic-highlighting :immediate)
- '(lsp-ui-doc-enable nil t)
- '(lsp-ui-doc-header t t)
- '(lsp-ui-doc-include-signature nil t)
- '(lsp-ui-doc-max-height 30 t)
- '(lsp-ui-doc-max-width 120 t)
- '(lsp-ui-doc-position 'at-point t)
- '(lsp-ui-doc-use-childframe t t)
- '(lsp-ui-imenu-enable t t)
- '(lsp-ui-imenu-kind-position 'top t)
- '(lsp-ui-peek-enable t t)
- '(lsp-ui-peek-fontify 'on-demand t)
- '(lsp-ui-peek-list-width 50 t)
- '(lsp-ui-peek-peek-height 20 t)
- '(lsp-ui-peek-show-directory t t)
+ '(lsp-ui-doc-enable nil)
+ '(lsp-ui-doc-header t)
+ '(lsp-ui-doc-include-signature nil)
+ '(lsp-ui-doc-max-height 30)
+ '(lsp-ui-doc-max-width 120)
+ '(lsp-ui-doc-position 'at-point)
+ '(lsp-ui-doc-use-childframe t)
+ '(lsp-ui-imenu-enable t)
+ '(lsp-ui-imenu-kind-position 'top)
+ '(lsp-ui-peek-enable t)
+ '(lsp-ui-peek-fontify 'on-demand)
+ '(lsp-ui-peek-list-width 50)
+ '(lsp-ui-peek-peek-height 20)
+ '(lsp-ui-peek-show-directory t)
  '(lsp-ui-sideline-code-actions-prefix "✡" t)
  '(lsp-ui-sideline-enable nil)
- '(lsp-ui-sideline-ignore-duplicate t t)
- '(lsp-ui-sideline-show-code-actions t t)
- '(lsp-ui-sideline-show-diagnostics nil t)
- '(lsp-ui-sideline-show-hover t t)
- '(lsp-ui-sideline-show-symbol nil t)
+ '(lsp-ui-sideline-ignore-duplicate t)
+ '(lsp-ui-sideline-show-code-actions t)
+ '(lsp-ui-sideline-show-diagnostics nil)
+ '(lsp-ui-sideline-show-hover t)
+ '(lsp-ui-sideline-show-symbol nil)
  '(objed-cursor-color "#955f5f")
- '(org-agenda-files '("~/code/notes/agenda"))
+ '(org-agenda-files
+   '("~/code/notes/japanese/taekimgrammar.org" "~/code/notes/programming/AdventOfCodeJava.org" "/home/coob/code/notes/agenda/habits.org" "/home/coob/code/notes/agenda/todo.org"))
  '(org-modules '(org-habit))
  '(package-selected-packages
-   '(ob-java ob-restclient direnv org-chef jq-mode company-restclient htmlize rustic gnuplot gnuplot-mode ivy-completing-read ivy-completing-read+ nix-mode nixos-mode ido-completing-read+ amx nov nov-mode ron-mode org-brain org-cliplink benchmark-init highlight-indentation zone-nyan zone-select nyan-mode dtrt-indent command-log-mode git-timemachine git-gutter beacon company-posframe company-box json-mode restclient org-download feature-mode rjsx-mode treemacs-projectile indent-guide highlight-indent-guides-method wrap-region evil-numbers elm-mode lsp-ui lsp-mode theme-changer lsp-ui-flycheck zygospore yasnippet yaml-mode which-key web-mode volatile-highlights use-package undo-tree transpose-frame smooth-scrolling smex rainbow-mode rainbow-delimiters purescript-mode psc-ide php-mode paredit org-bullets neotree multiple-cursors magit lsp-java lsp-haskell ivy helm-rg helm-projectile helm-lsp helm-ag hasklig-mode groovy-mode graphviz-dot-mode general gdscript-mode flycheck-joker flycheck-haskell expand-region doom-themes diminish dap-mode company-lua company-lsp company-ghci company-ghc cider auctex all-the-icons aggressive-indent))
+   '(org-ref org-re-reveal-ref oer-reveal google-translate-default-ui define-it ob-java ob-restclient direnv org-chef jq-mode company-restclient htmlize rustic gnuplot gnuplot-mode ivy-completing-read ivy-completing-read+ nix-mode nixos-mode ido-completing-read+ amx nov nov-mode ron-mode org-brain org-cliplink benchmark-init highlight-indentation zone-nyan zone-select nyan-mode dtrt-indent command-log-mode git-timemachine git-gutter beacon company-posframe company-box json-mode restclient org-download feature-mode rjsx-mode treemacs-projectile indent-guide highlight-indent-guides-method wrap-region evil-numbers elm-mode lsp-ui lsp-mode theme-changer lsp-ui-flycheck zygospore yasnippet yaml-mode which-key web-mode volatile-highlights use-package undo-tree transpose-frame smooth-scrolling smex rainbow-mode rainbow-delimiters purescript-mode psc-ide php-mode paredit org-bullets neotree multiple-cursors magit lsp-java lsp-haskell ivy helm-rg helm-projectile helm-lsp helm-ag hasklig-mode groovy-mode graphviz-dot-mode general gdscript-mode flycheck-joker flycheck-haskell expand-region doom-themes diminish dap-mode company-lua company-lsp company-ghci company-ghc cider auctex all-the-icons aggressive-indent))
  '(pdf-view-midnight-colors (cons "#605a52" "#f7f3ee"))
  '(rustic-ansi-faces
    ["#f7f3ee" "#955f5f" "#81895d" "#957f5f" "#7382a0" "#9c739c" "#5f8c7d" "#605a52"])
+ '(safe-local-variable-values
+   '((org-image-actual-width)
+     (org-todo-keyword-faces
+      ("Habit" . "red")
+      ("Done" . "green"))
+     (org-todo-keyword-faces
+      ("HABIT" . "red")
+      ("DONE" . "green"))
+     (org-todo-keyword-faces
+      ("HABIT" . "blue")
+      ("DONE" . "green"))
+     (org-todo-keyword-faces
+      ("NEXT" . "blue")
+      ("DONE" . "green"))))
  '(show-trailing-whitespace nil)
  '(treemacs-follow-mode t)
  '(vc-annotate-background "#f7f3ee")
