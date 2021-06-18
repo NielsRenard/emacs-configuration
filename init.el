@@ -489,15 +489,11 @@
 (use-package haskell-mode
   :config
   (add-to-list 'auto-mode-alist '("\\.hs\\'" . haskell-mode))
-  (add-hook 'haskell-mode-hook 'subword-mode))
+  (add-hook 'haskell-mode-hook 'subword-mode)
+  (add-hook 'haskell-mode-hook #'yas-minor-mode))
 
 (use-package flycheck-haskell
   :config (add-hook 'haskell-mode-hook #'flycheck-haskell-setup))
-
-(use-package hasklig-mode
-  :config
-                                        ;  :hook (haskell-mode)
-  )
 
 ;; nixos
 
