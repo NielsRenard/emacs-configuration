@@ -21,7 +21,7 @@
     ("unless" "unless" cperl-electric-keyword :count 0)
     ("until" "until" cperl-electric-keyword :count 0)
     ("while" "while" cperl-electric-keyword :count 0)
-    ))
+   ))
 
 (define-abbrev-table 'global-abbrev-table
   '(
@@ -32,7 +32,11 @@
     ("lpos" "{-# LANGUAGE OverloadedStrings #-}" nil :count 7)
     ("lpqq" "{-# LANGUAGE QuasiQuotes #-}" nil :count 7)
     ("lprag" "{-# LANGUAGE  #-}" nil :count 8)
-    ))
+    ("prl" "println!();" nil :count 20)
+    ("prpr" "println!(\"{:?}\", a);" nil :count 85)
+    ("prt" "println!(\"☬\");" nil :count 26)
+    ("prxy" "println!(\"x: {:?}, y: {:?}\", x, y);" nil :count 15)
+   ))
 
 (define-abbrev-table 'java-mode-abbrev-table
   '(
@@ -47,7 +51,6 @@
     ("psvm" "  public static void main(String[] args) {
     System.out.println(\"☃\");
   }" nil :count 14)
-    ("sout" "System.out.println(\"☃\")" nil :count 9)))
+    ("sout" "System.out.println(\"☃\")" nil :count 9)
+   ))
 
-  (provide 'abbrev_defs)
-;;; abbrev_defs ends here

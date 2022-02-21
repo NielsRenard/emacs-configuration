@@ -29,11 +29,18 @@
 (defvar tramp-default-method "ssh" )
 (setq tramp-default-method "ssh")
 
-;; (use-package benchmark-init
-;;   :ensure t
-;;   :config
-;;   ;; To disable collection of benchmark data after init is done.
-;;   (add-hook 'after-init-hook 'benchmark-init/deactivate))
+;; https://github.com/dholm/benchmark-init-el/issues/15
+(define-advice define-obsolete-function-alias (:filter-args (ll) fix-obsolete)
+  (let ((obsolete-name (pop ll))
+        (current-name (pop ll))
+        (when (if ll (pop ll) "1"))
+        (docstring (if ll (pop ll) nil)))
+    (list obsolete-name current-name when docstring)))
+(use-package benchmark-init
+  :ensure t
+  :config
+  ;; To disable collection of benchmark data after init is done.
+  (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 ;;"A defined abbrev is a word which expands"
 (setq-default abbrev-mode t)
@@ -46,7 +53,9 @@
 (scroll-bar-mode -1)
 ;; set linenumbers by default
 ;;(global-linum-mode)
+(set-default 'truncate-lines t)
 
+(global-set-key "\C-c$" 'toggle-truncate-lines)
 (global-set-key (kbd "M-z") 'zap-up-to-char)
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
 (global-set-key (kbd "C-r") 'isearch-backward-regexp)
@@ -129,15 +138,18 @@
 ;;;; visual / looks
 
 ;; make window a little bit transparent
-(set-frame-parameter (selected-frame) 'alpha '100)
-(add-to-list 'default-frame-alist '(alpha '95))
+;;(set-frame-parameter (selected-frame) 'alpha '95)
+;; (add-to-list 'default-frame-alist '(alpha '95))
 
 (use-package doom-themes
   :ensure t
   :config (setq inhibit-startup-screen t)
   ;;(set-default-font "Hasklig")
   ;;https://fontlibrary.org/en/font/fantasque-sans-mono
-  (set-frame-font "Fantasque Sans Mono"))
+  (set-frame-font "Fantasque Sans Mono")
+  ;; (set-frame-font "Purisa")
+  )
+
 
 ;; changes themes based on time of day
  (use-package theme-changer
@@ -259,9 +271,8 @@
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
 (use-package projectile
-  :defer 1
   :diminish projectile-mode
-  :config (projectile-mode)
+  :config (projectile-mode +1)
   )
 
 (global-set-key (kbd "<f5>")
@@ -312,6 +323,7 @@
   :config
   (setq avy-timeout-seconds 0.25)
   :bind (("<C-return>" . avy-goto-char-timer)
+         ("C-'" . avy-goto-char-timer)
 	 ("<C-M-return>" . avy-goto-line)))
 
 
@@ -364,7 +376,7 @@
   :custom
   (company-idle-delay 0)
   (company-echo-delay 0)
-  (company-minimum-prefix-length 1)
+  (company-minimum-prefix-length 2)
   :config
   ;; invert the navigation direction if the the completion popup-isearch-match
   ;; is displayed on top (happens near the bottom of windows)
@@ -467,14 +479,21 @@
 ;;;; rust
 (use-package toml-mode)
 
-(use-package rust-mode
-  :defer t
-  :hook ((rust-mode . lsp-deferred)
-         (rust-mode . subword-mode)
-         (rust-mode . yas-minor-mode)))
+;; (use-package rust-mode
+;;   :defer 3
+;;   :hook ((rust-mode . lsp-deferred)
+;;          (rust-mode . subword-mode)
+;;          (rust-mode . yas-minor-mode)))
 
 (use-package rustic
-  :diminish rustic-mode
+  :ensure t
+  :config
+  (lsp-toggle-signature-auto-activate)
+  (require 'dap-cpptools)
+  ;; (setq rustic-lsp-server 'rls) ;; switch from default rust-analyzer to rls
+  :hook (;; (rustic-mode . lsp-deferred)
+         (rust-mode . subword-mode)
+         (rust-mode . yas-minor-mode))
   )
 
 (use-package cargo
@@ -509,10 +528,11 @@
 
 ;;;; lsp
 (use-package lsp-mode
-  ;; :defer t
+  :defer 2
   :ensure t
   :commands lsp
   :config
+  (setq lsp-prefer-capf t)
   (setq lsp-prefer-flymake nil)
   '(lsp-lsp-flycheck-warning-unnecessary-face ((t (:underline "DarkOrange1"))) t)
   (setq lsp-idle-delay 0.500)
@@ -527,7 +547,6 @@
   )
 
 ;(use-package company-lsp :commands company-lsp)
-;(setq lsp-prefer-capf t)
 (use-package helm-lsp :commands helm-lsp-workspace-symbol)
 (use-package yasnippet)
 
@@ -656,12 +675,14 @@
   :config (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
 
 
-;;;; docs / org-mode / Org mode
+;;;; docs / org-mode / Org-mode
 
 ;; letters as ordered list bullets
 ;; A. like
 ;; B. this
 (setq org-list-allow-alphabetical t)
+
+(setf org-blank-before-new-entry '((heading . nil) (plain-list-item . nil)))
 
 (setq org-hide-emphasis-markers t)
 
@@ -671,14 +692,14 @@
 
 (setq org-tags-column 75)
 
-(setq org-modules (quote (org-habit)))
-(setq org-log-done t) ;; Necessary to timestamp habits
-(setq org-habit-preceding-days 30
-      org-habit-graph-column 40
-      org-habit-following-days 7
-      org-habit-graph-column 80
-      org-habit-show-habits-only-for-today t
-      org-habit-show-all-today t)
+;; (setq org-modules (quote (org-habit)))
+;; (setq org-log-done t) ;; Necessary to timestamp habits
+;; (setq org-habit-preceding-days 30
+;;       org-habit-graph-column 40
+;;       org-habit-following-days 7
+;;       org-habit-graph-column 80
+;;       org-habit-show-habits-only-for-today t
+;;       org-habit-show-all-today t)
 
 
 ;; org-agenda
@@ -709,8 +730,17 @@
   :bind ("C-x p l" . 'org-cliplink)
   )
 
+(use-package visual-fill-column
+  :defer t
+  )
+
+(defun my-nov-font-setup ()
+  (face-remap-add-relative 'variable-pitch :family "Liberation Serif"
+                                           :height 1.0))
+(add-hook 'nov-mode-hook 'my-nov-font-setup)
+
 (use-package nov
-  :defer 1
+  :defer t
   :config
   (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
   (setq nov-text-width 120)
@@ -718,12 +748,12 @@
   (setq visual-fill-column-center-text t)
   (add-hook 'nov-mode-hook 'visual-line-mode)
   (add-hook 'nov-mode-hook 'visual-fill-column-mode)
-  (setq line-spacing 0.0)
+  ;; (setq line-spacing 0.0)
   )
 
 ;;;; org-babel
 
-(use-package ob-rust :defer 2)
+;; (use-package ob-rust :defer 2)
 (use-package ob-restclient :defer 2)
 
 (org-babel-do-load-languages
@@ -742,17 +772,6 @@
 (use-package gnuplot :defer t)
 (use-package gnuplot-mode :defer t)
 
-(use-package org-brain
-  :defer 2
-  :init
-  (setq org-brain-path "~/code/brain")
-  :config
-  (bind-key "C-c b" 'org-brain-prefix-map org-mode-map)
-  (setq org-id-track-globally t)
-  (setq org-id-locations-file "~/.emacs.d/.org-id-locations")
-  (add-hook 'before-save-hook #'org-brain-ensure-ids-in-buffer)
-  )
-
 (use-package org-bullets
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
@@ -769,15 +788,17 @@
   :defer t
   :ensure auctex
   :config
-  (setq TeX-auto-save t))
+  (setq TeX-auto-save t)
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 3.5))
+  )
 
 ;; emacs-reveal for presentations
 
 ;;(use-package oer-reveal)
 ;;(use-package org-re-reveal-ref)
 ;;(use-package org-re-reveal)
-(add-to-list 'load-path "~/.emacs.d/emacs-reveal")
-(require 'emacs-reveal)
+;; (add-to-list 'load-path "~/.emacs.d/emacs-reveal")
+;; (require 'emacs-reveal)
 ;;(load "~/.emacs.d/emacs-reveal/reveal-config.el")
 
 ;; Japanese language
@@ -837,8 +858,12 @@
  ;; If there is more than one, they won't work right.
  '(amx-backend 'ido)
  '(amx-mode t)
+ '(ansi-color-faces-vector
+   [default bold shadow italic underline success warning error])
  '(ansi-color-names-vector
    ["#f7f3ee" "#955f5f" "#81895d" "#957f5f" "#7382a0" "#9c739c" "#5f8c7d" "#605a52"])
+ '(awesome-tray-mode-line-active-color "#2fafff")
+ '(awesome-tray-mode-line-inactive-color "#323232")
  '(beacon-color "#f1fa8c")
  '(beacon-mode t)
  '(blink-cursor-mode nil)
@@ -850,16 +875,44 @@
  '(css-indent-offset 2)
  '(cua-mode nil nil (cua-base))
  '(custom-safe-themes
-   '("9efb2d10bfb38fe7cd4586afb3e644d082cbcdb7435f3d1e8dd9413cbe5e61fc" "37a4701758378c93159ad6c7aceb19fd6fb523e044efe47f2116bc7398ce20c9" "71e5acf6053215f553036482f3340a5445aee364fb2e292c70d9175fb0cc8af7" "4f01c1df1d203787560a67c1b295423174fd49934deb5e6789abd1e61dba9552" "711efe8b1233f2cf52f338fd7f15ce11c836d0b6240a18fffffc2cbd5bfe61b0" "01cf34eca93938925143f402c2e6141f03abb341f27d1c2dba3d50af9357ce70" "4bca89c1004e24981c840d3a32755bf859a6910c65b829d9441814000cf6c3d0" "37144b437478e4c235824f0e94afa740ee2c7d16952e69ac3c5ed4352209eefb" "9f15d03580b08dae41a1e5c1f00d1f1aa99fea121ca32c28e2abec9563c6e32c" "730a87ed3dc2bf318f3ea3626ce21fb054cd3a1471dcd59c81a4071df02cb601" "5d09b4ad5649fea40249dd937eaaa8f8a229db1cec9a1a0ef0de3ccf63523014" "2f1518e906a8b60fac943d02ad415f1d8b3933a5a7f75e307e6e9a26ef5bf570" "5b809c3eae60da2af8a8cfba4e9e04b4d608cb49584cb5998f6e4a1c87c057c4" "1623aa627fecd5877246f48199b8e2856647c99c6acdab506173f9bb8b0a41ac" "76bfa9318742342233d8b0b42e824130b3a50dcc732866ff8e47366aed69de11" "9b272154fb77a926f52f2756ed5872877ad8d73d018a426d44c6083d1ed972b1" "0cb1b0ea66b145ad9b9e34c850ea8e842c4c4c83abe04e37455a1ef4cc5b8791" "6177ecbffb8f37756012c9ee9fd73fc043520836d254397566e37c6204118852" "79278310dd6cacf2d2f491063c4ab8b129fee2a498e4c25912ddaa6c3c5b621e" "93ed23c504b202cf96ee591138b0012c295338f38046a1f3c14522d4a64d7308" "6bacece4cf10ea7dd5eae5bfc1019888f0cb62059ff905f37b33eec145a6a430" "361f5a2bc2a7d7387b442b2570b0ef35198442b38c2812bf3c70e1e091771d1a" "f2b56244ecc6f4b952b2bcb1d7e517f1f4272876a8c873b378f5cf68e904bd59" "7d708f0168f54b90fc91692811263c995bebb9f68b8b7525d0e2200da9bc903c" "fa3bdd59ea708164e7821574822ab82a3c51e262d419df941f26d64d015c90ee" "1ed5c8b7478d505a358f578c00b58b430dde379b856fbcb60ed8d345fc95594e" "0ad7f1c71fd0289f7549f0454c9b12005eddf9b76b7ead32a24d9cb1d16cbcbd" "76f66cbdf9ada1f86f9225c0f33ae60b40d04073146c4f5c49d8189d1157728b" "d74c5485d42ca4b7f3092e50db687600d0e16006d8fa335c69cf4f379dbd0eee" "a339f231e63aab2a17740e5b3965469e8c0b85eccdfb1f9dbd58a30bdad8562b" "99ea831ca79a916f1bd789de366b639d09811501e8c092c85b2cb7d697777f93" "e1ecb0536abec692b5a5e845067d75273fe36f24d01210bf0aa5842f2a7e029f" "285efd6352377e0e3b68c71ab12c43d2b72072f64d436584f9159a58c4ff545a" "cb96a06ed8f47b07c014e8637bd0fd0e6c555364171504680ac41930cfe5e11e" "6231254e74298a1cf8a5fee7ca64352943de4b495e615c449e9bb27e2ccae709" "b462d00de785490a0b6861807a360f5c1e05b48a159a99786145de7e3cce3afe" "cdb3e7a8864cede434b168c9a060bf853eeb5b3f9f758310d2a2e23be41a24ae" "0d087b2853473609d9efd2e9fbeac088e89f36718c4a4c89c568dd1b628eae41" "428754d8f3ed6449c1078ed5b4335f4949dc2ad54ed9de43c56ea9b803375c23" "7d56fb712ad356e2dacb43af7ec255c761a590e1182fe0537e1ec824b7897357" "3952ef318c8cbccf09954ecf43250ac0cbd1f4ae66b4abe569491b260f6e054b" "1ca1f43ca32d30b05980e01fa60c107b02240226ac486f41f9b790899f6f6e67" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" "49ec957b508c7d64708b40b0273697a84d3fee4f15dd9fc4a9588016adee3dad" "d1b4990bd599f5e2186c3f75769a2c5334063e9e541e37514942c27975700370" "cd736a63aa586be066d5a1f0e51179239fe70e16a9f18991f6f5d99732cabb32" "a3fa4abaf08cc169b61dea8f6df1bbe4123ec1d2afeb01c17e11fdc31fc66379" "93a0885d5f46d2aeac12bf6be1754faa7d5e28b27926b8aa812840fe7d0b7983" "10461a3c8ca61c52dfbbdedd974319b7f7fd720b091996481c8fb1dded6c6116" "bd7b7c5df1174796deefce5debc2d976b264585d51852c962362be83932873d9" "4697a2d4afca3f5ed4fdf5f715e36a6cac5c6154e105f3596b44a4874ae52c45" "7e78a1030293619094ea6ae80a7579a562068087080e01c2b8b503b27900165c" "6b289bab28a7e511f9c54496be647dc60f5bd8f9917c9495978762b99d8c96a0" "8aca557e9a17174d8f847fb02870cb2bb67f3b6e808e46c0e54a44e3e18e1020" "75d3dde259ce79660bac8e9e237b55674b910b470f313cdf4b019230d01a982a" "1c082c9b84449e54af757bcae23617d11f563fc9f33a832a8a2813c4d7dfb652" "6d589ac0e52375d311afaa745205abb6ccb3b21f6ba037104d71111e7e76a3fc" "100e7c5956d7bb3fd0eebff57fde6de8f3b9fafa056a2519f169f85199cc1c96" default))
+   '("7a7b1d475b42c1a0b61f3b1d1225dd249ffa1abb1b7f726aec59ac7ca3bf4dae" "b7e460a67bcb6cac0a6aadfdc99bdf8bbfca1393da535d4e8945df0648fa95fb" "4f1d2476c290eaa5d9ab9d13b60f2c0f1c8fa7703596fa91b235db7f99a9441b" "4a5aa2ccb3fa837f322276c060ea8a3d10181fecbd1b74cb97df8e191b214313" "1278c5f263cdb064b5c86ab7aa0a76552082cf0189acf6df17269219ba496053" "850bb46cc41d8a28669f78b98db04a46053eca663db71a001b40288a9b36796c" "22a514f7051c7eac7f07112a217772f704531b136f00e2ccfaa2e2a456558d39" "1d44ec8ec6ec6e6be32f2f73edf398620bb721afeed50f75df6b12ccff0fbb15" "8d7b028e7b7843ae00498f68fad28f3c6258eda0650fe7e17bfb017d51d0e2a2" "b5803dfb0e4b6b71f309606587dd88651efe0972a5be16ece6a958b197caeed8" "6f4421bf31387397f6710b6f6381c448d1a71944d9e9da4e0057b3fe5d6f2fad" "8146edab0de2007a99a2361041015331af706e7907de9d6a330a3493a541e5a6" "d47f868fd34613bd1fc11721fe055f26fd163426a299d45ce69bef1f109e1e71" "75b8719c741c6d7afa290e0bb394d809f0cc62045b93e1d66cd646907f8e6d43" "3df5335c36b40e417fec0392532c1b82b79114a05d5ade62cfe3de63a59bc5c6" "08a27c4cde8fcbb2869d71fdc9fa47ab7e4d31c27d40d59bf05729c4640ce834" "8f5a7a9a3c510ef9cbb88e600c0b4c53cdcdb502cfe3eb50040b7e13c6f4e78e" "6c3b5f4391572c4176908bb30eddc1718344b8eaff50e162e36f271f6de015ca" "56d10d2b60685d112dd54f4ba68a173c102eacc2a6048d417998249085383da1" "ff3c57a5049010a76de8949ddb629d29e2ced42b06098e046def291989a4104a" "9efb2d10bfb38fe7cd4586afb3e644d082cbcdb7435f3d1e8dd9413cbe5e61fc" "37a4701758378c93159ad6c7aceb19fd6fb523e044efe47f2116bc7398ce20c9" "71e5acf6053215f553036482f3340a5445aee364fb2e292c70d9175fb0cc8af7" "4f01c1df1d203787560a67c1b295423174fd49934deb5e6789abd1e61dba9552" "711efe8b1233f2cf52f338fd7f15ce11c836d0b6240a18fffffc2cbd5bfe61b0" "01cf34eca93938925143f402c2e6141f03abb341f27d1c2dba3d50af9357ce70" "4bca89c1004e24981c840d3a32755bf859a6910c65b829d9441814000cf6c3d0" "37144b437478e4c235824f0e94afa740ee2c7d16952e69ac3c5ed4352209eefb" "9f15d03580b08dae41a1e5c1f00d1f1aa99fea121ca32c28e2abec9563c6e32c" "730a87ed3dc2bf318f3ea3626ce21fb054cd3a1471dcd59c81a4071df02cb601" "5d09b4ad5649fea40249dd937eaaa8f8a229db1cec9a1a0ef0de3ccf63523014" "2f1518e906a8b60fac943d02ad415f1d8b3933a5a7f75e307e6e9a26ef5bf570" "5b809c3eae60da2af8a8cfba4e9e04b4d608cb49584cb5998f6e4a1c87c057c4" "1623aa627fecd5877246f48199b8e2856647c99c6acdab506173f9bb8b0a41ac" "76bfa9318742342233d8b0b42e824130b3a50dcc732866ff8e47366aed69de11" "9b272154fb77a926f52f2756ed5872877ad8d73d018a426d44c6083d1ed972b1" "0cb1b0ea66b145ad9b9e34c850ea8e842c4c4c83abe04e37455a1ef4cc5b8791" "6177ecbffb8f37756012c9ee9fd73fc043520836d254397566e37c6204118852" "79278310dd6cacf2d2f491063c4ab8b129fee2a498e4c25912ddaa6c3c5b621e" "93ed23c504b202cf96ee591138b0012c295338f38046a1f3c14522d4a64d7308" "6bacece4cf10ea7dd5eae5bfc1019888f0cb62059ff905f37b33eec145a6a430" "361f5a2bc2a7d7387b442b2570b0ef35198442b38c2812bf3c70e1e091771d1a" "f2b56244ecc6f4b952b2bcb1d7e517f1f4272876a8c873b378f5cf68e904bd59" "7d708f0168f54b90fc91692811263c995bebb9f68b8b7525d0e2200da9bc903c" "fa3bdd59ea708164e7821574822ab82a3c51e262d419df941f26d64d015c90ee" "1ed5c8b7478d505a358f578c00b58b430dde379b856fbcb60ed8d345fc95594e" "0ad7f1c71fd0289f7549f0454c9b12005eddf9b76b7ead32a24d9cb1d16cbcbd" "76f66cbdf9ada1f86f9225c0f33ae60b40d04073146c4f5c49d8189d1157728b" "d74c5485d42ca4b7f3092e50db687600d0e16006d8fa335c69cf4f379dbd0eee" "a339f231e63aab2a17740e5b3965469e8c0b85eccdfb1f9dbd58a30bdad8562b" "99ea831ca79a916f1bd789de366b639d09811501e8c092c85b2cb7d697777f93" "e1ecb0536abec692b5a5e845067d75273fe36f24d01210bf0aa5842f2a7e029f" "285efd6352377e0e3b68c71ab12c43d2b72072f64d436584f9159a58c4ff545a" "cb96a06ed8f47b07c014e8637bd0fd0e6c555364171504680ac41930cfe5e11e" "6231254e74298a1cf8a5fee7ca64352943de4b495e615c449e9bb27e2ccae709" "b462d00de785490a0b6861807a360f5c1e05b48a159a99786145de7e3cce3afe" "cdb3e7a8864cede434b168c9a060bf853eeb5b3f9f758310d2a2e23be41a24ae" "0d087b2853473609d9efd2e9fbeac088e89f36718c4a4c89c568dd1b628eae41" "428754d8f3ed6449c1078ed5b4335f4949dc2ad54ed9de43c56ea9b803375c23" "7d56fb712ad356e2dacb43af7ec255c761a590e1182fe0537e1ec824b7897357" "3952ef318c8cbccf09954ecf43250ac0cbd1f4ae66b4abe569491b260f6e054b" "1ca1f43ca32d30b05980e01fa60c107b02240226ac486f41f9b790899f6f6e67" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" "49ec957b508c7d64708b40b0273697a84d3fee4f15dd9fc4a9588016adee3dad" "d1b4990bd599f5e2186c3f75769a2c5334063e9e541e37514942c27975700370" "cd736a63aa586be066d5a1f0e51179239fe70e16a9f18991f6f5d99732cabb32" "a3fa4abaf08cc169b61dea8f6df1bbe4123ec1d2afeb01c17e11fdc31fc66379" "93a0885d5f46d2aeac12bf6be1754faa7d5e28b27926b8aa812840fe7d0b7983" "10461a3c8ca61c52dfbbdedd974319b7f7fd720b091996481c8fb1dded6c6116" "bd7b7c5df1174796deefce5debc2d976b264585d51852c962362be83932873d9" "4697a2d4afca3f5ed4fdf5f715e36a6cac5c6154e105f3596b44a4874ae52c45" "7e78a1030293619094ea6ae80a7579a562068087080e01c2b8b503b27900165c" "6b289bab28a7e511f9c54496be647dc60f5bd8f9917c9495978762b99d8c96a0" "8aca557e9a17174d8f847fb02870cb2bb67f3b6e808e46c0e54a44e3e18e1020" "75d3dde259ce79660bac8e9e237b55674b910b470f313cdf4b019230d01a982a" "1c082c9b84449e54af757bcae23617d11f563fc9f33a832a8a2813c4d7dfb652" "6d589ac0e52375d311afaa745205abb6ccb3b21f6ba037104d71111e7e76a3fc" "100e7c5956d7bb3fd0eebff57fde6de8f3b9fafa056a2519f169f85199cc1c96" default))
  '(default-input-method "japanese")
+ '(exwm-floating-border-color "#646464")
  '(fci-rule-color "#605a52")
  '(flycheck-display-errors-delay 0)
+ '(flymake-error-bitmap '(flymake-double-exclamation-mark modus-theme-fringe-red))
+ '(flymake-note-bitmap '(exclamation-mark modus-theme-fringe-cyan))
+ '(flymake-warning-bitmap '(exclamation-mark modus-theme-fringe-yellow))
  '(git-gutter:added-sign "+")
  '(git-gutter:deleted-sign "-")
  '(git-gutter:modified-sign "~")
- '(global-linum-mode t)
+ '(global-linum-mode nil)
  '(graphviz-dot-view-command "dotty %s")
  '(helm-mode-fuzzy-match nil)
+ '(highlight-tail-colors '(("#2f4a00" . 0) ("#00415e" . 20)))
+ '(hl-todo-keyword-faces
+   '(("HOLD" . "#cfdf30")
+     ("TODO" . "#feacd0")
+     ("NEXT" . "#b6a0ff")
+     ("THEM" . "#f78fe7")
+     ("PROG" . "#00d3d0")
+     ("OKAY" . "#4ae8fc")
+     ("DONT" . "#70c900")
+     ("FAIL" . "#ff8059")
+     ("BUG" . "#ff8059")
+     ("DONE" . "#44bc44")
+     ("NOTE" . "#f0ce43")
+     ("KLUDGE" . "#eecc00")
+     ("HACK" . "#eecc00")
+     ("TEMP" . "#ffcccc")
+     ("FIXME" . "#ff9977")
+     ("XXX+" . "#f4923b")
+     ("REVIEW" . "#6ae4b9")
+     ("DEPRECATED" . "#bfd9ff")))
+ '(ibuffer-deletion-face 'modus-theme-mark-del)
+ '(ibuffer-filter-group-name-face 'modus-theme-mark-symbol)
+ '(ibuffer-marked-face 'modus-theme-mark-sel)
+ '(ibuffer-title-face 'modus-theme-pseudo-header)
  '(ido-enable-flex-matching t)
  '(ido-separator nil)
  '(jdee-db-active-breakpoint-face-colors (cons "#f1ece4" "#7382a0"))
@@ -890,7 +943,6 @@
  '(lsp-ui-peek-list-width 50)
  '(lsp-ui-peek-peek-height 20)
  '(lsp-ui-peek-show-directory t)
- '(lsp-ui-sideline-code-actions-prefix "✡" t)
  '(lsp-ui-sideline-enable nil)
  '(lsp-ui-sideline-ignore-duplicate t)
  '(lsp-ui-sideline-show-code-actions t)
@@ -899,11 +951,14 @@
  '(lsp-ui-sideline-show-symbol nil)
  '(objed-cursor-color "#955f5f")
  '(org-agenda-files
-   '("~/code/notes/japanese/taekimgrammar.org" "~/code/notes/programming/AdventOfCodeJava.org" "/home/coob/code/notes/agenda/habits.org" "/home/coob/code/notes/agenda/todo.org"))
+   '("~/code/japanese/nihongo/words.org" "~/code/notes/japanese/taekimgrammar.org" "~/code/notes/programming/AdventOfCodeJava.org" "/home/coob/code/notes/agenda/habits.org" "/home/coob/code/notes/agenda/todo.org"))
  '(org-modules '(org-habit))
+ '(org-src-block-faces 'nil)
+ '(org-src-tab-acts-natively t)
  '(package-selected-packages
-   '(org-ref org-re-reveal-ref oer-reveal google-translate-default-ui define-it ob-java ob-restclient direnv org-chef jq-mode company-restclient htmlize rustic gnuplot gnuplot-mode ivy-completing-read ivy-completing-read+ nix-mode nixos-mode ido-completing-read+ amx nov nov-mode ron-mode org-brain org-cliplink benchmark-init highlight-indentation zone-nyan zone-select nyan-mode dtrt-indent command-log-mode git-timemachine git-gutter beacon company-posframe company-box json-mode restclient org-download feature-mode rjsx-mode treemacs-projectile indent-guide highlight-indent-guides-method wrap-region evil-numbers elm-mode lsp-ui lsp-mode theme-changer lsp-ui-flycheck zygospore yasnippet yaml-mode which-key web-mode volatile-highlights use-package undo-tree transpose-frame smooth-scrolling smex rainbow-mode rainbow-delimiters purescript-mode psc-ide php-mode paredit org-bullets neotree multiple-cursors magit lsp-java lsp-haskell ivy helm-rg helm-projectile helm-lsp helm-ag hasklig-mode groovy-mode graphviz-dot-mode general gdscript-mode flycheck-joker flycheck-haskell expand-region doom-themes diminish dap-mode company-lua company-lsp company-ghci company-ghc cider auctex all-the-icons aggressive-indent))
+   '(org windresize highlight-indent-guides visual-fill-column org-ref org-re-reveal-ref oer-reveal google-translate-default-ui define-it ob-java ob-restclient direnv org-chef jq-mode company-restclient htmlize rustic gnuplot gnuplot-mode ivy-completing-read ivy-completing-read+ nix-mode nixos-mode ido-completing-read+ amx nov nov-mode ron-mode org-brain org-cliplink benchmark-init highlight-indentation zone-nyan zone-select nyan-mode dtrt-indent command-log-mode git-timemachine git-gutter beacon company-posframe company-box json-mode restclient org-download feature-mode rjsx-mode treemacs-projectile indent-guide highlight-indent-guides-method wrap-region evil-numbers elm-mode lsp-ui lsp-mode theme-changer lsp-ui-flycheck zygospore yasnippet yaml-mode which-key web-mode volatile-highlights use-package undo-tree transpose-frame smooth-scrolling smex rainbow-mode rainbow-delimiters purescript-mode psc-ide php-mode paredit org-bullets neotree multiple-cursors magit lsp-java lsp-haskell ivy helm-rg helm-projectile helm-lsp helm-ag hasklig-mode groovy-mode graphviz-dot-mode general gdscript-mode flycheck-joker flycheck-haskell expand-region doom-themes diminish dap-mode company-lua company-lsp company-ghci company-ghc cider auctex all-the-icons aggressive-indent))
  '(pdf-view-midnight-colors (cons "#605a52" "#f7f3ee"))
+ '(projectile-enable-caching t)
  '(rustic-ansi-faces
    ["#f7f3ee" "#955f5f" "#81895d" "#957f5f" "#7382a0" "#9c739c" "#5f8c7d" "#605a52"])
  '(safe-local-variable-values
@@ -921,8 +976,10 @@
       ("NEXT" . "blue")
       ("DONE" . "green"))))
  '(show-trailing-whitespace nil)
+ '(sql-sqlite-program "sqlite3")
  '(treemacs-follow-mode t)
  '(vc-annotate-background "#f7f3ee")
+ '(vc-annotate-background-mode nil)
  '(vc-annotate-color-map
    (list
     (cons 20 "#81895d")
@@ -946,7 +1003,11 @@
  '(vc-annotate-very-old-color nil)
  '(which-function-mode t)
  '(which-key-mode t)
- '(window-divider-mode t))
+ '(window-divider-mode t)
+ '(xterm-color-names
+   ["black" "#ff8059" "#44bc44" "#eecc00" "#2fafff" "#feacd0" "#00d3d0" "gray65"])
+ '(xterm-color-names-bright
+   ["gray35" "#f4923b" "#70c900" "#cfdf30" "#79a8ff" "#f78fe7" "#4ae8fc" "white"]))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -954,5 +1015,7 @@
  ;; If there is more than one, they won't work right.
  '(git-gutter:added ((t (:foreground "#000000" :background "#50fa7b"))))
  '(git-gutter:deleted ((t (:foreground "#000000" :background "#ff79c6"))))
- '(git-gutter:modified ((t (:foreground "#000000" :background "#87cefa")))))
+ '(git-gutter:modified ((t (:foreground "#000000" :background "#87cefa"))))
+ '(variable-pitch ((t (:family "Sans Serif")))))
 (put 'narrow-to-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
