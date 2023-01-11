@@ -34,7 +34,7 @@
     ("lprag" "{-# LANGUAGE  #-}" nil :count 8)
     ("prl" "println!();" nil :count 20)
     ("prpr" "println!(\"{:?}\", a);" nil :count 85)
-    ("prt" "println!(\"☬\");" nil :count 26)
+    ("prt" "println!(\"☬\");" nil :count 70)
     ("prxy" "println!(\"x: {:?}, y: {:?}\", x, y);" nil :count 15)
    ))
 
